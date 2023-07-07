@@ -7,7 +7,7 @@
     "withGlobalTauri": false
   },
   "package": {
-    "productName": "bcs-capacidad-de-demanda",
+    "productName": "BCS_Demanda",
     "version": "0.0.0"
   },
   "tauri": {
@@ -37,7 +37,7 @@
       {
         "fullscreen": false,
         "resizable": true,
-        "title": "bcs-capacidad-de-demanda",
+        "title": "BCS_Demanda",
         "width": 800,
         "height": 600
       }
