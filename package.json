@@ -10,6 +10,7 @@
     "tauri": "tauri"
   },
   "dependencies": {
+    "@heroicons/react": "^2.0.18",
     "@material-tailwind/react": "^2.0.4",
     "@tauri-apps/api": "^1.4.0",
     "@types/react-icons": "^3.0.0",
@@ -38,8 +39,8 @@
     "javascript": "javascript",
     "css": "css",
     "typescriptreact": "typescriptreact"
-},
-"editor.quickSuggestions": {
+  },
+  "editor.quickSuggestions": {
     "strings": true
-}
+  }
 }

@@ -3,7 +3,7 @@ import * as FaIcons from 'react-icons/fa'
 
 export const SidenavData = [
     {
-        title: 'Home',
+        title: 'Dashboard',
         path: '/',
         icon: <FaIcons.FaHome />
     },
