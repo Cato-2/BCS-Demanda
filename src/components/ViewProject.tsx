@@ -10,10 +10,14 @@ import {
 } from "@material-tailwind/react";
 import { PencilIcon, UserPlusIcon, EyeIcon } from "@heroicons/react/24/solid";
 
-function ViewProject() {
-    const [open, setOpen] = useState(false);
- 
-    const handleOpen = () => setOpen(!open);
+function ViewProject(props:any) {
+  const [open, setOpen] = useState(false);
+  const [id, setId] = useState(0);
+  const handleOpen = () => {
+    setOpen(!open);
+    handleId();
+  }; 
+  const handleId = () => setId(props.id);
 
   return (
     <>
@@ -23,7 +27,7 @@ function ViewProject() {
         </IconButton>
       </Tooltip>
       <Dialog open={open} handler={handleOpen}>
-        <DialogHeader>Its a simple dialog.</DialogHeader>
+        <DialogHeader>Visualizar Tarea {id}</DialogHeader>
         <DialogBody divider>
           The key to more success is to have a lot of pillows. Put it this way, it took me
               twenty five years to get these plants, twenty five years of blood sweat and tears, and

@@ -19,7 +19,7 @@ function AddProject() {
         <UserPlusIcon strokeWidth={2} className="h-4 w-4" /> Agregar Tarea
       </Button>
       <Dialog open={open} handler={handleOpen}>
-        <DialogHeader>Its a simple dialog.</DialogHeader>
+        <DialogHeader>Agregar Tarea</DialogHeader>
         <DialogBody divider>
           The key to more success is to have a lot of pillows. Put it this way, it took me
               twenty five years to get these plants, twenty five years of blood sweat and tears, and

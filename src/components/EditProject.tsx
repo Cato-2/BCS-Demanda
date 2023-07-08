@@ -19,8 +19,6 @@ function EditProject(props:any) {
     }; 
     const handleId = () => setId(props.id);
 
-    console.log(props.id);
-
   return (
     <>
        <Tooltip content="Edit User" >
@@ -29,7 +27,7 @@ function EditProject(props:any) {
         </IconButton>
       </Tooltip>
       <Dialog open={open} handler={handleOpen} >
-        <DialogHeader>Its dialog. {id}</DialogHeader>
+        <DialogHeader>Editar Tarea {id}</DialogHeader>
         <DialogBody divider>
           The key to more success is to have a lot of pillows. Put it this way, it took me
               twenty five years to get these plants, twenty five years of blood sweat and tears, and

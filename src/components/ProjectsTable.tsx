@@ -246,7 +246,7 @@ function ProjectsTable() {
                           <EditProject id={id} />
                         </div>
                         <div>
-                          <ViewProject />
+                          <ViewProject id={id}/>
                         </div>
                       </td>
                     </tr>
