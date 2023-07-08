@@ -6,6 +6,7 @@ import Home from "./components/Home";
 import Projects from "./components/Projects";
 import Roles from "./components/Roles";
 import Demanda from './components/Demanda';
+import NoRoutine from './components/NoRoutine';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/projects" element={<Projects />} />
           <Route path="/roles" element={<Roles />} />
           <Route path="/demanda" element={<Demanda />} />
+          <Route path="no-rutinarias" element={<NoRoutine />} />
         </Routes>
       </div>
     </div>

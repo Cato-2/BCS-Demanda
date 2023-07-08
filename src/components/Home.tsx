@@ -3,7 +3,7 @@ import Topnav from './Topnav'
 function Home() {
   return (
     < >
-    <div className='w-auto h-screen bg-[#f2f2f2] '>
+    <div className='w-auto h-screen bg-[#eff4fb] '>
     <Topnav />
     <div>
         <div className='px-3 py-3'>

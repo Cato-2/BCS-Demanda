@@ -8,7 +8,7 @@ export const SidenavData = [
         icon: <FaIcons.FaHome />
     },
     {
-        title: 'Projectos',
+        title: 'Tareas',
         path: '/projects',
         icon: <FaIcons.FaUsers />
     },

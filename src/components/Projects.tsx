@@ -5,7 +5,7 @@ import ProjectsTable from "./ProjectsTable";
 function Projects() {
   return (
     <>
-      <div className="w-auto h-screen bg-[#f2f2f2] ">
+      <div className="w-auto h-screen bg-[#fcfcfc] ">
 
         <div>
           <div className="px-5 pt-8">

@@ -1,6 +1,7 @@
 import {
   MagnifyingGlassIcon,
   ChevronUpDownIcon,
+  MagnifyingGlassCircleIcon,
 } from "@heroicons/react/24/outline";
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 import AddProject from "./AddProject";
@@ -24,7 +25,7 @@ import {
 } from "@material-tailwind/react";
 import { useState } from "react";
 
-const TABLE_HEAD = ["Titulo", "Roles", "Estado", "Creación", ""];
+const TABLE_HEAD = ["Titulo", "Duración", "Roles", "Estado", "Creación", ""];
 
 const TABLE_ROWS = [
   {
@@ -36,6 +37,7 @@ const TABLE_ROWS = [
     online: true,
     date: "23/04/18",
     id: 1,
+    duracion: "2 horas",
   },
   {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg",
@@ -46,6 +48,7 @@ const TABLE_ROWS = [
     online: false,
     date: "23/04/18",
     id: 2,
+    duracion: "1 hora",
   },
   {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg",
@@ -56,6 +59,7 @@ const TABLE_ROWS = [
     online: false,
     date: "19/09/17",
     id: 3,
+    duracion: "3 horas",
   },
   {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg",
@@ -66,6 +70,7 @@ const TABLE_ROWS = [
     online: true,
     date: "23/04/18",
     id: 4,
+    duracion: "2 horas",
   },
   {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg",
@@ -76,6 +81,7 @@ const TABLE_ROWS = [
     online: false,
     date: "23/04/18",
     id: 5,
+    duracion: "1 hora",
   },
   {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg",
@@ -86,6 +92,7 @@ const TABLE_ROWS = [
     online: false,
     date: "19/09/17",
     id: 6,
+    duracion: "3 horas",
   },
   {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg",
@@ -96,6 +103,7 @@ const TABLE_ROWS = [
     online: true,
     date: "23/04/18",
     id: 7,
+    duracion: "2 horas",
   },
   {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg",
@@ -106,6 +114,7 @@ const TABLE_ROWS = [
     online: false,
     date: "23/04/18",
     id: 8,
+    duracion: "1 hora",
   },
   {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg",
@@ -116,6 +125,7 @@ const TABLE_ROWS = [
     online: false,
     date: "19/09/17",
     id: 9,
+    duracion: "3 horas",
   },
 ];
 
@@ -128,6 +138,7 @@ interface Row {
   online: boolean;
   date: string;
   id: number;
+  duracion: string;
 }
 
 interface ArrayRow {
@@ -135,34 +146,34 @@ interface ArrayRow {
 }
 
 function ProjectsTable() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedItemId, setSelectedItemId] = useState<number | null>(null);
- 
 
   return (
     <>
-      <div className="pb-4 flex items-center justify-between gap-8 bg-[#f2f2f2]">
+      <div className="pb-4 flex items-center justify-between gap-8 bg-[#fcfcfc]">
         <div>
           <Typography variant="h5" color="blue-gray">
-            Lista de Tareas
+            Tareas rutinarias
           </Typography>
           <Typography color="gray" className="mt-1 font-normal">
-            Ve información sobre todas las tareas
+            Información sobre todas las tareas rutinarias
           </Typography>
         </div>
         <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
+        <div className="w-72">
+          <Input label="Buscar" icon={<MagnifyingGlassIcon/>} />
+        </div>
           <AddProject />
         </div>
       </div>
-      <Card className="h-[calc(100vh-12rem)] w-auto shadow-none bg-[#f2f2f2] border">
+      <Card className="h-[calc(100vh-9rem)] w-auto shadow-none bg-white border tabla px-2">
         <CardBody className="overflow-auto p-0">
-          <table className="mt-4 w-full min-w-max table-auto text-left">
+          <table className="w-full min-w-max table-auto text-left mt-4 mb-2">
             <thead>
               <tr>
                 {TABLE_HEAD.map((head, index) => (
                   <th
                     key={head}
-                    className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50"
+                    className="cursor-pointer border-y border-blue-gray-100 bg-blue-gray-50/50 p-4 transition-colors hover:bg-blue-gray-50 "
                   >
                     <Typography
                       variant="small"
@@ -183,15 +194,15 @@ function ProjectsTable() {
             </thead>
             <tbody>
               {TABLE_ROWS.map(
-                ({ name, email, job, org, online, date, id }, index) => {
+                ({ name, email, job, org, online, date, id ,duracion}, index) => {
                   const isLast = index === TABLE_ROWS.length - 1;
                   const classes = isLast
-                    ? "p-4"
-                    : "p-4 border-b border-blue-gray-50";
+                    ? "p-0 px-4"
+                    : "p-0 px-4 border-b border-blue-gray-100/50 ";
 
                   return (
-                    <tr key={name} className="hover:bg-gray-200 bg-gray-100">
-                      <td className={classes}>
+                    <tr key={name} className="hover:bg-blue-gray-100/30 bg-white">
+                      <td className={`${classes} w-2/5`}>
                         <div className="flex items-center gap-3">
                           <div className="flex flex-col">
                             <Typography
@@ -204,7 +215,20 @@ function ProjectsTable() {
                           </div>
                         </div>
                       </td>
-                      <td className={classes}>
+                      <td className={`${classes}  bg-blue-gray-100/20`}>
+                        <div className="flex items-center gap-3">
+                          <div className="flex flex-col">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              {duracion}
+                            </Typography>
+                          </div>
+                        </div>
+                      </td>
+                      <td className={`${classes} w-2/10`}>
                         <div className="flex flex-col">
                           <Typography
                             variant="small"
@@ -213,16 +237,9 @@ function ProjectsTable() {
                           >
                             {job}
                           </Typography>
-                          <Typography
-                            variant="small"
-                            color="blue-gray"
-                            className="font-normal opacity-70"
-                          >
-                            {org}
-                          </Typography>
                         </div>
                       </td>
-                      <td className={classes}>
+                      <td className={`${classes} w-2/10  bg-blue-gray-100/20`}>
                         <div className="w-max">
                           <Chip
                             variant="ghost"
@@ -232,7 +249,7 @@ function ProjectsTable() {
                           />
                         </div>
                       </td>
-                      <td className={classes}>
+                      <td className={`${classes}`}>
                         <Typography
                           variant="small"
                           color="blue-gray"
@@ -241,7 +258,7 @@ function ProjectsTable() {
                           {date}
                         </Typography>
                       </td>
-                      <td className="flex-row flex-auto">
+                      <td className={`${classes}  bg-blue-gray-100/20 flex-row flex-auto flex justify-center w-auto`}>
                           <EditProject id={id} />
                           <ViewProject id={id}/>
                       </td>

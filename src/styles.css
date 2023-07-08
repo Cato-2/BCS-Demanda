@@ -14,7 +14,7 @@
 
 .active{
   color: #FBFFFF;
-  background-color: #323337;
+  background-color: #1F2937;
   border-radius: 0.5rem;
 }
 
@@ -22,7 +22,7 @@
 /* Hide the default scroll bar */
 ::-webkit-scrollbar {
   width: 8px;
-  background-color: #f5f5f5;
+  background-color: transparent;
 }
 
 /* Style the scroll bar track */
@@ -39,4 +39,8 @@
 /* Style the scroll bar thumb when hovering */
 ::-webkit-scrollbar-thumb:hover {
   background-color: #55555580;
+}
+
+.tabla{
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 2px 5px -1px, rgba(0, 0, 0, 0.3) 0px 1px 3px -1px;
 }

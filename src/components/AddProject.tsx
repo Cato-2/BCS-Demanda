@@ -15,7 +15,7 @@ function AddProject() {
 
   return (
     <>
-      <Button className="flex items-center gap-3" color="blue-gray"  size="sm" onClick={handleOpen} variant="gradient">
+      <Button className="flex items-center gap-3" color="blue"  size="sm" onClick={handleOpen} variant="gradient">
         <UserPlusIcon strokeWidth={2} className="h-4 w-4 " /> Agregar Tarea
       </Button>
       <Dialog open={open} handler={handleOpen}>
