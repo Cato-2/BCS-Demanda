@@ -15,7 +15,7 @@ const Sidenav: React.FunctionComponent = () => {
 
   return (
     <>
-      <div className="h-screen w-[15rem] shadow-xl shadow-blue-gray-900/5 bg-[#111827]">
+      <div className="h-screen w-[15rem] shadow-xl shadow-blue-gray-900/5 bg-[#242529]">
         <div className="p-4 pb-2">
           <img className="w-[2rem]" src={iconImage} alt="" /> {/* Use the imported image */}
         </div>

@@ -241,13 +241,9 @@ function ProjectsTable() {
                           {date}
                         </Typography>
                       </td>
-                      <td className={classes}>
-                        <div key={id}>
+                      <td className="flex-row flex-auto">
                           <EditProject id={id} />
-                        </div>
-                        <div>
                           <ViewProject id={id}/>
-                        </div>
                       </td>
                     </tr>
                   );
