@@ -25,7 +25,7 @@ import {
 } from "@material-tailwind/react";
 import { useState } from "react";
 
-const TABLE_HEAD = ["Titulo", "Duración", "Roles", "Estado", "Creación", ""];
+const TABLE_HEAD = ["Titulo", "Duración", "Roles", "Estado", "Creación", "test", ""];
 
 const TABLE_ROWS = [
   {
@@ -38,6 +38,7 @@ const TABLE_ROWS = [
     date: "23/04/18",
     id: 1,
     duracion: "2 horas",
+    test: "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum?",
   },
   {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg",
@@ -49,6 +50,7 @@ const TABLE_ROWS = [
     date: "23/04/18",
     id: 2,
     duracion: "1 hora",
+    test: "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum?",
   },
   {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg",
@@ -60,6 +62,7 @@ const TABLE_ROWS = [
     date: "19/09/17",
     id: 3,
     duracion: "3 horas",
+    test: "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum?",
   },
   {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg",
@@ -71,6 +74,7 @@ const TABLE_ROWS = [
     date: "23/04/18",
     id: 4,
     duracion: "2 horas",
+    test: "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum?",
   },
   {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg",
@@ -82,6 +86,7 @@ const TABLE_ROWS = [
     date: "23/04/18",
     id: 5,
     duracion: "1 hora",
+    test: "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum?",
   },
   {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg",
@@ -93,6 +98,7 @@ const TABLE_ROWS = [
     date: "19/09/17",
     id: 6,
     duracion: "3 horas",
+    test: "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum?",
   },
   {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg",
@@ -104,6 +110,7 @@ const TABLE_ROWS = [
     date: "23/04/18",
     id: 7,
     duracion: "2 horas",
+    test: "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum?",
   },
   {
     img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg",
@@ -139,6 +146,7 @@ interface Row {
   date: string;
   id: number;
   duracion: string;
+  test: string;
 }
 
 interface ArrayRow {
@@ -149,25 +157,23 @@ function ProjectsTable() {
 
   return (
     <>
-      <div className="pb-4 flex items-center justify-between gap-8 bg-[#fcfcfc]">
-        <div>
+      <div className="pb-4 flex items-center justify-between gap-8 bg-[#fcfcfc]  whitespace-nowrap">
+        <div >
           <Typography variant="h5" color="blue-gray">
             Tareas rutinarias
           </Typography>
-          <Typography color="gray" className="mt-1 font-normal">
-            Información sobre todas las tareas rutinarias
-          </Typography>
+
         </div>
-        <div className="flex shrink-0 flex-col gap-2 sm:flex-row">
-        <div className="w-72">
+        <div className="flex shrink-0 flex-col gap-2 lg:flex-row">
+        <div className="w-68">
           <Input label="Buscar" icon={<MagnifyingGlassIcon/>} />
         </div>
-          <AddProject />
+          <AddProject tipo="rutinaria"/>
         </div>
       </div>
-      <Card className="h-[calc(100vh-9rem)] w-auto shadow-none bg-white border tabla px-2">
-        <CardBody className="overflow-auto p-0">
-          <table className="w-full min-w-max table-auto text-left mt-4 mb-2">
+      <Card className="h-[calc(100vh-9rem)] shadow-none bg-white border tabla px-2 ">
+        <CardBody className="p-0 table-auto overflow-auto whitespace-nowrap max-w-[calc(100vw-19rem)]">
+          <table className="text-left mt-4 mb-2">
             <thead>
               <tr>
                 {TABLE_HEAD.map((head, index) => (
@@ -194,7 +200,7 @@ function ProjectsTable() {
             </thead>
             <tbody>
               {TABLE_ROWS.map(
-                ({ name, email, job, org, online, date, id ,duracion}, index) => {
+                ({ name, email, job, org, online, date, id ,duracion, test}, index) => {
                   const isLast = index === TABLE_ROWS.length - 1;
                   const classes = isLast
                     ? "p-0 px-4"
@@ -248,6 +254,15 @@ function ProjectsTable() {
                             color={online ? "green" : "blue-gray"}
                           />
                         </div>
+                      </td>
+                      <td className={`${classes}`}>
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
+                        >
+                          {test}
+                        </Typography>
                       </td>
                       <td className={`${classes}`}>
                         <Typography

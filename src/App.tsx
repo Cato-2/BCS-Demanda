@@ -10,11 +10,11 @@ import NoRoutine from './components/NoRoutine';
 
 function App() {
   return (
-    <div style={{ display: "flex" }}>
+    <div style={{ display: "flex" }} className='h-auto'>
       <div>
         <Sidenav />
       </div>
-      <div style={{ flex: 2 }}>
+      <div className='w-full'>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/projects" element={<Projects />} />

@@ -5,13 +5,11 @@ import ProjectsTable from "./ProjectsTable";
 function Projects() {
   return (
     <>
-      <div className="w-auto h-screen bg-[#fcfcfc] ">
+      <div className="w-auto h-auto bg-[#fcfcfc] ">
 
-        <div>
-          <div className="px-5 pt-8">
+          <div className="px-5 pt-8 w-full">
             <ProjectsTable />
           </div>
-        </div>
       </div>
     </>
   );
