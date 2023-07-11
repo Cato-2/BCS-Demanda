@@ -25,7 +25,7 @@ import {
 } from "@material-tailwind/react";
 import { useState } from "react";
 
-const TABLE_HEAD = ["Titulo", "Duración", "Roles", "Estado", "Creación", "test", ""];
+const TABLE_HEAD = ["Titulo", "Duración", "Roles", "Estado", "Creación", ""];
 
 const TABLE_ROWS = [
   {
@@ -171,9 +171,9 @@ function ProjectsTable() {
           <AddProject tipo="rutinaria"/>
         </div>
       </div>
-      <Card className="h-[calc(100vh-9rem)] shadow-none bg-white border tabla px-2 ">
+      <Card className="max-h-[calc(100vh-9rem)] h-fit shadow-none bg-white border tabla px-2 ">
         <CardBody className="p-0 table-auto overflow-auto whitespace-nowrap max-w-[calc(100vw-19rem)]">
-          <table className="text-left mt-4 mb-2">
+          <table className="text-left mt-4 mb-2 w-full">
             <thead>
               <tr>
                 {TABLE_HEAD.map((head, index) => (
@@ -254,15 +254,6 @@ function ProjectsTable() {
                             color={online ? "green" : "blue-gray"}
                           />
                         </div>
-                      </td>
-                      <td className={`${classes}`}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {test}
-                        </Typography>
                       </td>
                       <td className={`${classes}`}>
                         <Typography

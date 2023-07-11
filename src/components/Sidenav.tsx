@@ -40,7 +40,7 @@ function Sidenav() {
             <ListItemPrefix className="icon">
               <FaHome />
             </ListItemPrefix>
-            <span>Dashboard</span>
+            <span>Inicio</span>
           </Link>
 
           <div className="relative">
