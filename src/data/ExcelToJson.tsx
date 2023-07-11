@@ -1,8 +1,20 @@
 import React, { ChangeEvent, useState } from 'react';
 import * as XLSX from 'xlsx';
+import {writeFile, FsTextFileOption} from '@tauri-apps/api/fs';
+
 
 const XlsxInput: React.FC = () => {
   const [xlsxData, setXlsxData] = useState<any[]>([]);
+
+  const handleClick = async () => {
+    const f: FsTextFileOption = {
+      path: './test.txt',
+      contents: 'Hello world!',
+    };
+    await writeFile(f);
+    console.log('File written')
+  };
+
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
@@ -33,7 +45,12 @@ const XlsxInput: React.FC = () => {
 
   return (
     <div>
+    <div>
       <input type="file" accept=".xlsx" onChange={handleFileChange} />
+    </div>
+    <div>
+      <button onClick={handleClick}>Write file</button>
+    </div>
     </div>
   );
 };
