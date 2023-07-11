@@ -4,6 +4,7 @@ import {
   MagnifyingGlassCircleIcon,
 } from "@heroicons/react/24/outline";
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
+import data from "../../src-tauri/roles.json"
 import AddProject from "./AddProject";
 import EditProject from "./EditProject";
 import ViewProject from "./ViewProject";
@@ -28,43 +29,13 @@ import AddRole from "./AddRole";
 
 const TABLE_HEAD = ["Rol", "Cantidad de personas", "Cantidad de tareas", "Horas disponible", "Horas reales", ""];
 
-const TABLE_ROWS = [
-  {
-    rol: "Desarrollador",
-    cantidad: 2,
-    totalTareas: 5,
-    totalhoras : 188,
-    id:1,
-    horasReales: 188,
-  },
-  {
-    rol: "Diseñador",
-    cantidad: 1,
-    totalTareas: 2,
-    totalhoras : 188,
-    id:2,
-    horasReales: 188,
-  },
-  {
-    rol: "Tester",
-    cantidad: 1,
-    totalTareas: 2,
-    totalhoras : 188,
-    id:3,
-    horasReales: 188,
-  },
-  {
-    rol: "Analista",
-    cantidad: 1,
-    totalTareas: 2,
-    totalhoras : 188,
-    id:4,
-    horasReales: 188,
-  },
-];
+
+const rows = data;
 
 
 function Roles() {
+
+  console.log(rows)
 
   return (
     <>
@@ -110,15 +81,14 @@ function Roles() {
               </tr>
             </thead>
             <tbody>
-              {TABLE_ROWS.map(
-                ({ rol, cantidad, totalTareas, totalhoras, id, horasReales}, index) => {
-                  const isLast = index === TABLE_ROWS.length - 1;
+              {rows.map((rol) => {
+                  const isLast = rol.id === rows.length - 1;
                   const classes = isLast
                     ? "p-0 px-4"
                     : "p-0 px-4 border-b border-blue-gray-100/50 ";
 
                   return (
-                    <tr key={rol} className="hover:bg-blue-gray-100/30 bg-white">
+                    <tr key={rol.id} className="hover:bg-blue-gray-100/30 bg-white">
                       <td className={`${classes} w-2/5`}>
                         <div className="flex items-center gap-3">
                           <div className="flex flex-col">
@@ -127,7 +97,7 @@ function Roles() {
                               color="blue-gray"
                               className="font-normal"
                             >
-                              {rol}
+                              {rol.nombre}
                             </Typography>
                           </div>
                         </div>
@@ -140,7 +110,7 @@ function Roles() {
                               color="blue-gray"
                               className="font-normal"
                             >
-                              {cantidad}
+                              {rol.cantidad}
                             </Typography>
                           </div>
                         </div>
@@ -152,7 +122,7 @@ function Roles() {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {totalTareas}
+                            
                           </Typography>
                         </div>
                       </td>
@@ -162,7 +132,7 @@ function Roles() {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {totalhoras}
+                          {rol["horas semanales"]}
                         </Typography>
                       </td>
                       <td className={`${classes}`}>
@@ -171,12 +141,12 @@ function Roles() {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {horasReales}
+                         
                         </Typography>
                       </td>
                       <td className={`${classes}  bg-blue-gray-100/20 flex-row flex-auto flex justify-center w-auto`}>
-                          <EditProject id={id} />
-                          <ViewProject id={id}/>
+                          <EditProject id={rol.id} />
+                          <ViewProject id={rol.id}/>
                       </td>
                     </tr>
                   );

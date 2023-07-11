@@ -24,118 +24,12 @@ import {
     Tooltip,
   } from "@material-tailwind/react";
   import { useState } from "react";
-  
+  import data from "../../src-tauri/tareas.json"
   const TABLE_HEAD = ["Titulo", "Duración", "Roles", "Estado", "Creación", ""];
   
-  const TABLE_ROWS = [
-    {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg",
-      name: "Preparación del lugar de trabajo",
-      email: "john@creative-tim.com",
-      job: "Manager",
-      org: "Organization",
-      online: true,
-      date: "23/04/18",
-      id: 1,
-      duracion: "2 horas",
-      test: "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum?",
-    },
-    {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg",
-      name: "Revisión y respuesta de correo electronico",
-      email: "alexa@creative-tim.com",
-      job: "Programator",
-      org: "Developer",
-      online: false,
-      date: "23/04/18",
-      id: 2,
-      duracion: "1 hora",
-      test: "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum?",
-    },
-    {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg",
-      name: "Organización y mantenimiento de archivos",
-      email: "laurent@creative-tim.com",
-      job: "Executive",
-      org: "Projects",
-      online: false,
-      date: "19/09/17",
-      id: 3,
-      duracion: "3 horas",
-      test: "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum?",
-    },
-    {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg",
-      name: "Preparación del lugar de trabajo",
-      email: "john@creative-tim.com",
-      job: "Manager",
-      org: "Organization",
-      online: true,
-      date: "23/04/18",
-      id: 4,
-      duracion: "2 horas",
-      test: "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum?",
-    },
-    {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg",
-      name: "Revisión y respuesta de correo electronico",
-      email: "alexa@creative-tim.com",
-      job: "Programator",
-      org: "Developer",
-      online: false,
-      date: "23/04/18",
-      id: 5,
-      duracion: "1 hora",
-      test: "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum?",
-    },
-    {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg",
-      name: "Organización y mantenimiento de archivos",
-      email: "laurent@creative-tim.com",
-      job: "Executive",
-      org: "Projects",
-      online: false,
-      date: "19/09/17",
-      id: 6,
-      duracion: "3 horas",
-      test: "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum?",
-    },
-    {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-3.jpg",
-      name: "Preparación del lugar de trabajo",
-      email: "john@creative-tim.com",
-      job: "Manager",
-      org: "Organization",
-      online: true,
-      date: "23/04/18",
-      id: 7,
-      duracion: "2 horas",
-      test: "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum?",
-    },
-    {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-2.jpg",
-      name: "Revisión y respuesta de correo electronico",
-      email: "alexa@creative-tim.com",
-      job: "Programator",
-      org: "Developer",
-      online: false,
-      date: "23/04/18",
-      id: 8,
-      duracion: "1 hora",
-    },
-    {
-      img: "https://demos.creative-tim.com/test/corporate-ui-dashboard/assets/img/team-1.jpg",
-      name: "Organización y mantenimiento de archivos",
-      email: "laurent@creative-tim.com",
-      job: "Executive",
-      org: "Projects",
-      online: false,
-      date: "19/09/17",
-      id: 9,
-      duracion: "3 horas",
-    },
-  ];
+  const TABLE_ROWS = data;
   
+
   interface Row {
     img: string;
     name: string;
@@ -199,15 +93,14 @@ import {
                 </tr>
               </thead>
               <tbody>
-                {TABLE_ROWS.map(
-                  ({ name, email, job, org, online, date, id ,duracion, test}, index) => {
-                    const isLast = index === TABLE_ROWS.length - 1;
+                {TABLE_ROWS.map((tarea) => {
+                    const isLast = tarea.id === TABLE_ROWS.length - 1;
                     const classes = isLast
                       ? "p-0 px-4"
                       : "p-0 px-4 border-b border-blue-gray-100/50 ";
-  
+                    if(tarea.rutinaria != "true" && tarea.id != null){
                     return (
-                      <tr key={name} className="hover:bg-blue-gray-100/30 bg-white">
+                      <tr key={tarea.id} className="hover:bg-blue-gray-100/30 bg-white">
                         <td className={`${classes} w-2/5`}>
                           <div className="flex items-center gap-3">
                             <div className="flex flex-col">
@@ -216,7 +109,7 @@ import {
                                 color="blue-gray"
                                 className="font-normal"
                               >
-                                {name}
+                                {tarea.titulo}
                               </Typography>
                             </div>
                           </div>
@@ -229,7 +122,7 @@ import {
                                 color="blue-gray"
                                 className="font-normal"
                               >
-                                {duracion}
+                                {tarea.duracion}
                               </Typography>
                             </div>
                           </div>
@@ -241,7 +134,7 @@ import {
                               color="blue-gray"
                               className="font-normal"
                             >
-                              {job}
+                              {tarea.roles}
                             </Typography>
                           </div>
                         </td>
@@ -250,8 +143,8 @@ import {
                             <Chip
                               variant="ghost"
                               size="sm"
-                              value={online ? "online" : "offline"}
-                              color={online ? "green" : "blue-gray"}
+                              value={tarea.activo ? "online" : "offline"}
+                              color={tarea.activo ? "green" : "blue-gray"}
                             />
                           </div>
                         </td>
@@ -261,15 +154,15 @@ import {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {date}
+                            {tarea.fechadecreacion}
                           </Typography>
                         </td>
                         <td className={`${classes}  bg-blue-gray-100/20 flex-row flex-auto flex justify-center w-auto`}>
-                            <EditProject id={id} />
-                            <ViewProject id={id}/>
+                            <EditProject id={tarea.id} />
+                            <ViewProject id={tarea.id}/>
                         </td>
                       </tr>
-                    );
+                    );}
                   }
                 )}
               </tbody>

@@ -13,6 +13,8 @@ import { Card, List, ListItem, Title } from "@tremor/react";
 import React, { PureComponent } from 'react';
 import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import Grafico from "./Grafico";
+import tasks from "../../src-tauri/tareas.json"
+import roles from "../../src-tauri/roles.json"
 
 const cities = [
   {
@@ -198,6 +200,27 @@ const data2 = [
 ];
 
 function Demanda() {
+
+  const allmonths = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+
+  const getLast12Months = () => {
+    const months = [];
+    const currentDate = new Date();
+    const currentMonth = currentDate.getMonth();
+    let currentYear = currentDate.getFullYear();
+  
+    for (let i = 0; i < 12; i++) {
+      const month = (currentMonth - i + 12) % 12;
+      const year = currentMonth >= i ? currentYear : currentYear - 1;
+      months.push(`${allmonths[month]} - ${year}`);
+    }
+  
+    return months.reverse();
+  };
+  
+  const last12Months = getLast12Months();
+  console.log(last12Months);  
+  
   return (
     <div>
       <div className="w-[20rem] p-2">
@@ -209,21 +232,13 @@ function Demanda() {
       </div>
       <div className="px-2 pt-0">
         <Card>
-          <Table className="">
+          <Table className="overflow-auto max-w-[calc(100vw-20rem)]">
             <TableHead>
               <TableRow>
-                <TableHeaderCell className="p-0">Actividades</TableHeaderCell>
-                <TableHeaderCell className="p-0">Ene</TableHeaderCell>
-                <TableHeaderCell className="p-0">Feb</TableHeaderCell>
-                <TableHeaderCell className="p-0">Mar</TableHeaderCell>
-                <TableHeaderCell className="p-0">Abr</TableHeaderCell>
-                <TableHeaderCell className="p-0">Jun</TableHeaderCell>
-                <TableHeaderCell className="p-0">Jul</TableHeaderCell>
-                <TableHeaderCell className="p-0">Ago</TableHeaderCell>
-                <TableHeaderCell className="p-0">Sep</TableHeaderCell>
-                <TableHeaderCell className="p-0">Oct</TableHeaderCell>
-                <TableHeaderCell className="p-0">Nov</TableHeaderCell>
-                <TableHeaderCell className="p-0">Dic</TableHeaderCell>
+                <TableHeaderCell> </TableHeaderCell>
+                  {last12Months.map((month) => (
+                    <TableHeaderCell key={month}>{month}</TableHeaderCell>
+                  ))}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -233,37 +248,37 @@ function Demanda() {
                   className={` ${item.special ? "item2" : ""}`}
                 >
                   <TableCell className="p-0">{item.name}</TableCell>
-                  <TableCell className="p-0">
+                  <TableCell className="p-0 text-center">
                     <Text>{item.enero}</Text>
                   </TableCell>
-                  <TableCell className="p-0">
+                  <TableCell className="p-0 text-center">
                     <Text>{item.febrero}</Text>
                   </TableCell>
-                  <TableCell className="p-0">
+                  <TableCell className="p-0 text-center">
                     <Text>{item.marzo}</Text>
                   </TableCell>
-                  <TableCell className="p-0">
+                  <TableCell className="p-0 text-center">
                     <Text>{item.abril}</Text>
                   </TableCell>
-                  <TableCell className="p-0">
+                  <TableCell className="p-0 text-center">
                     <Text>{item.junio}</Text>
                   </TableCell>
-                  <TableCell className="p-0">
+                  <TableCell className="p-0 text-center">
                     <Text>{item.julio}</Text>
                   </TableCell>
-                  <TableCell className="p-0">
+                  <TableCell className="p-0 text-center">
                     <Text>{item.agosto}</Text>
                   </TableCell>
-                  <TableCell className="p-0">
+                  <TableCell className="p-0 text-center">
                     <Text>{item.septiembre}</Text>
                   </TableCell>
-                  <TableCell className="p-0">
+                  <TableCell className="p-0 text-center">
                     <Text>{item.octubre}</Text>
                   </TableCell>
-                  <TableCell className="p-0">
+                  <TableCell className="p-0 text-center">
                     <Text>{item.noviembre}</Text>
                   </TableCell>
-                  <TableCell className="p-0">
+                  <TableCell className="p-0 text-center">
                     <Text>{item.diciembre}</Text>
                   </TableCell>
                 </TableRow>
