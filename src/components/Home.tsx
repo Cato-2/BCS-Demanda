@@ -1,5 +1,7 @@
 import React from 'react'
 import Topnav from './Topnav'
+import ExcelToJSON from '../data/ExcelToJson'
+
 function Home() {
   return (
     < >
@@ -11,7 +13,7 @@ function Home() {
             <span className='text-sm text-gray-500'>Bienvenido al dashboard de gestión</span>
         </div>
         <div>
-            
+            <ExcelToJSON />
         </div>
     </div>
     </div>
