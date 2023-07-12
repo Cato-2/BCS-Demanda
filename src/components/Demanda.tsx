@@ -10,11 +10,22 @@ import {
 } from "@tremor/react";
 import { SearchSelect, SearchSelectItem } from "@tremor/react";
 import { Card, List, ListItem, Title } from "@tremor/react";
-import React, { PureComponent } from 'react';
-import { BarChart, Bar, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import React, { PureComponent } from "react";
+import {
+  BarChart,
+  Bar,
+  Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+} from "recharts";
 import Grafico from "./Grafico";
-import tasks from "../../src-tauri/tareas.json"
-import roles from "../../src-tauri/roles.json"
+import tasks from "../../src-tauri/tareas.json";
+import RolesList from "../../src-tauri/roles.json";
+import Roles from "./Roles";
 
 const cities = [
   {
@@ -41,7 +52,7 @@ const cities = [
 
 const data = [
   {
-    name: "Por cargo",
+    name: "Proyectos",
     enero: "100",
     febrero: "200",
     marzo: "300",
@@ -156,71 +167,152 @@ const data = [
 
 const data2 = [
   {
-    name: 'Page A',
+    name: "Page A",
     uv: 4000,
     pv: 2400,
     amt: 2400,
   },
   {
-    name: 'Page B',
+    name: "Page B",
     uv: 3000,
     pv: 1398,
     amt: 2210,
   },
   {
-    name: 'Page C',
+    name: "Page C",
     uv: 2000,
     pv: 9800,
     amt: 2290,
   },
   {
-    name: 'Page D',
+    name: "Page D",
     uv: 2780,
     pv: 3908,
     amt: 2000,
   },
   {
-    name: 'Page E',
+    name: "Page E",
     uv: 1890,
     pv: 4800,
     amt: 2181,
   },
   {
-    name: 'Page F',
+    name: "Page F",
     uv: 2390,
     pv: 3800,
     amt: 2500,
   },
   {
-    name: 'Page G',
+    name: "Page G",
     uv: 3490,
     pv: 4300,
     amt: 2100,
   },
 ];
 
-function Demanda() {
+const roles = RolesList;
+const tareas = tasks;
 
-  const allmonths = ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"]
+function Demanda() {
+  const allmonths = [
+    "Ene",
+    "Feb",
+    "Mar",
+    "Abr",
+    "May",
+    "Jun",
+    "Jul",
+    "Ago",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dic",
+  ];
 
   const getLast12Months = () => {
     const months = [];
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
     let currentYear = currentDate.getFullYear();
-  
+
     for (let i = 0; i < 12; i++) {
       const month = (currentMonth - i + 12) % 12;
       const year = currentMonth >= i ? currentYear : currentYear - 1;
       months.push(`${allmonths[month]} - ${year}`);
     }
-  
+
     return months.reverse();
   };
-  
+
   const last12Months = getLast12Months();
-  console.log(last12Months);  
-  
+  //console.log(last12Months);
+
+  const rutinariasbyrole = (
+    last12Months: any[],
+    Roles: any[],
+    Tasks: any[]
+  ) => {
+    const rutinarias: any[] = [];
+
+    Roles.map((role: any) => {
+      let acu = 0;
+      if (role.nombre != undefined) {
+        Tasks.map((task: any) => {
+          if (task.roles == role.nombre || task.roles == "todos") { //task.roles.indexOf(role.nombre) !== -1 
+            if (task.frecuencia == "diaria") {
+              acu = task.duracion * 4 * 2.5 + acu;
+            }
+            if (task.frecuencia == "semanal") {
+              acu = task.duracion * 4 * 1.5 + acu;
+             
+            }
+            if (task.frecuencia == "mensual") {
+              acu = task.duracion * 4 * 0.75 + acu;
+            
+            }
+          }
+        });
+        rutinarias.push([role.nombre, acu]);
+        acu = 0;
+        
+      }
+    });
+
+    let aux = 0;
+    for (let i = 0; i < rutinarias.length; i++) {
+      aux = aux + rutinarias[i][1];
+    }
+    rutinarias.push(["todos", aux]);
+
+    return rutinarias;
+  };
+
+  const rutinariasMes = rutinariasbyrole(last12Months, roles, tareas);
+  console.log("test", rutinariasMes);
+
+  const bymonth = (last12Months: any[], rutinariasMes: any[], Roles: any) => {
+    let lastyear: any[] = [];
+    let aux: any[] = [];
+    Roles.map((role: any) => {
+      if(role.nombre != undefined){
+        last12Months.map((month: any) => {
+          rutinariasMes.map((rutinaria: any) => {
+          if (rutinaria[0] === role.nombre) {
+            aux.push([month, rutinaria[1]]);
+          }
+        
+        });
+      });
+      console.log(role.nombre , aux)
+      aux = [];
+      //lastyear.push(role, aux);
+      //console.log(lastyear);
+    }
+    });
+  };
+
+  bymonth(last12Months, rutinariasMes, roles);
+
   return (
     <div>
       <div className="w-[20rem] p-2">
@@ -236,9 +328,9 @@ function Demanda() {
             <TableHead>
               <TableRow>
                 <TableHeaderCell> </TableHeaderCell>
-                  {last12Months.map((month) => (
-                    <TableHeaderCell key={month}>{month}</TableHeaderCell>
-                  ))}
+                {last12Months.map((month) => (
+                  <TableHeaderCell key={month}>{month}</TableHeaderCell>
+                ))}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -289,21 +381,21 @@ function Demanda() {
       </div>
       <div className="flex flex-row">
         <div className="p-2">
-        <Card className="w-[20rem] h-full">
-          <Title>Indicadores</Title>
-          <List className="pt-4">
-            {cities.map((item) => (
-              <ListItem key={item.item}>
-                <span>{item.item}</span>
-                <span>{item.valor}</span>
-              </ListItem>
-            ))}
-          </List>
-        </Card>
+          <Card className="w-[20rem] h-full">
+            <Title>Indicadores</Title>
+            <List className="pt-4">
+              {cities.map((item) => (
+                <ListItem key={item.item}>
+                  <span>{item.item}</span>
+                  <span>{item.valor}</span>
+                </ListItem>
+              ))}
+            </List>
+          </Card>
         </div>
         <div className="w-full p-2 pl-0">
           <Card>
-          <Grafico />
+            <Grafico />
           </Card>
         </div>
       </div>

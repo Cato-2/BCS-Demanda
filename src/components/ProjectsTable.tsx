@@ -25,7 +25,7 @@ import {
 } from "@material-tailwind/react";
 import { useState } from "react";
 import data from "../../src-tauri/tareas.json"
-const TABLE_HEAD = ["Titulo", "Duración (horas)", "Frecuencia", "Roles", "Estado", "Creación", ""];
+const TABLE_HEAD = ["Titulo", "Duración (horas)", "Cantidad" ,"Frecuencia", "Roles", "Estado", "Creación", ""];
 
 const TABLE_ROWS = data;
 interface Row {
@@ -165,7 +165,7 @@ function ProjectsTable() {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {tarea.fechadecreacion}
+                            {tarea["fecha de creacion"]}
                           </Typography>
                         </td>
                         <td className={`${classes}  bg-blue-gray-100/20 flex-row flex-auto flex justify-center w-auto`}>
