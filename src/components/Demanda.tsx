@@ -26,6 +26,7 @@ import Grafico from "./Grafico";
 import tasks from "../../src-tauri/tareas.json";
 import RolesList from "../../src-tauri/roles.json";
 import Roles from "./Roles";
+import { useState } from "react";
 
 const cities = [
   {
@@ -258,23 +259,21 @@ function Demanda() {
       let acu = 0;
       if (role.nombre != undefined) {
         Tasks.map((task: any) => {
-          if (task.roles == role.nombre || task.roles == "todos") { //task.roles.indexOf(role.nombre) !== -1 
+          if (task.roles == role.nombre || task.roles == "todos") {
+            //task.roles.indexOf(role.nombre) !== -1
             if (task.frecuencia == "diaria") {
               acu = task.duracion * 4 * 2.5 + acu;
             }
             if (task.frecuencia == "semanal") {
               acu = task.duracion * 4 * 1.5 + acu;
-             
             }
             if (task.frecuencia == "mensual") {
               acu = task.duracion * 4 * 0.75 + acu;
-            
             }
           }
         });
         rutinarias.push([role.nombre, acu]);
         acu = 0;
-        
       }
     });
 
@@ -293,33 +292,43 @@ function Demanda() {
   const bymonth = (last12Months: any[], rutinariasMes: any[], Roles: any) => {
     let lastyear: any[] = [];
     let aux: any[] = [];
-    Roles.map((role: any) => {
-      if(role.nombre != undefined){
+    rutinariasMes.map((role: any) => {
+      if (role[0] != undefined) {
         last12Months.map((month: any) => {
           rutinariasMes.map((rutinaria: any) => {
-          if (rutinaria[0] === role.nombre) {
-            aux.push([month, rutinaria[1]]);
-          }
-        
+            if (rutinaria[0] === role[0]) {
+              aux.push([month, rutinaria[1]]);
+            }
+          });
         });
-      });
-      console.log(role.nombre , aux)
-      aux = [];
-      //lastyear.push(role, aux);
-      //console.log(lastyear);
-    }
+        lastyear.push({ rol: role[0], datos: aux });
+        aux = [];
+      }
     });
+    console.log("lastyear", lastyear);
+    return lastyear;
   };
 
-  bymonth(last12Months, rutinariasMes, roles);
+  const lastyearRutina = bymonth(last12Months, rutinariasMes, roles);
+  const [filter, setFilter] = useState("ingeniero cm bursatil");
+
+  const onClickHandler = (e: any) => {
+    setFilter(e.target.value);
+  };
 
   return (
     <div>
       <div className="w-[20rem] p-2">
         <SearchSelect>
-          <SearchSelectItem value="1">Viola Amherd</SearchSelectItem>
-          <SearchSelectItem value="2">Simonetta Sommaruga</SearchSelectItem>
-          <SearchSelectItem value="3">Alain Berset</SearchSelectItem>
+          {lastyearRutina.map((role) => (
+            <SearchSelectItem
+              key={role.rol}
+              value={role.rol}
+              onClick={onClickHandler}
+            >
+              {role.rol}
+            </SearchSelectItem>
+          ))}
         </SearchSelect>
       </div>
       <div className="px-2 pt-0">
@@ -334,47 +343,23 @@ function Demanda() {
               </TableRow>
             </TableHead>
             <TableBody>
-              {data.map((item) => (
-                <TableRow
-                  key={item.name}
-                  className={` ${item.special ? "item2" : ""}`}
-                >
-                  <TableCell className="p-0">{item.name}</TableCell>
-                  <TableCell className="p-0 text-center">
-                    <Text>{item.enero}</Text>
-                  </TableCell>
-                  <TableCell className="p-0 text-center">
-                    <Text>{item.febrero}</Text>
-                  </TableCell>
-                  <TableCell className="p-0 text-center">
-                    <Text>{item.marzo}</Text>
-                  </TableCell>
-                  <TableCell className="p-0 text-center">
-                    <Text>{item.abril}</Text>
-                  </TableCell>
-                  <TableCell className="p-0 text-center">
-                    <Text>{item.junio}</Text>
-                  </TableCell>
-                  <TableCell className="p-0 text-center">
-                    <Text>{item.julio}</Text>
-                  </TableCell>
-                  <TableCell className="p-0 text-center">
-                    <Text>{item.agosto}</Text>
-                  </TableCell>
-                  <TableCell className="p-0 text-center">
-                    <Text>{item.septiembre}</Text>
-                  </TableCell>
-                  <TableCell className="p-0 text-center">
-                    <Text>{item.octubre}</Text>
-                  </TableCell>
-                  <TableCell className="p-0 text-center">
-                    <Text>{item.noviembre}</Text>
-                  </TableCell>
-                  <TableCell className="p-0 text-center">
-                    <Text>{item.diciembre}</Text>
-                  </TableCell>
-                </TableRow>
-              ))}
+              <TableRow>
+                <TableCell className="p-0">{"Actividades de rutina"}</TableCell>
+                {
+  lastyearRutina.map((role, index) =>
+    role.rol === filter && (
+      <React.Fragment key={index}>
+        {role.datos.map((dato: any, dataIndex: number) => (
+          <TableCell key={dataIndex}>
+            {dato[1]}
+          </TableCell>
+        ))}
+      </React.Fragment>
+    )
+  )
+}
+
+              </TableRow>
             </TableBody>
           </Table>
         </Card>
