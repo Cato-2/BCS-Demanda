@@ -26,7 +26,7 @@ import Grafico from "./Grafico";
 import tasks from "../../src-tauri/tareas.json";
 import RolesList from "../../src-tauri/roles.json";
 import Roles from "./Roles";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 const cities = [
   {
@@ -248,13 +248,8 @@ function Demanda() {
   const last12Months = getLast12Months();
   //console.log(last12Months);
 
-  const rutinariasbyrole = (
-    last12Months: any[],
-    Roles: any[],
-    Tasks: any[]
-  ) => {
+  const rutinariasbyrole = (Roles: any[], Tasks: any[]) => {
     const rutinarias: any[] = [];
-
     Roles.map((role: any) => {
       let acu = 0;
       if (role.nombre != undefined) {
@@ -263,12 +258,6 @@ function Demanda() {
             //task.roles.indexOf(role.nombre) !== -1
             if (task.frecuencia == "diaria") {
               acu = task.duracion * 4 * 2.5 + acu;
-            }
-            if (task.frecuencia == "semanal") {
-              acu = task.duracion * 4 * 1.5 + acu;
-            }
-            if (task.frecuencia == "mensual") {
-              acu = task.duracion * 4 * 0.75 + acu;
             }
           }
         });
@@ -286,8 +275,66 @@ function Demanda() {
     return rutinarias;
   };
 
-  const rutinariasMes = rutinariasbyrole(last12Months, roles, tareas);
-  console.log("test", rutinariasMes);
+  const norutinariasbyrole = (Roles: any[], Tasks: any[]) => {
+    const norutinarias: any[] = [];
+    Roles.map((role: any) => {
+      let acu = 0;
+      if (role.nombre != undefined) {
+        Tasks.map((task: any) => {
+          if (task.roles == role.nombre || task.roles == "todos") {
+            //task.roles.indexOf(role.nombre) !== -1
+            if (task.frecuencia == "mensual") {
+              acu = task.duracion * 4 * 1.5 + acu;
+            }
+          }
+        });
+        norutinarias.push([role.nombre, acu]);
+        acu = 0;
+      }
+    });
+
+    let aux = 0;
+    for (let i = 0; i < norutinarias.length; i++) {
+      aux = aux + norutinarias[i][1];
+    }
+    norutinarias.push(["todos", aux]);
+
+    return norutinarias;
+  };
+
+  const programadasbyrole = (Roles: any[], Tasks: any[]) => {
+    const programadas: any[] = [];
+    Roles.map((role: any) => {
+      let acu = 0;
+      if (role.nombre != undefined) {
+        Tasks.map((task: any) => {
+          if (task.roles == role.nombre || task.roles == "todos") {
+            //task.roles.indexOf(role.nombre) !== -1
+            if (task.frecuencia == "mensual") {
+              acu = task.duracion * 4 * 0.75 + acu;
+            }
+          }
+        });
+        programadas.push([role.nombre, acu]);
+        acu = 0;
+      }
+    });
+
+    let aux = 0;
+    for (let i = 0; i < programadas.length; i++) {
+      aux = aux + programadas[i][1];
+    }
+    programadas.push(["todos", aux]);
+
+    return programadas;
+  };
+
+  const norutinariasMes = norutinariasbyrole(roles, tareas);
+  const rutinariasMes = rutinariasbyrole(roles, tareas);
+  const programadasMes = programadasbyrole(roles, tareas);
+  console.log("rutinaria", rutinariasMes);
+  console.log("norutinaria, ", norutinariasMes);
+  console.log("programadas, ", programadasMes);
 
   const bymonth = (last12Months: any[], rutinariasMes: any[], Roles: any) => {
     let lastyear: any[] = [];
@@ -310,11 +357,17 @@ function Demanda() {
   };
 
   const lastyearRutina = bymonth(last12Months, rutinariasMes, roles);
-  const [filter, setFilter] = useState("ingeniero cm bursatil");
+  const lastyearNorutina = bymonth(last12Months, norutinariasMes, roles);
+  const lastyearProgramada = bymonth(last12Months, programadasMes, roles);
+  const [filter, setFilter] = useState("todos");
 
-  const onClickHandler = (e: any) => {
-    setFilter(e.target.value);
+  const onClickHandler = (value: string) => {
+    setFilter(value);
   };
+
+  useEffect(() => {
+    console.log(filter);
+  }, [filter]);
 
   return (
     <div>
@@ -324,7 +377,7 @@ function Demanda() {
             <SearchSelectItem
               key={role.rol}
               value={role.rol}
-              onClick={onClickHandler}
+              onClick={() => onClickHandler(role.rol)}
             >
               {role.rol}
             </SearchSelectItem>
@@ -345,20 +398,42 @@ function Demanda() {
             <TableBody>
               <TableRow>
                 <TableCell className="p-0">{"Actividades de rutina"}</TableCell>
-                {
-  lastyearRutina.map((role, index) =>
-    role.rol === filter && (
-      <React.Fragment key={index}>
-        {role.datos.map((dato: any, dataIndex: number) => (
-          <TableCell key={dataIndex}>
-            {dato[1]}
-          </TableCell>
-        ))}
-      </React.Fragment>
-    )
-  )
-}
-
+                {lastyearRutina.map(
+                  (role, index) =>
+                    role.rol === filter && (
+                      <React.Fragment key={index}>
+                        {role.datos.map((dato: any, dataIndex: number) => (
+                          <TableCell className="p-0 pl-4" key={dataIndex}>{dato[1]}</TableCell>
+                        ))}
+                      </React.Fragment>
+                    )
+                )}
+              </TableRow>
+              <TableRow>
+              <TableCell className="p-0">{"Actividades de no rutina"}</TableCell>
+                {lastyearNorutina.map(
+                  (role, index) =>
+                    role.rol === filter && (
+                      <React.Fragment key={index}>
+                        {role.datos.map((dato: any, dataIndex: number) => (
+                          <TableCell className="p-0 pl-4" key={dataIndex}>{dato[1]}</TableCell>
+                        ))}
+                      </React.Fragment>
+                    )
+                )}
+              </TableRow>
+              <TableRow>
+              <TableCell className="p-0">{"Actividades programadas"}</TableCell>
+                {lastyearProgramada.map(
+                  (role, index) =>
+                    role.rol === filter && (
+                      <React.Fragment key={index}>
+                        {role.datos.map((dato: any, dataIndex: number) => (
+                          <TableCell className="p-0 pl-4" key={dataIndex}>{dato[1]}</TableCell>
+                        ))}
+                      </React.Fragment>
+                    )
+                )}
               </TableRow>
             </TableBody>
           </Table>

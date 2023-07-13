@@ -25,7 +25,7 @@ import {
   } from "@material-tailwind/react";
   import { useState } from "react";
   import data from "../../src-tauri/tareas.json"
-  const TABLE_HEAD = ["Titulo", "Duración", "Roles", "Estado", "Creación", ""];
+  const TABLE_HEAD = ["Titulo", "Duración", "Roles", "Fecha de inicio", "Fecha de término", ""];
   
   const TABLE_ROWS = data;
   
@@ -47,14 +47,14 @@ import {
     rows: Row[];
   }
   
-  function NoRoutine() {
+  function Programadas() {
   
     return (
       <>
         <div className="pb-4 px-5 pt-8 flex w-full items-center justify-between gap-8 bg-[#fcfcfc]  whitespace-nowrap">
           <div >
             <Typography variant="h5" color="blue-gray">
-              Tareas no rutinarias
+              Actividades programadas
             </Typography>
   
           </div>
@@ -98,7 +98,7 @@ import {
                     const classes = isLast
                       ? "p-0 px-4"
                       : "p-0 px-4 border-b border-blue-gray-100/50 ";
-                    if(tarea.frecuencia == "mensual" && tarea.id != null){
+                    if(tarea.frecuencia == "semanal" && tarea.id != null){
                     return (
                       <tr key={tarea.id} className="hover:bg-blue-gray-100/30 bg-white">
                         <td className={`${classes} w-2/5`}>
@@ -138,14 +138,26 @@ import {
                             </Typography>
                           </div>
                         </td>
-                        <td className={`${classes} w-2/10  bg-blue-gray-100/20`}>
-                          <div className="w-max">
-                            <Chip
-                              variant="ghost"
-                              size="sm"
-                              value={tarea.activo ? "online" : "offline"}
-                              color={tarea.activo ? "green" : "blue-gray"}
-                            />
+                        <td className={`${classes} w-2/10`}>
+                          <div className="flex flex-col">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            >
+                              {tarea["fecha de creacion"]}
+                            </Typography>
+                          </div>
+                        </td>
+                        <td className={`${classes} w-2/10`}>
+                          <div className="flex flex-col">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal"
+                            > 
+                              {tarea["fecha de creacion"]}
+                            </Typography>
                           </div>
                         </td>
                         <td className={`${classes}`}>
@@ -173,5 +185,4 @@ import {
     );
   }
   
-  export default NoRoutine;
-  
+  export default Programadas;

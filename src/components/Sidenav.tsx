@@ -11,9 +11,15 @@ import {
 
 import iconImage from "../assets/icon bcs.png"; // Import the image file
 
-import { useState } from 'react';
+import { useState } from "react";
 
-import { FaUsers, FaUserTag, FaHome, FaAngleDown, FaAngleUp } from 'react-icons/fa';
+import {
+  FaUsers,
+  FaUserTag,
+  FaHome,
+  FaAngleDown,
+  FaAngleUp,
+} from "react-icons/fa";
 
 function Sidenav() {
   const location = useLocation();
@@ -52,7 +58,7 @@ function Sidenav() {
                 <FaUsers />
               </ListItemPrefix>
               <span className="flex flex-row justify-between w-full pr-6 cursor-pointer">
-                Tareas 
+                Tareas
                 <div className="flex mt-1">
                   {dropdownOpen ? <FaAngleUp /> : <FaAngleDown />}
                 </div>
@@ -60,6 +66,14 @@ function Sidenav() {
             </div>
             {dropdownOpen && (
               <div className="block bg-[#111827] left-0 top-[calc(100%+0.5rem)] py-2 rounded">
+                <Link
+                  className={`text-[#6E8BA5] py-2 block pl-[3.5rem] ${
+                    location.pathname === "/programadas" ? "active" : ""
+                  }`}
+                  to="/programadas"
+                >
+                  Programadas
+                </Link>
                 <Link
                   className={`text-[#6E8BA5] py-2 block pl-[3.5rem] ${
                     location.pathname === "/projects" ? "active" : ""
@@ -108,8 +122,5 @@ function Sidenav() {
     </>
   );
 }
-
-
-
 
 export default Sidenav;

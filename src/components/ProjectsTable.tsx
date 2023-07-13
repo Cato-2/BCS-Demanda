@@ -25,7 +25,7 @@ import {
 } from "@material-tailwind/react";
 import { useState } from "react";
 import data from "../../src-tauri/tareas.json"
-const TABLE_HEAD = ["Titulo", "Duración (horas)", "Cantidad" ,"Frecuencia", "Roles", "Estado", "Creación", ""];
+const TABLE_HEAD = ["Titulo", "Duración (horas)" ,"Frecuencia", "Roles", "Estado", "Creación", ""];
 
 const TABLE_ROWS = data;
 interface Row {
@@ -96,7 +96,7 @@ function ProjectsTable() {
                     const classes = isLast
                       ? "p-0 px-4"
                       : "p-0 px-4 border-b border-blue-gray-100/50 ";
-                    if(tarea.rutinaria == "true" && tarea.id != null){
+                    if(tarea.frecuencia == "diaria" && tarea.id != null){
                     return (
                       <tr key={tarea.id} className="hover:bg-blue-gray-100/30 bg-white">
                         <td className={`${classes} max-w-2/5 min-w-[15rem]`}>
