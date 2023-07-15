@@ -29,14 +29,11 @@ import Roles from "./Roles";
 import { useState, useEffect } from "react";
 
 const cities = [
-
   {
     item: "Personas necesarias",
     valor: "3,25",
   },
 ];
-
-
 
 const roles = RolesList;
 const tareas = tasks;
@@ -62,25 +59,23 @@ function Demanda() {
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();
-  
+
     let startMonth = currentMonth - 6;
     let startYear = currentYear;
-    
+
     if (startMonth < 0) {
       startMonth += 12;
       startYear -= 1;
     }
-  
+
     for (let i = 0; i < 12; i++) {
       const month = (startMonth + i) % 12;
       const year = startYear + Math.floor((startMonth + i) / 12);
       months.push(`${allmonths[month]} - ${year}`);
     }
-  
+
     return months;
   };
-  
-  
 
   const last12Months = getLast12Months();
   //console.log(last12Months);
@@ -193,16 +188,21 @@ function Demanda() {
     let aux: any[] = [];
     let contador = 0;
     let cantidad = 0;
-    roles.map((role: any) => {
+    let avg = 0;
+    let rolesnumber = 0;
+    roles.map((role: any, item) => {
       aux.push([
         role.nombre,
         role.cantidad,
         role.cantidad * role["horas semanales"],
+        role["horas semanales"],
       ]);
       contador = contador + role.cantidad * role["horas semanales"];
+      avg = avg + role["horas semanales"];
       cantidad = cantidad + role.cantidad;
+      rolesnumber = rolesnumber + 1;
     });
-    aux.push(["todos", cantidad, contador]);
+    aux.push(["todos", cantidad, contador, avg / rolesnumber]);
     return aux;
   };
   const rolesInfo = getroledata();
@@ -214,18 +214,36 @@ function Demanda() {
   const gettotal = () => {
     let aux: any[] = [];
     let aux2: any[] = [];
-    for(let i=0; i<lastyearRutina.length; i++){
-      for(let j=0; j<lastyearRutina[i].datos.length; j++){
-        aux2.push([lastyearRutina[i].datos[j][0], lastyearRutina[i].datos[j][1] + lastyearNorutina[i].datos[j][1] + lastyearProgramada[i].datos[j][1]])
+    for (let i = 0; i < lastyearRutina.length; i++) {
+      for (let j = 0; j < lastyearRutina[i].datos.length; j++) {
+        aux2.push([
+          lastyearRutina[i].datos[j][0],
+          lastyearRutina[i].datos[j][1] +
+            lastyearNorutina[i].datos[j][1] +
+            lastyearProgramada[i].datos[j][1],
+        ]);
       }
-      aux.push({ rol: lastyearRutina[i].rol, datos: aux2 } )
-      aux2 = []
+      aux.push({ rol: lastyearRutina[i].rol, datos: aux2 });
+      aux2 = [];
     }
-    console.log(aux)
+    console.log(aux);
     return aux;
-  }
+  };
+
+  const averagetotal = () => {
+    let aux: any[] = [];
+    totalbymonth.map((role: any) => {
+      let acu = 0;
+      role.datos.map((dato: any) => {
+        acu = acu + dato[1];
+      });
+      aux.push([role.rol, acu / 12]);
+    });
+    return aux;
+  };
 
   const totalbymonth = gettotal();
+  const totaldemanda = averagetotal();
 
   const onClickHandler = (value: string) => {
     setFilter(value);
@@ -262,7 +280,7 @@ function Demanda() {
               </TableRow>
             </TableHead>
             <TableBody>
-              <TableRow >
+              <TableRow>
                 <TableCell className="p-0">
                   {"Actividades programadas"}
                 </TableCell>
@@ -311,10 +329,8 @@ function Demanda() {
                     )
                 )}
               </TableRow>
-              <TableRow className="bg-gray-200">
-                <TableCell className="p-0">
-                  {"Total demanda"}
-                </TableCell>
+              <TableRow className="bg-gray-200 font-bold">
+                <TableCell className="p-0">{"Total demanda"}</TableCell>
                 {totalbymonth.map(
                   (role, index) =>
                     role.rol === filter && (
@@ -339,34 +355,59 @@ function Demanda() {
             <List className="pt-4">
               <ListItem>
                 <span>Número de personas</span>
-                  {rolesInfo.map((role, index) => {
-                    if (role[0] === filter) {
-                      return <span key={index}>{role[1]}</span>;
-                    }
-                  })}
+                {rolesInfo.map((role, index) => {
+                  if (role[0] === filter) {
+                    return <span key={index}>{role[1]}</span>;
+                  }
+                })}
               </ListItem>
               <ListItem>
                 <span>Demanda del sistema</span>
-                <span>2</span>
+                {totaldemanda.map((role, index) => {
+                  if (role[0] === filter) {
+                    return <span key={index}>{role[1]} HH</span>;
+                  }
+                })}
               </ListItem>
               <ListItem>
                 <span>Capacidad ofertada</span>
-                  {rolesInfo.map((role, index) => {
-                    if (role[0] === filter) {
-                      return <span key={index}>{role[2]} HH</span>;
-                    }
-                  })}
+                {rolesInfo.map((role, index) => {
+                  if (role[0] === filter) {
+                    return <span key={index}>{role[2]} HH</span>;
+                  }
+                })}
               </ListItem>
               <ListItem>
                 <span>Capacidad residual</span>
-                <span>2</span>
+                {rolesInfo.map((role, i) => {
+                  if (role[0] === filter) {
+                    const capacidadResidual = role[2] - totaldemanda[i][1];
+                    const style = capacidadResidual < 0 ? { color: "red" } : {};
+                    return (
+                      <span key={i} style={style}>
+                        {capacidadResidual} HH
+                      </span>
+                    );
+                  }
+                  return null; // Return null for elements that don't meet the condition
+                })}
               </ListItem>
-              {cities.map((item) => (
-                <ListItem key={item.item}>
-                  <span>{item.item}</span>
-                  <span>{item.valor}</span>
-                </ListItem>
-              ))}
+              <ListItem>
+                <span>Personas necesarias</span>
+                {totaldemanda.map((role, index) => {
+                  if (role[0] === filter) {
+                    const personasNecesarias = rolesInfo[index][1]
+                    const style =
+                      personasNecesarias < (role[1]/rolesInfo[index][3]) ? { color: "red" } : {};
+                    return (
+                      <span key={index} style={style}>
+                        {(role[1]/rolesInfo[index][3]).toFixed(1)}
+                      </span>
+                    );
+                  }
+                  return null;
+                })}
+              </ListItem>
             </List>
           </Card>
         </div>

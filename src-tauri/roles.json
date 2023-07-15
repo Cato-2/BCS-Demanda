@@ -1,1 +1,38 @@
-[{"id":1,"nombre":"ingeniero cm bursatil senior","cantidad":1,"horas semanales":188},{"id":2,"nombre":"ingeniero cm bursatil","cantidad":1,"horas semanales":188},{"id":3,"nombre":"supervisor bolsa"},{"id":4,"nombre":"explotador bursatil","horas semanales":180},{"id":5,"nombre":"explotador gestion","horas semanales":180},{"id":6,"nombre":"explotador sonda","horas semanales":180},{"horas semanales":180}]
+[
+    {
+        "id": 1,
+        "nombre": "ingeniero cm bursatil senior",
+        "cantidad": 1,
+        "horas semanales": 160
+    },
+    {
+        "id": 2,
+        "nombre": "ingeniero cm bursatil",
+        "cantidad": 1,
+        "horas semanales": 160
+    },
+    {
+        "id": 3,
+        "nombre": "supervisor bolsa",
+        "cantidad": 1,
+        "horas semanales": 160
+    },
+    {
+        "id": 4,
+        "nombre": "explotador bursatil",
+        "cantidad": 1,
+        "horas semanales": 160
+    },
+    {
+        "id": 5,
+        "nombre": "explotador gestion",
+        "cantidad": 1,
+        "horas semanales": 160
+    },
+    {
+        "id": 6,
+        "nombre": "explotador sonda",
+        "cantidad": 1,
+        "horas semanales": 160
+    }
+]
