@@ -29,187 +29,14 @@ import Roles from "./Roles";
 import { useState, useEffect } from "react";
 
 const cities = [
-  {
-    item: "Número de personas",
-    valor: "3",
-  },
-  {
-    item: "Demanda del sistema",
-    valor: "532 HH",
-  },
-  {
-    item: "Capacidad ofertada",
-    valor: "504 HH",
-  },
-  {
-    item: "Capacidad residual",
-    valor: "-28 HH",
-  },
+
   {
     item: "Personas necesarias",
     valor: "3,25",
   },
 ];
 
-const data = [
-  {
-    name: "Proyectos",
-    enero: "100",
-    febrero: "200",
-    marzo: "300",
-    abril: "400",
-    mayo: "500",
-    junio: "600",
-    julio: "700",
-    agosto: "800",
-    septiembre: "900",
-    octubre: "1000",
-    noviembre: "1100",
-    diciembre: "1200",
-    special: false,
-  },
-  {
-    name: "Actividades de rutina",
-    enero: "100",
-    febrero: "200",
-    marzo: "300",
-    abril: "400",
-    mayo: "500",
-    junio: "600",
-    julio: "700",
-    agosto: "800",
-    septiembre: "900",
-    octubre: "1000",
-    noviembre: "1100",
-    diciembre: "1200",
-    special: false,
-  },
-  {
-    name: "Fuera de rutina",
-    enero: "100",
-    febrero: "200",
-    marzo: "300",
-    abril: "400",
-    mayo: "500",
-    junio: "600",
-    julio: "700",
-    agosto: "800",
-    septiembre: "900",
-    octubre: "1000",
-    noviembre: "1100",
-    diciembre: "1200",
-    special: false,
-  },
-  {
-    name: "Total demanda",
-    enero: "100",
-    febrero: "200",
-    marzo: "300",
-    abril: "400",
-    mayo: "500",
-    junio: "600",
-    julio: "700",
-    agosto: "800",
-    septiembre: "900",
-    octubre: "1000",
-    noviembre: "1100",
-    diciembre: "1200",
-    special: true,
-  },
-  {
-    name: "Mediana de demanda",
-    enero: "100",
-    febrero: "200",
-    marzo: "300",
-    abril: "400",
-    mayo: "500",
-    junio: "600",
-    julio: "700",
-    agosto: "800",
-    septiembre: "900",
-    octubre: "1000",
-    noviembre: "1100",
-    diciembre: "1200",
-    special: false,
-  },
-  {
-    name: "Capacidad del sistema",
-    enero: "100",
-    febrero: "200",
-    marzo: "300",
-    abril: "400",
-    mayo: "500",
-    junio: "600",
-    julio: "700",
-    agosto: "800",
-    septiembre: "900",
-    octubre: "1000",
-    noviembre: "1100",
-    diciembre: "1200",
-    special: false,
-  },
-  {
-    name: "Capacidad del sistema real",
-    enero: "100",
-    febrero: "200",
-    marzo: "300",
-    abril: "400",
-    mayo: "500",
-    junio: "600",
-    julio: "700",
-    agosto: "800",
-    septiembre: "900",
-    octubre: "1000",
-    noviembre: "1100",
-    diciembre: "1200",
-    special: true,
-  },
-];
 
-const data2 = [
-  {
-    name: "Page A",
-    uv: 4000,
-    pv: 2400,
-    amt: 2400,
-  },
-  {
-    name: "Page B",
-    uv: 3000,
-    pv: 1398,
-    amt: 2210,
-  },
-  {
-    name: "Page C",
-    uv: 2000,
-    pv: 9800,
-    amt: 2290,
-  },
-  {
-    name: "Page D",
-    uv: 2780,
-    pv: 3908,
-    amt: 2000,
-  },
-  {
-    name: "Page E",
-    uv: 1890,
-    pv: 4800,
-    amt: 2181,
-  },
-  {
-    name: "Page F",
-    uv: 2390,
-    pv: 3800,
-    amt: 2500,
-  },
-  {
-    name: "Page G",
-    uv: 3490,
-    pv: 4300,
-    amt: 2100,
-  },
-];
 
 const roles = RolesList;
 const tareas = tasks;
@@ -234,16 +61,26 @@ function Demanda() {
     const months = [];
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
-    let currentYear = currentDate.getFullYear();
-
+    const currentYear = currentDate.getFullYear();
+  
+    let startMonth = currentMonth - 6;
+    let startYear = currentYear;
+    
+    if (startMonth < 0) {
+      startMonth += 12;
+      startYear -= 1;
+    }
+  
     for (let i = 0; i < 12; i++) {
-      const month = (currentMonth - i + 12) % 12;
-      const year = currentMonth >= i ? currentYear : currentYear - 1;
+      const month = (startMonth + i) % 12;
+      const year = startYear + Math.floor((startMonth + i) / 12);
       months.push(`${allmonths[month]} - ${year}`);
     }
-
-    return months.reverse();
+  
+    return months;
   };
+  
+  
 
   const last12Months = getLast12Months();
   //console.log(last12Months);
@@ -283,7 +120,7 @@ function Demanda() {
         Tasks.map((task: any) => {
           if (task.roles == role.nombre || task.roles == "todos") {
             //task.roles.indexOf(role.nombre) !== -1
-            if (task.frecuencia == "mensual") {
+            if (task.frecuencia == "semanal") {
               acu = task.duracion * 4 * 1.5 + acu;
             }
           }
@@ -332,9 +169,6 @@ function Demanda() {
   const norutinariasMes = norutinariasbyrole(roles, tareas);
   const rutinariasMes = rutinariasbyrole(roles, tareas);
   const programadasMes = programadasbyrole(roles, tareas);
-  console.log("rutinaria", rutinariasMes);
-  console.log("norutinaria, ", norutinariasMes);
-  console.log("programadas, ", programadasMes);
 
   const bymonth = (last12Months: any[], rutinariasMes: any[], Roles: any) => {
     let lastyear: any[] = [];
@@ -352,14 +186,46 @@ function Demanda() {
         aux = [];
       }
     });
-    console.log("lastyear", lastyear);
     return lastyear;
   };
 
+  const getroledata = () => {
+    let aux: any[] = [];
+    let contador = 0;
+    let cantidad = 0;
+    roles.map((role: any) => {
+      aux.push([
+        role.nombre,
+        role.cantidad,
+        role.cantidad * role["horas semanales"],
+      ]);
+      contador = contador + role.cantidad * role["horas semanales"];
+      cantidad = cantidad + role.cantidad;
+    });
+    aux.push(["todos", cantidad, contador]);
+    return aux;
+  };
+  const rolesInfo = getroledata();
   const lastyearRutina = bymonth(last12Months, rutinariasMes, roles);
   const lastyearNorutina = bymonth(last12Months, norutinariasMes, roles);
   const lastyearProgramada = bymonth(last12Months, programadasMes, roles);
   const [filter, setFilter] = useState("todos");
+
+  const gettotal = () => {
+    let aux: any[] = [];
+    let aux2: any[] = [];
+    for(let i=0; i<lastyearRutina.length; i++){
+      for(let j=0; j<lastyearRutina[i].datos.length; j++){
+        aux2.push([lastyearRutina[i].datos[j][0], lastyearRutina[i].datos[j][1] + lastyearNorutina[i].datos[j][1] + lastyearProgramada[i].datos[j][1]])
+      }
+      aux.push({ rol: lastyearRutina[i].rol, datos: aux2 } )
+      aux2 = []
+    }
+    console.log(aux)
+    return aux;
+  }
+
+  const totalbymonth = gettotal();
 
   const onClickHandler = (value: string) => {
     setFilter(value);
@@ -396,6 +262,40 @@ function Demanda() {
               </TableRow>
             </TableHead>
             <TableBody>
+              <TableRow >
+                <TableCell className="p-0">
+                  {"Actividades programadas"}
+                </TableCell>
+                {lastyearProgramada.map(
+                  (role, index) =>
+                    role.rol === filter && (
+                      <React.Fragment key={index}>
+                        {role.datos.map((dato: any, dataIndex: number) => (
+                          <TableCell className="p-0 pl-4" key={dataIndex}>
+                            {dato[1]}
+                          </TableCell>
+                        ))}
+                      </React.Fragment>
+                    )
+                )}
+              </TableRow>
+              <TableRow>
+                <TableCell className="p-0">
+                  {"Actividades de no rutina"}
+                </TableCell>
+                {lastyearNorutina.map(
+                  (role, index) =>
+                    role.rol === filter && (
+                      <React.Fragment key={index}>
+                        {role.datos.map((dato: any, dataIndex: number) => (
+                          <TableCell className="p-0 pl-4" key={dataIndex}>
+                            {dato[1]}
+                          </TableCell>
+                        ))}
+                      </React.Fragment>
+                    )
+                )}
+              </TableRow>
               <TableRow>
                 <TableCell className="p-0">{"Actividades de rutina"}</TableCell>
                 {lastyearRutina.map(
@@ -403,33 +303,26 @@ function Demanda() {
                     role.rol === filter && (
                       <React.Fragment key={index}>
                         {role.datos.map((dato: any, dataIndex: number) => (
-                          <TableCell className="p-0 pl-4" key={dataIndex}>{dato[1]}</TableCell>
+                          <TableCell className="p-0 pl-4" key={dataIndex}>
+                            {dato[1]}
+                          </TableCell>
                         ))}
                       </React.Fragment>
                     )
                 )}
               </TableRow>
-              <TableRow>
-              <TableCell className="p-0">{"Actividades de no rutina"}</TableCell>
-                {lastyearNorutina.map(
+              <TableRow className="bg-gray-200">
+                <TableCell className="p-0">
+                  {"Total demanda"}
+                </TableCell>
+                {totalbymonth.map(
                   (role, index) =>
                     role.rol === filter && (
                       <React.Fragment key={index}>
                         {role.datos.map((dato: any, dataIndex: number) => (
-                          <TableCell className="p-0 pl-4" key={dataIndex}>{dato[1]}</TableCell>
-                        ))}
-                      </React.Fragment>
-                    )
-                )}
-              </TableRow>
-              <TableRow>
-              <TableCell className="p-0">{"Actividades programadas"}</TableCell>
-                {lastyearProgramada.map(
-                  (role, index) =>
-                    role.rol === filter && (
-                      <React.Fragment key={index}>
-                        {role.datos.map((dato: any, dataIndex: number) => (
-                          <TableCell className="p-0 pl-4" key={dataIndex}>{dato[1]}</TableCell>
+                          <TableCell className="p-0 pl-4" key={dataIndex}>
+                            {dato[1]}
+                          </TableCell>
                         ))}
                       </React.Fragment>
                     )
@@ -444,6 +337,30 @@ function Demanda() {
           <Card className="w-[20rem] h-full">
             <Title>Indicadores</Title>
             <List className="pt-4">
+              <ListItem>
+                <span>Número de personas</span>
+                  {rolesInfo.map((role, index) => {
+                    if (role[0] === filter) {
+                      return <span key={index}>{role[1]}</span>;
+                    }
+                  })}
+              </ListItem>
+              <ListItem>
+                <span>Demanda del sistema</span>
+                <span>2</span>
+              </ListItem>
+              <ListItem>
+                <span>Capacidad ofertada</span>
+                  {rolesInfo.map((role, index) => {
+                    if (role[0] === filter) {
+                      return <span key={index}>{role[2]} HH</span>;
+                    }
+                  })}
+              </ListItem>
+              <ListItem>
+                <span>Capacidad residual</span>
+                <span>2</span>
+              </ListItem>
               {cities.map((item) => (
                 <ListItem key={item.item}>
                   <span>{item.item}</span>

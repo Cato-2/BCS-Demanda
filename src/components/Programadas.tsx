@@ -149,17 +149,6 @@ import {
                             </Typography>
                           </div>
                         </td>
-                        <td className={`${classes} w-2/10`}>
-                          <div className="flex flex-col">
-                            <Typography
-                              variant="small"
-                              color="blue-gray"
-                              className="font-normal"
-                            > 
-                              {tarea["fecha de creacion"]}
-                            </Typography>
-                          </div>
-                        </td>
                         <td className={`${classes}`}>
                           <Typography
                             variant="small"
