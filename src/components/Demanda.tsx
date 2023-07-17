@@ -226,7 +226,6 @@ function Demanda() {
       aux.push({ rol: lastyearRutina[i].rol, datos: aux2 });
       aux2 = [];
     }
-    console.log(aux);
     return aux;
   };
 
@@ -248,10 +247,6 @@ function Demanda() {
   const onClickHandler = (value: string) => {
     setFilter(value);
   };
-
-  useEffect(() => {
-    console.log(filter);
-  }, [filter]);
 
   return (
     <div>
@@ -413,7 +408,7 @@ function Demanda() {
         </div>
         <div className="w-full p-2 pl-0">
           <Card>
-            <Grafico />
+            <Grafico filter={filter} capacidadofertada={rolesInfo} demandapromedio={totaldemanda} demandapormes={totalbymonth}  />
           </Card>
         </div>
       </div>
