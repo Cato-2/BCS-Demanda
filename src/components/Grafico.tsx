@@ -73,7 +73,7 @@ export default function Grafico(any: any) {
       if (any.filter == any.demandapormes[i].rol) {
         for (let j = 0; j < any.demandapormes[i].datos.length; j++) {
           aux.push({
-            mes: any.demandapormes[i].datos[j][0],
+            mes:(any.demandapormes[i].datos[j][0] as string).substring(0, 3),
             demanda: any.demandapormes[i].datos[j][1],
             capacidad: capacidad,
           });
@@ -98,12 +98,12 @@ export default function Grafico(any: any) {
       }}
     >
       <CartesianGrid stroke="#f5f5f5" />
-      <XAxis dataKey="mes" scale="band" />
+      <XAxis dataKey="mes" />
       <YAxis />
       <Tooltip />
       <Legend />
       <Bar dataKey="demanda" barSize={30} fill="#00BDA4" />
-      <Line type="monotone" dataKey="capacidad" stroke="#185a7d" />
+      <Line type="monotone" dataKey="capacidad" stroke="#185a7d" dot={false} />
     </ComposedChart>
   );
 }
