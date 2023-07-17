@@ -32,7 +32,7 @@ export default function Example(any: any) {
   } else if (aux > 2) {
     value = 130; // rojo derecha
   }
-  
+
   const cx = 150;
   const cy = 200;
   const iR = 50;
@@ -67,11 +67,11 @@ export default function Example(any: any) {
     const yp = y0 + length * sin;
 
     return [
-      <circle cx={x0} cy={y0} r={r} fill={color} stroke="none" />,
+      <circle cx={x0} cy={y0} r={r} fill="#185a7d" stroke="none" />,
       <path
         d={`M${xba} ${yba}L${xbb} ${ybb} L${xp} ${yp} L${xba} ${yba}`}
         stroke="#none"
-        fill={color}
+        fill="#185a7d"
       />,
     ];
   };

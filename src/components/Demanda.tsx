@@ -146,6 +146,9 @@ function Demanda() {
             if (task.frecuencia == "ocasionales") {
               acu = task.duracion * 4 * 0.75 + acu;
             }
+            //if tiene fecha de inicio y fecha de termino calcular la cantidad de meses y multiplicar por la duracion
+            //no se realizaria la multiplicacion por 4 ni por 0.75 porque ya se considera en la duracion
+            // se suma a acu
           }
         });
         programadas.push([role.nombre, acu]);
@@ -211,8 +214,6 @@ function Demanda() {
   const lastyearNorutina = bymonth(last12Months, norutinariasMes, roles); // esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
   const lastyearProgramada = bymonth(last12Months, programadasMes, roles); // esto no deberia ser así esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
   const [filter, setFilter] = useState("todos");
-  const [personasNecesarias, setpersonasNecesarias] = useState(0);
-  const [personasactuales, setpersonasactuales] = useState(0);
 
 
   const gettotal = () => {
@@ -248,27 +249,30 @@ function Demanda() {
   const totalbymonth = gettotal();
   const totaldemanda = averagetotal();
 
-  useEffect(() => {
-    const getpersonasNecesarias = () => {
-      // Initialize a local variable to hold the calculated value
-      let personasnecesarias = 0;
-      let personasactuales = 0;
-    
-      // Iterate over the totaldemanda array
+
+
+    const getPersonasNecesarias = (tipo:string) => {
+      // Calculate the required number of people for the selected role
+      let aux = 0;
+
       totaldemanda.forEach((role, index) => {
         if (role[0] === filter) {
-          personasnecesarias = role[1] / rolesInfo[index][3];
-          personasactuales = rolesInfo[index][1];
-        }
+          if(tipo === "necesarias"){
+            aux = role[1] / rolesInfo[index][3];
+          }
+          else{
+            aux = rolesInfo[index][1];
+          }    }    
       });
-    
-      // Update the state outside the loop, once the calculation is complete
-      setpersonasactuales(personasactuales)
-      setpersonasNecesarias(personasnecesarias);
+
+      // Update the state with the calculated values
+      return aux;
     };
-  
-    getpersonasNecesarias();
-  }, [filter, totaldemanda, rolesInfo]);
+
+    
+    const personasnecesarias = getPersonasNecesarias("necesarias");
+    const personasactuales = getPersonasNecesarias("actuales");
+
 
   const onClickHandler = (value: string) => {
     setFilter(value);
@@ -290,7 +294,7 @@ function Demanda() {
         </SearchSelect>
       </div>
       <div className="px-2 pt-0">
-        <Card>
+        <Card className="overflow-auto max-w-[calc(100vw-17rem)]">
           <Table className="overflow-auto max-w-[calc(100vw-20rem)]">
             <TableHead>
               <TableRow>
@@ -434,17 +438,22 @@ function Demanda() {
             </List>
           </Card>
         </div>
-        <div className="w-full p-2 pl-0">
-          <Card className="max-w-full min-w-[15rem] overflow-auto flex flex-row h-[20rem]">
+        <div className="overflow-auto max-w-[calc(100vw-37rem)] w-full p-2 pl-1">
+          <Card className="max-w-full min-w-[18rem] overflow-auto flex flex-row h-[18rem] justify-center p-0 pt-2">
             <Grafico
               filter={filter}
               capacidadofertada={rolesInfo}
               demandapromedio={totaldemanda}
               demandapormes={totalbymonth}
             />
-            <Indicador personasnecesarias={personasNecesarias} personasactuales={personasactuales}/>
+            <Indicador personasnecesarias={personasnecesarias} personasactuales={personasactuales}/>
           </Card>
         </div>
+      </div>
+      <div className="overflow-auto max-w-[calc(100vw-16rem)] p-2 pt-1">
+        <Card className="overflow-auto max-w-[calc(100vw-17rem)]">
+          texto
+        </Card>
       </div>
     </div>
   );
