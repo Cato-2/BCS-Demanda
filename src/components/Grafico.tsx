@@ -61,11 +61,9 @@ export default function Grafico(any: any) {
   const getdata = () => {
     let aux: any[] = [];
     let capacidad = 0;
-    console.log("capacidad", any.capacidadofertada);
     any.capacidadofertada.map((item: any) => {
       if (item[0] == any.filter) {
         capacidad = item[2];
-        console.log("capacidad", capacidad);
       }
     });
 
@@ -80,7 +78,6 @@ export default function Grafico(any: any) {
         }
       }
     }
-    console.log(aux);
     return aux;
   };
 

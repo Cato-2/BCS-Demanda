@@ -98,7 +98,7 @@ import {
                     const classes = isLast
                       ? "p-0 px-4"
                       : "p-0 px-4 border-b border-blue-gray-100/50 ";
-                    if(tarea.frecuencia == "mensual" && tarea.id != null){
+                    if(tarea.frecuencia == "ocasionales" && tarea.id != null){
                     return (
                       <tr key={tarea.id} className="hover:bg-blue-gray-100/30 bg-white">
                         <td className={`${classes} w-2/5`}>

@@ -25,6 +25,7 @@ import {
 import Grafico from "./Grafico";
 import tasks from "../../src-tauri/tareas.json";
 import RolesList from "../../src-tauri/roles.json";
+import Indicador from "./Indicador";
 import Roles from "./Roles";
 import { useState, useEffect } from "react";
 
@@ -88,7 +89,7 @@ function Demanda() {
         Tasks.map((task: any) => {
           if (task.roles == role.nombre || task.roles == "todos") {
             //task.roles.indexOf(role.nombre) !== -1
-            if (task.frecuencia == "diaria") {
+            if (task.frecuencia == "frecuente") {
               acu = task.duracion * 4 * 2.5 + acu;
             }
           }
@@ -115,7 +116,7 @@ function Demanda() {
         Tasks.map((task: any) => {
           if (task.roles == role.nombre || task.roles == "todos") {
             //task.roles.indexOf(role.nombre) !== -1
-            if (task.frecuencia == "semanal") {
+            if (task.frecuencia == "periodicas") {
               acu = task.duracion * 4 * 1.5 + acu;
             }
           }
@@ -142,7 +143,7 @@ function Demanda() {
         Tasks.map((task: any) => {
           if (task.roles == role.nombre || task.roles == "todos") {
             //task.roles.indexOf(role.nombre) !== -1
-            if (task.frecuencia == "mensual") {
+            if (task.frecuencia == "ocasionales") {
               acu = task.duracion * 4 * 0.75 + acu;
             }
           }
@@ -207,9 +208,12 @@ function Demanda() {
   };
   const rolesInfo = getroledata();
   const lastyearRutina = bymonth(last12Months, rutinariasMes, roles);
-  const lastyearNorutina = bymonth(last12Months, norutinariasMes, roles);
-  const lastyearProgramada = bymonth(last12Months, programadasMes, roles);
+  const lastyearNorutina = bymonth(last12Months, norutinariasMes, roles); // esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
+  const lastyearProgramada = bymonth(last12Months, programadasMes, roles); // esto no deberia ser así esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
   const [filter, setFilter] = useState("todos");
+  const [personasNecesarias, setpersonasNecesarias] = useState(0);
+  const [personasactuales, setpersonasactuales] = useState(0);
+
 
   const gettotal = () => {
     let aux: any[] = [];
@@ -243,6 +247,28 @@ function Demanda() {
 
   const totalbymonth = gettotal();
   const totaldemanda = averagetotal();
+
+  useEffect(() => {
+    const getpersonasNecesarias = () => {
+      // Initialize a local variable to hold the calculated value
+      let personasnecesarias = 0;
+      let personasactuales = 0;
+    
+      // Iterate over the totaldemanda array
+      totaldemanda.forEach((role, index) => {
+        if (role[0] === filter) {
+          personasnecesarias = role[1] / rolesInfo[index][3];
+          personasactuales = rolesInfo[index][1];
+        }
+      });
+    
+      // Update the state outside the loop, once the calculation is complete
+      setpersonasactuales(personasactuales)
+      setpersonasNecesarias(personasnecesarias);
+    };
+  
+    getpersonasNecesarias();
+  }, [filter, totaldemanda, rolesInfo]);
 
   const onClickHandler = (value: string) => {
     setFilter(value);
@@ -391,12 +417,14 @@ function Demanda() {
                 <span>Personas necesarias</span>
                 {totaldemanda.map((role, index) => {
                   if (role[0] === filter) {
-                    const personasNecesarias = rolesInfo[index][1]
+                    const personasActual = rolesInfo[index][1];
                     const style =
-                      personasNecesarias < (role[1]/rolesInfo[index][3]) ? { color: "red" } : {};
+                      personasActual < role[1] / rolesInfo[index][3]
+                        ? { color: "red" }
+                        : {};
                     return (
                       <span key={index} style={style}>
-                        {(role[1]/rolesInfo[index][3]).toFixed(1)}
+                        {(role[1] / rolesInfo[index][3]).toFixed(1)}
                       </span>
                     );
                   }
@@ -407,8 +435,14 @@ function Demanda() {
           </Card>
         </div>
         <div className="w-full p-2 pl-0">
-          <Card>
-            <Grafico filter={filter} capacidadofertada={rolesInfo} demandapromedio={totaldemanda} demandapormes={totalbymonth}  />
+          <Card className="max-w-full min-w-[15rem] overflow-auto flex flex-row h-[20rem]">
+            <Grafico
+              filter={filter}
+              capacidadofertada={rolesInfo}
+              demandapromedio={totaldemanda}
+              demandapormes={totalbymonth}
+            />
+            <Indicador personasnecesarias={personasNecesarias} personasactuales={personasactuales}/>
           </Card>
         </div>
       </div>
