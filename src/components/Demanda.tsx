@@ -417,12 +417,17 @@ function Demanda() {
           </Card>
         </div>
         <div className="overflow-auto max-w-[calc(100vw-37rem)] w-full p-2 pl-1">
+<<<<<<< Updated upstream
           <Card className="max-w-full min-w-[18rem] overflow-auto flex flex-row h-[18rem] p-0 pt-6">
+=======
+          <Card className="max-w-full min-w-[18rem] overflow-auto flex flex-row h-[18rem] justify-center p-0 pt-5">
+>>>>>>> Stashed changes
             <Grafico
               filter={filter}
               capacidadofertada={rolesInfo}
               demandapromedio={totaldemanda}
               demandapormes={totalbymonth}
+              clas
             />
             <Indicador
               personasnecesarias={personasnecesarias}
