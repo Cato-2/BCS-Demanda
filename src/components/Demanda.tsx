@@ -10,34 +10,17 @@ import {
 } from "@tremor/react";
 import { SearchSelect, SearchSelectItem } from "@tremor/react";
 import { Card, List, ListItem, Title } from "@tremor/react";
-import React, { PureComponent } from "react";
-import {
-  BarChart,
-  Bar,
-  Cell,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  ResponsiveContainer,
-} from "recharts";
+import React from "react";
 import Grafico from "./Grafico";
 import tasks from "../../src-tauri/tareas.json";
 import RolesList from "../../src-tauri/roles.json";
 import Indicador from "./Indicador";
+import Riesgos from "./Riesgos";
 import Roles from "./Roles";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
-const cities = [
-  {
-    item: "Personas necesarias",
-    valor: "3,25",
-  },
-];
-
-const roles = RolesList;
-const tareas = tasks;
+const roles = RolesList; //json
+const tareas = tasks; //json
 
 function Demanda() {
   const allmonths = [
@@ -215,7 +198,6 @@ function Demanda() {
   const lastyearProgramada = bymonth(last12Months, programadasMes, roles); // esto no deberia ser así esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
   const [filter, setFilter] = useState("todos");
 
-
   const gettotal = () => {
     let aux: any[] = [];
     let aux2: any[] = [];
@@ -249,30 +231,26 @@ function Demanda() {
   const totalbymonth = gettotal();
   const totaldemanda = averagetotal();
 
+  const getPersonasNecesarias = (tipo: string) => {
+    // Calculate the required number of people for the selected role
+    let aux = 0;
 
+    totaldemanda.forEach((role, index) => {
+      if (role[0] === filter) {
+        if (tipo === "necesarias") {
+          aux = role[1] / rolesInfo[index][3];
+        } else {
+          aux = rolesInfo[index][1];
+        }
+      }
+    });
 
-    const getPersonasNecesarias = (tipo:string) => {
-      // Calculate the required number of people for the selected role
-      let aux = 0;
+    // Update the state with the calculated values
+    return aux;
+  };
 
-      totaldemanda.forEach((role, index) => {
-        if (role[0] === filter) {
-          if(tipo === "necesarias"){
-            aux = role[1] / rolesInfo[index][3];
-          }
-          else{
-            aux = rolesInfo[index][1];
-          }    }    
-      });
-
-      // Update the state with the calculated values
-      return aux;
-    };
-
-    
-    const personasnecesarias = getPersonasNecesarias("necesarias");
-    const personasactuales = getPersonasNecesarias("actuales");
-
+  const personasnecesarias = getPersonasNecesarias("necesarias");
+  const personasactuales = getPersonasNecesarias("actuales");
 
   const onClickHandler = (value: string) => {
     setFilter(value);
@@ -428,7 +406,7 @@ function Demanda() {
                         : {};
                     return (
                       <span key={index} style={style}>
-                        {(role[1] / rolesInfo[index][3]).toFixed(1)}
+                        {(role[1] / rolesInfo[index][3]).toFixed(2)}
                       </span>
                     );
                   }
@@ -439,20 +417,30 @@ function Demanda() {
           </Card>
         </div>
         <div className="overflow-auto max-w-[calc(100vw-37rem)] w-full p-2 pl-1">
-          <Card className="max-w-full min-w-[18rem] overflow-auto flex flex-row h-[18rem] justify-center p-0 pt-2">
+          <Card className="max-w-full min-w-[18rem] overflow-auto flex flex-row h-[18rem] p-0 pt-6">
             <Grafico
               filter={filter}
               capacidadofertada={rolesInfo}
               demandapromedio={totaldemanda}
               demandapormes={totalbymonth}
             />
-            <Indicador personasnecesarias={personasnecesarias} personasactuales={personasactuales}/>
+            <Indicador
+              personasnecesarias={personasnecesarias}
+              personasactuales={personasactuales}
+            />
           </Card>
         </div>
       </div>
-      <div className="overflow-auto max-w-[calc(100vw-16rem)] p-2 pt-1">
-        <Card className="overflow-auto max-w-[calc(100vw-17rem)]">
-          texto
+      <div className="overflow-auto max-w-[calc(100vw-16rem)] p-2 pt-1 flex min-h-[calc(100vh-35rem)]">
+        <Card className="overflow-auto max-w-[calc(100vw-17rem)] flex-grow px-2 py-1">
+          <Riesgos
+            filter={filter} //rol seleccionado
+            capacidadofertada={rolesInfo} //capacidad ofertada por rol
+            demandapromedio={totaldemanda} //demanda promedio por rol
+            demandapormes={totalbymonth} //demanda por mes por rol
+            personasnecesarias={personasnecesarias} //personas necesarias por rol
+            personasactuales={personasactuales} //personas actuales por rol
+          />
         </Card>
       </div>
     </div>

@@ -15,7 +15,7 @@ function App() {
       <div>
         <Sidenav />
       </div>
-      <div className='w-full'>
+      <div className='w-full overflow-auto max-h-screen'>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/projects" element={<Projects />} />
