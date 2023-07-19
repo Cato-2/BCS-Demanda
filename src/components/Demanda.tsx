@@ -252,6 +252,17 @@ function Demanda() {
   const personasnecesarias = getPersonasNecesarias("necesarias");
   const personasactuales = getPersonasNecesarias("actuales");
 
+  const getcapacidadvaluebyfilter = (): number => {
+    const foundRole = rolesInfo.find((item) => item[0] === filter);
+    if (foundRole) {
+      console.log(foundRole[2]);
+      return foundRole[2];
+    }
+    return 0; // Or any default value if role with the specified filter is not found
+  };
+  
+  const valuecapacidad: number = getcapacidadvaluebyfilter();
+
   const onClickHandler = (value: string) => {
     setFilter(value);
   };
@@ -292,7 +303,7 @@ function Demanda() {
                     role.rol === filter && (
                       <React.Fragment key={index}>
                         {role.datos.map((dato: any, dataIndex: number) => (
-                          <TableCell className="p-0 pl-4" key={dataIndex}>
+                          <TableCell className="p-0 text-center"  key={dataIndex}>
                             {dato[1]}
                           </TableCell>
                         ))}
@@ -309,7 +320,7 @@ function Demanda() {
                     role.rol === filter && (
                       <React.Fragment key={index}>
                         {role.datos.map((dato: any, dataIndex: number) => (
-                          <TableCell className="p-0 pl-4" key={dataIndex}>
+                          <TableCell className="p-0 text-center"  key={dataIndex}>
                             {dato[1]}
                           </TableCell>
                         ))}
@@ -324,7 +335,7 @@ function Demanda() {
                     role.rol === filter && (
                       <React.Fragment key={index}>
                         {role.datos.map((dato: any, dataIndex: number) => (
-                          <TableCell className="p-0 pl-4" key={dataIndex}>
+                          <TableCell className="p-0 text-center"  key={dataIndex}>
                             {dato[1]}
                           </TableCell>
                         ))}
@@ -336,10 +347,10 @@ function Demanda() {
                 <TableCell className="p-0">{"Total demanda"}</TableCell>
                 {totalbymonth.map(
                   (role, index) =>
-                    role.rol === filter && (
+                    role.rol == filter && (
                       <React.Fragment key={index}>
                         {role.datos.map((dato: any, dataIndex: number) => (
-                          <TableCell className="p-0 pl-4" key={dataIndex}>
+                          <TableCell className="p-0 text-center"  key={dataIndex}>
                             {dato[1]}
                           </TableCell>
                         ))}
@@ -347,6 +358,48 @@ function Demanda() {
                     )
                 )}
               </TableRow>
+              <TableRow>
+                <TableCell className="p-0">{"Capacidad ofertada"}</TableCell>
+                {rolesInfo.map((role, index) => {
+                  if (role[0] === filter) {
+                    const cells = [];
+                    for (let i = 0; i < last12Months.length; i++) {
+                      cells.push(
+                        <TableCell className="p-0 text-center"  key={index + i}>
+                          {role[2]}
+                        </TableCell>
+                      );
+                    }
+                    return cells;
+                  } else {
+                    return null; // Return null for elements that don't meet the condition
+                  }
+                })}
+              </TableRow>
+              <TableRow>
+  <TableCell className="p-0">{"Capacidad residual"}</TableCell>
+  {totalbymonth.map((role, index) => {
+    if (role.rol === filter) {
+      return (
+        <React.Fragment key={index}>
+          {role.datos.map((dato: any, dataIndex: number) => {
+            // Assuming `valuecapacidad` is a number, you may want to add a parseFloat or parseInt here if needed.
+            const capacidadResidual = valuecapacidad - dato[1] ;
+            const style = capacidadResidual < 0 ? { color: "red" } : {};
+            return (
+              <TableCell className="p-0 text-center" key={dataIndex} style={style}>
+                {capacidadResidual}
+              </TableCell>
+            );
+          })}
+        </React.Fragment>
+      );
+    } else {
+      return null; // Return null for elements that don't meet the condition
+    }
+  })}
+</TableRow>
+
             </TableBody>
           </Table>
         </Card>
@@ -416,12 +469,8 @@ function Demanda() {
             </List>
           </Card>
         </div>
-        <div className="overflow-auto max-w-[calc(100vw-37rem)] w-full p-2 pl-1">
-<<<<<<< Updated upstream
+        <div className="max-w-[calc(100vw-37rem)] w-full p-2 pl-1">
           <Card className="max-w-full min-w-[18rem] overflow-auto flex flex-row h-[18rem] p-0 pt-6">
-=======
-          <Card className="max-w-full min-w-[18rem] overflow-auto flex flex-row h-[18rem] justify-center p-0 pt-5">
->>>>>>> Stashed changes
             <Grafico
               filter={filter}
               capacidadofertada={rolesInfo}
@@ -436,17 +485,15 @@ function Demanda() {
           </Card>
         </div>
       </div>
-      <div className="overflow-auto max-w-[calc(100vw-16rem)] p-2 pt-1 flex min-h-[calc(100vh-35rem)]">
-        <Card className="overflow-auto max-w-[calc(100vw-17rem)] flex-grow px-2 py-1">
-          <Riesgos
-            filter={filter} //rol seleccionado
-            capacidadofertada={rolesInfo} //capacidad ofertada por rol
-            demandapromedio={totaldemanda} //demanda promedio por rol
-            demandapormes={totalbymonth} //demanda por mes por rol
-            personasnecesarias={personasnecesarias} //personas necesarias por rol
-            personasactuales={personasactuales} //personas actuales por rol
-          />
-        </Card>
+      <div className="max-w-[calc(100vw-16rem)] p-2 pt-1 flex min-h-[calc(100vh-35rem)]">
+        <Riesgos
+          filter={filter} //rol seleccionado
+          capacidadofertada={rolesInfo} //capacidad ofertada por rol
+          demandapromedio={totaldemanda} //demanda promedio por rol
+          demandapormes={totalbymonth} //demanda por mes por rol
+          personasnecesarias={personasnecesarias} //personas necesarias por rol
+          personasactuales={personasactuales} //personas actuales por rol
+        />
       </div>
     </div>
   );
