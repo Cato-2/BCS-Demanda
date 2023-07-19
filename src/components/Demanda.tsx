@@ -260,7 +260,7 @@ function Demanda() {
     }
     return 0; // Or any default value if role with the specified filter is not found
   };
-  
+
   const valuecapacidad: number = getcapacidadvaluebyfilter();
 
   const onClickHandler = (value: string) => {
@@ -303,7 +303,10 @@ function Demanda() {
                     role.rol === filter && (
                       <React.Fragment key={index}>
                         {role.datos.map((dato: any, dataIndex: number) => (
-                          <TableCell className="p-0 text-center"  key={dataIndex}>
+                          <TableCell
+                            className="p-0 text-center"
+                            key={dataIndex}
+                          >
                             {dato[1]}
                           </TableCell>
                         ))}
@@ -320,7 +323,10 @@ function Demanda() {
                     role.rol === filter && (
                       <React.Fragment key={index}>
                         {role.datos.map((dato: any, dataIndex: number) => (
-                          <TableCell className="p-0 text-center"  key={dataIndex}>
+                          <TableCell
+                            className="p-0 text-center"
+                            key={dataIndex}
+                          >
                             {dato[1]}
                           </TableCell>
                         ))}
@@ -335,7 +341,10 @@ function Demanda() {
                     role.rol === filter && (
                       <React.Fragment key={index}>
                         {role.datos.map((dato: any, dataIndex: number) => (
-                          <TableCell className="p-0 text-center"  key={dataIndex}>
+                          <TableCell
+                            className="p-0 text-center"
+                            key={dataIndex}
+                          >
                             {dato[1]}
                           </TableCell>
                         ))}
@@ -350,7 +359,10 @@ function Demanda() {
                     role.rol == filter && (
                       <React.Fragment key={index}>
                         {role.datos.map((dato: any, dataIndex: number) => (
-                          <TableCell className="p-0 text-center"  key={dataIndex}>
+                          <TableCell
+                            className="p-0 text-center"
+                            key={dataIndex}
+                          >
                             {dato[1]}
                           </TableCell>
                         ))}
@@ -365,7 +377,7 @@ function Demanda() {
                     const cells = [];
                     for (let i = 0; i < last12Months.length; i++) {
                       cells.push(
-                        <TableCell className="p-0 text-center"  key={index + i}>
+                        <TableCell className="p-0 text-center" key={index + i}>
                           {role[2]}
                         </TableCell>
                       );
@@ -377,29 +389,33 @@ function Demanda() {
                 })}
               </TableRow>
               <TableRow>
-  <TableCell className="p-0">{"Capacidad residual"}</TableCell>
-  {totalbymonth.map((role, index) => {
-    if (role.rol === filter) {
-      return (
-        <React.Fragment key={index}>
-          {role.datos.map((dato: any, dataIndex: number) => {
-            // Assuming `valuecapacidad` is a number, you may want to add a parseFloat or parseInt here if needed.
-            const capacidadResidual = valuecapacidad - dato[1] ;
-            const style = capacidadResidual < 0 ? { color: "red" } : {};
-            return (
-              <TableCell className="p-0 text-center" key={dataIndex} style={style}>
-                {capacidadResidual}
-              </TableCell>
-            );
-          })}
-        </React.Fragment>
-      );
-    } else {
-      return null; // Return null for elements that don't meet the condition
-    }
-  })}
-</TableRow>
-
+                <TableCell className="p-0">{"Capacidad residual"}</TableCell>
+                {totalbymonth.map((role, index) => {
+                  if (role.rol === filter) {
+                    return (
+                      <React.Fragment key={index}>
+                        {role.datos.map((dato: any, dataIndex: number) => {
+                          // Assuming `valuecapacidad` is a number, you may want to add a parseFloat or parseInt here if needed.
+                          const capacidadResidual = valuecapacidad - dato[1];
+                          const style =
+                            capacidadResidual < 0 ? { color: "red" } : {};
+                          return (
+                            <TableCell
+                              className="p-0 text-center"
+                              key={dataIndex}
+                              style={style}
+                            >
+                              {capacidadResidual}
+                            </TableCell>
+                          );
+                        })}
+                      </React.Fragment>
+                    );
+                  } else {
+                    return null; // Return null for elements that don't meet the condition
+                  }
+                })}
+              </TableRow>
             </TableBody>
           </Table>
         </Card>
