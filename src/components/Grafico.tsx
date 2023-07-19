@@ -16,45 +16,63 @@ import {
 const data = [
   {
     name: "Page A",
-    uv: 590,
-    pv: 800,
-    amt: 1400,
-    cnt: 490,
+    capacidad: 600,
+    demanda: 800,
+
   },
   {
     name: "Page B",
-    uv: 868,
-    pv: 967,
-    amt: 1506,
-    cnt: 590,
+    capacidad: 600,
+    demanda: 400,
+
   },
   {
     name: "Page C",
-    uv: 1397,
-    pv: 1098,
-    amt: 989,
-    cnt: 350,
+    capacidad: 600,
+    demanda: 1098,
+
   },
   {
     name: "Page D",
-    uv: 1480,
-    pv: 1200,
-    amt: 1228,
-    cnt: 480,
+    capacidad: 600,
+    demanda: 1200,
+
   },
   {
     name: "Page E",
-    uv: 1520,
-    pv: 1108,
-    amt: 1100,
-    cnt: 460,
+    capacidad: 600,
+    demanda: 1108,
+
   },
   {
     name: "Page F",
-    uv: 1400,
-    pv: 680,
-    amt: 1700,
-    cnt: 380,
+    capacidad: 600,
+    demanda: 680,
+
+  },
+  {
+    name: "Page C",
+    capacidad: 600,
+    demanda: 1098,
+
+  },
+  {
+    name: "Page D",
+    capacidad: 600,
+    demanda: 1200,
+
+  },
+  {
+    name: "Page E",
+    capacidad: 600,
+    demanda: 500,
+
+  },
+  {
+    name: "Page F",
+    capacidad: 600,
+    demanda: 680,
+
   },
 ];
 export default function Grafico(any: any) {
@@ -99,8 +117,8 @@ export default function Grafico(any: any) {
       <YAxis />
       <Tooltip />
       <Legend />
-      <Bar dataKey="demanda" barSize={30} fill="#00BDA4" />
-      <Line type="monotone" dataKey="capacidad" stroke="#185a7d" dot={false} />
+      <Area type="monotone" dataKey="capacidad" fill="#8884d8" stroke="#8884d8" />
+      <Line type="monotone" dataKey="demanda" stroke="#185a7d" dot={false} />
     </ComposedChart>
   );
 }

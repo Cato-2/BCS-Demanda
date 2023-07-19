@@ -11,6 +11,7 @@ interface Props {
   filter: string;
   demandapromedio: any[]; // Replace 'any[]' with a more specific type if you know the structure of 'demandapromedio'
   personasnecesarias: number;
+  demandapormes: any [];
 }
 
 const Riesgos: React.FC<Props> = (props) => {

@@ -10,13 +10,10 @@ const oR = 100;
 
 const RADIAN = Math.PI / 180;
 const data = [
-  { name: "A", value: 20, color: "red" },
-  { name: "B", value: 20, color: "orange" },
-  { name: "C", value: 20, color: "yellow" },
-  { name: "D", value: 20, color: "green" },
-  { name: "E", value: 20, color: "yellow" },
-  { name: "F", value: 20, color: "orange" },
-  { name: "G", value: 20, color: "red" },
+
+  { name: "D", value: 50, color: "green" },
+  { name: "E", value: 25, color: "yellow" },
+  { name: "G", value: 25, color: "red" },
 ];
 const needle = (
   value: any,
@@ -26,24 +23,26 @@ const needle = (
   iR: any,
   oR: any,
   color: any,
-  aux: any
+  aux: any, // capacidad
+  aux2: any //demanda
 ) => {
-  if (aux <= -2) {
-    value = 10; // rojo izquierda
-  } else if (aux <= -1 && aux >= -1.9) {
-    value = 30; // naranjo izquierda
-  } else if (aux < -0.2 && aux >= -0.9) {
-    value = 50; // amarillo izquierda
-  } else if (aux >= -0.2 && aux <= 0.2) {
-    value = 70; // verde
-  } else if (aux > 0.2 && aux <= 0.9) {
-    value = 90; // amarillo derecha
-  } else if (aux >= 1 && aux <= 1.9) {
-    value = 110; // naranjo derecha
-  } else if (aux > 2) {
-    value = 130; // rojo derecha
+  let yellow = aux*1.2
+  console.log( "capacidad", aux, "demanda", aux2, "yellow", yellow)
+  if(aux >= aux2){
+    console.log("capaciddad mayor igual a demanda")
+    value = 25
   }
+  else if( aux < aux2 && aux2 < yellow ){
+    value = 63
+    console.log("capaciddad menor a demanda y menor a amarillo ")
 
+  }
+  else{
+    value = 85
+    console.log("capacidad mayor a", yellow)
+
+  }
+  
   let total = 0;
   data.forEach((v: any) => {
     total += v.value;
@@ -73,10 +72,26 @@ const needle = (
 };
 
 function Indicador(any: any) {
-  const aux = parseFloat(
-    (any.personasnecesarias - any.personasactuales).toFixed(1)
-  );
 
+  let aux = 0
+  let aux2 = 0
+  const getvalue = () => {
+    any.capacidadofertada.map((item:any, index:any)=>{
+      if(item[0] == any.filter){
+        aux= item[2]
+      }
+    })  
+    any.demandapromedio.map((item:any, index:any)=>{
+      if(item[0] == any.filter){
+        aux2 = item[1]
+      }
+    })
+
+  }
+
+  getvalue()
+
+  
   return (
     <div className="flex flex-col">
       <PieChart width={300} height={210}>
@@ -96,7 +111,7 @@ function Indicador(any: any) {
             <Cell key={`cell-${index}`} fill={entry.color} />
           ))}
         </Pie>
-        {needle(value, data, cx, cy, iR, oR, "#d0d000", aux)}
+        {needle(value, data, cx, cy, iR, oR, "#d0d000", aux, aux2)}
       </PieChart>
       <div></div>
     </div>

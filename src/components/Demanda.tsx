@@ -255,7 +255,6 @@ function Demanda() {
   const getcapacidadvaluebyfilter = (): number => {
     const foundRole = rolesInfo.find((item) => item[0] === filter);
     if (foundRole) {
-      console.log(foundRole[2]);
       return foundRole[2];
     }
     return 0; // Or any default value if role with the specified filter is not found
@@ -497,6 +496,9 @@ function Demanda() {
             <Indicador
               personasnecesarias={personasnecesarias}
               personasactuales={personasactuales}
+              demandapromedio={totaldemanda} //demanda promedio por rol
+              filter={filter} //rol seleccionado
+              capacidadofertada={rolesInfo} //capacidad ofertada por rol
             />
           </Card>
         </div>
