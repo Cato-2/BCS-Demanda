@@ -9,7 +9,7 @@ import {
   Badge,
 } from "@tremor/react";
 import { SearchSelect, SearchSelectItem } from "@tremor/react";
-import { Card, List, ListItem, Title } from "@tremor/react";
+import { Card, List, ListItem, Title, Button} from "@tremor/react";
 import React from "react";
 import Grafico from "./Grafico";
 import tasks from "../../src-tauri/tareas.json";
@@ -18,6 +18,8 @@ import Indicador from "./Indicador";
 import Riesgos from "./Riesgos";
 import Roles from "./Roles";
 import { useState } from "react";
+import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
+import { Link } from "react-router-dom";
 
 const roles = RolesList; //json
 const tareas = tasks; //json
@@ -268,7 +270,8 @@ function Demanda() {
 
   return (
     <div>
-      <div className="w-[20rem] p-2">
+      <div className="flex flex-row justify-between p-2">
+      <div className="w-[20rem] ">
         <SearchSelect>
           {lastyearRutina.map((role) => (
             <SearchSelectItem
@@ -281,6 +284,14 @@ function Demanda() {
           ))}
         </SearchSelect>
       </div>
+      <div className="pr-2">
+        <Link to="/pdf-screen">
+            <Button>
+              <ArrowDownTrayIcon className="w-5 h-5" />
+            </Button>
+        </Link>
+      </div>
+      </div> 
       <div className="px-2 pt-0">
         <Card className="overflow-auto max-w-[calc(100vw-17rem)]">
           <Table className="overflow-auto max-w-[calc(100vw-20rem)]">
@@ -503,7 +514,7 @@ function Demanda() {
           </Card>
         </div>
       </div>
-      <div className="max-w-[calc(100vw-16rem)] p-2 pt-1 flex min-h-[calc(100vh-35rem)]">
+      <div className=" p-2 pt-1 flex ">
         <Riesgos
           filter={filter} //rol seleccionado
           capacidadofertada={rolesInfo} //capacidad ofertada por rol

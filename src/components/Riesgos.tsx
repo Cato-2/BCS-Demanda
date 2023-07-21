@@ -26,7 +26,7 @@ const Riesgos: React.FC<Props> = (props) => {
   const renderRiesgos = () => {
     const riesgosElements: JSX.Element[] = [];
     capacidadofertada.forEach((role, index) => {
-      if (role[0] === filter) {
+      if (role[0] == filter) {
         const capacidadResidual = role[2] - demandapromedio[index][1];
         if (capacidadResidual < 0) {
           riesgosElements.push(
@@ -65,7 +65,7 @@ const Riesgos: React.FC<Props> = (props) => {
   return (
     <div>
       <Callout
-        className="mt-4"
+        className="mt-4 py-3"
         title="Riesgos"
         icon={personasnecesarias > personasactuales ? ExclamationCircleIcon : CheckCircleIcon}
         color={personasnecesarias > personasactuales ? "orange" : "green"}
