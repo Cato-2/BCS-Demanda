@@ -19,6 +19,7 @@ import {
   TableCell,
   Text,
   Badge,
+  Button,
 } from "@tremor/react";
 import { Card, List, ListItem, Title } from "@tremor/react";
 import Grafico from "./Grafico";
@@ -26,6 +27,7 @@ import Indicador from "./Indicador";
 import Riesgos from "./Riesgos";
 import tasks from "../../src-tauri/tareas.json";
 import RolesList from "../../src-tauri/roles.json";
+import { Link } from "react-router-dom";
 
 const allmonths = [
   "Ene",
@@ -279,6 +281,8 @@ const MyPdfDocument: React.FC<MyPdfDocumentProps> = ({
   const generatePDF = async () => {
     try {
       const pdf = new jsPDF("landscape"); // Set the orientation to 'landscape'
+      const currentDate = new Date();
+      const dateString = currentDate.toLocaleString();
 
       for (let i = 0; i < roleList.length; i++) {
         const canvas = await html2canvas(
@@ -291,250 +295,278 @@ const MyPdfDocument: React.FC<MyPdfDocumentProps> = ({
         }
       }
 
-      pdf.save("graphs.pdf");
+      pdf.save(`CD ${dateString}.pdf`);
     } catch (error) {
       console.error("Error generating PDF:", error);
     }
   };
 
   return (
-    <div ref={pdfRef}>
-      {rolesInfo.map((role: any, index: number) => {
-        const personasnecesarias = getPersonasNecesarias("necesarias", role[0]);
-        const personasactuales = getPersonasNecesarias("actuales", role[0]);
-        const valuecapacidad: number = getcapacidadvaluebyfilter(role[0]);
-        return (
-          <div>
-            <div className="capitalize font-lg">{role[0]}</div>
-            <div>
-              <Table className="">
-                <TableHead>
-                  <TableRow>
-                    <TableHeaderCell> </TableHeaderCell>
-                    {last12Months.map((month) => (
-                      <TableHeaderCell key={month}>{month}</TableHeaderCell>
-                    ))}
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  <TableRow>
-                    <TableCell className="py-2">
-                      {"Actividades programadas"}
-                    </TableCell>
-                    {lastyearProgramada.map(
-                      (item, index) =>
-                        item.rol == role[0] && (
-                          <React.Fragment key={index}>
-                            {item.datos.map((dato: any, dataIndex: number) => (
+    <>
+      <div className="flex flex-col justify-between pt-5 border-b-2 border-gray-200 m-2 pb-2">
+        <div className="w-full flex flex-row justify-center ">
+          <span className="text-xl font-bold ">Vista previa</span>
+        </div>
+        <div>
+          <Link to="/demanda" className="px-4">
+            <Button>Back</Button>
+          </Link>
+          <Button onClick={generatePDF}>Descargar PDF</Button>
+        </div>
+      </div>
+      <div ref={pdfRef}>
+        {rolesInfo.map((role: any, index: number) => {
+          const personasnecesarias = getPersonasNecesarias(
+            "necesarias",
+            role[0]
+          );
+          const personasactuales = getPersonasNecesarias("actuales", role[0]);
+          const valuecapacidad: number = getcapacidadvaluebyfilter(role[0]);
+          return (
+            <div className="p-4 pt-10">
+              <div className="capitalize text-xl font-bold">{role[0]}</div>
+              <div>
+                <Table className="">
+                  <TableHead>
+                    <TableRow>
+                      <TableHeaderCell> </TableHeaderCell>
+                      {last12Months.map((month) => (
+                        <TableHeaderCell key={month}>{month}</TableHeaderCell>
+                      ))}
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <TableRow>
+                      <TableCell className="py-2">
+                        {"Actividades programadas"}
+                      </TableCell>
+                      {lastyearProgramada.map(
+                        (item, index) =>
+                          item.rol == role[0] && (
+                            <React.Fragment key={index}>
+                              {item.datos.map(
+                                (dato: any, dataIndex: number) => (
+                                  <TableCell
+                                    className="py-1 text-center"
+                                    key={dataIndex}
+                                  >
+                                    {dato[1]}
+                                  </TableCell>
+                                )
+                              )}
+                            </React.Fragment>
+                          )
+                      )}
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="py-1">
+                        {"Actividades de no rutina"}
+                      </TableCell>
+                      {lastyearNorutina.map(
+                        (item, index) =>
+                          item.rol === role[0] && (
+                            <React.Fragment key={index}>
+                              {item.datos.map(
+                                (dato: any, dataIndex: number) => (
+                                  <TableCell
+                                    className="py-1 text-center"
+                                    key={dataIndex}
+                                  >
+                                    {dato[1]}
+                                  </TableCell>
+                                )
+                              )}
+                            </React.Fragment>
+                          )
+                      )}
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="py-1">
+                        {"Actividades de rutina"}
+                      </TableCell>
+                      {lastyearRutina.map(
+                        (item, index) =>
+                          item.rol === role[0] && (
+                            <React.Fragment key={index}>
+                              {item.datos.map(
+                                (dato: any, dataIndex: number) => (
+                                  <TableCell
+                                    className="py-1 text-center"
+                                    key={dataIndex}
+                                  >
+                                    {dato[1]}
+                                  </TableCell>
+                                )
+                              )}
+                            </React.Fragment>
+                          )
+                      )}
+                    </TableRow>
+                    <TableRow className="bg-gray-200 font-bold">
+                      <TableCell className="py-1">{"Total demanda"}</TableCell>
+                      {totalbymonth.map(
+                        (item, index) =>
+                          item.rol == role[0] && (
+                            <React.Fragment key={index}>
+                              {item.datos.map(
+                                (dato: any, dataIndex: number) => (
+                                  <TableCell
+                                    className="py-1 text-center"
+                                    key={dataIndex}
+                                  >
+                                    {dato[1]}
+                                  </TableCell>
+                                )
+                              )}
+                            </React.Fragment>
+                          )
+                      )}
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="py-1">
+                        {"Capacidad ofertada"}
+                      </TableCell>
+                      {rolesInfo.map((item, index) => {
+                        if (item[0] === role[0]) {
+                          const cells = [];
+                          for (let i = 0; i < last12Months.length; i++) {
+                            cells.push(
                               <TableCell
                                 className="py-1 text-center"
-                                key={dataIndex}
+                                key={index + i}
                               >
-                                {dato[1]}
+                                {item[2]}
                               </TableCell>
-                            ))}
-                          </React.Fragment>
-                        )
-                    )}
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="py-1">
-                      {"Actividades de no rutina"}
-                    </TableCell>
-                    {lastyearNorutina.map(
-                      (item, index) =>
-                        item.rol === role[0] && (
-                          <React.Fragment key={index}>
-                            {item.datos.map((dato: any, dataIndex: number) => (
-                              <TableCell
-                                className="py-1 text-center"
-                                key={dataIndex}
-                              >
-                                {dato[1]}
-                              </TableCell>
-                            ))}
-                          </React.Fragment>
-                        )
-                    )}
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="py-1">
-                      {"Actividades de rutina"}
-                    </TableCell>
-                    {lastyearRutina.map(
-                      (item, index) =>
-                        item.rol === role[0] && (
-                          <React.Fragment key={index}>
-                            {item.datos.map((dato: any, dataIndex: number) => (
-                              <TableCell
-                                className="py-1 text-center"
-                                key={dataIndex}
-                              >
-                                {dato[1]}
-                              </TableCell>
-                            ))}
-                          </React.Fragment>
-                        )
-                    )}
-                  </TableRow>
-                  <TableRow className="bg-gray-200 font-bold">
-                    <TableCell className="py-1">{"Total demanda"}</TableCell>
-                    {totalbymonth.map(
-                      (item, index) =>
-                        item.rol == role[0] && (
-                          <React.Fragment key={index}>
-                            {item.datos.map((dato: any, dataIndex: number) => (
-                              <TableCell
-                                className="py-1 text-center"
-                                key={dataIndex}
-                              >
-                                {dato[1]}
-                              </TableCell>
-                            ))}
-                          </React.Fragment>
-                        )
-                    )}
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="py-1">
-                      {"Capacidad ofertada"}
-                    </TableCell>
-                    {rolesInfo.map((item, index) => {
-                      if (item[0] === role[0]) {
-                        const cells = [];
-                        for (let i = 0; i < last12Months.length; i++) {
-                          cells.push(
-                            <TableCell
-                              className="py-1 text-center"
-                              key={index + i}
-                            >
-                              {item[2]}
-                            </TableCell>
+                            );
+                          }
+                          return cells;
+                        } else {
+                          return null; // Return null for elements that don't meet the condition
+                        }
+                      })}
+                    </TableRow>
+                    <TableRow>
+                      <TableCell className="py-1">
+                        {"Capacidad residual"}
+                      </TableCell>
+                      {totalbymonth.map((item, index) => {
+                        if (item.rol == role[0]) {
+                          console.log(item);
+                          return (
+                            <React.Fragment key={index}>
+                              {item.datos.map(
+                                (dato: any, dataIndex: number) => {
+                                  const capacidadResidual =
+                                    valuecapacidad - dato[1];
+                                  const style =
+                                    capacidadResidual < 0
+                                      ? { color: "red" }
+                                      : {};
+                                  return (
+                                    <TableCell
+                                      className="py-1 text-center"
+                                      key={dataIndex}
+                                      style={style}
+                                    >
+                                      {capacidadResidual}
+                                    </TableCell>
+                                  );
+                                }
+                              )}
+                            </React.Fragment>
+                          );
+                        } else {
+                          return null; // Return null for elements that don't meet the condition
+                        }
+                      })}
+                    </TableRow>
+                  </TableBody>
+                </Table>
+              </div>
+              <div className="flex flex-row py-4">
+                <Card className="w-[20rem] h-full">
+                  <Title>Indicadores</Title>
+                  <List className="pt-4">
+                    <ListItem>
+                      <span>Número de personas</span>
+                      {rolesInfo.map((item, index) => {
+                        if (item[0] === role[0]) {
+                          return <span key={index}>{item[1]}</span>;
+                        }
+                      })}
+                    </ListItem>
+                    <ListItem>
+                      <span>Demanda del sistema</span>
+                      {totaldemanda.map((item, index) => {
+                        if (item[0] === role[0]) {
+                          return <span key={index}>{item[1]} HH</span>;
+                        }
+                      })}
+                    </ListItem>
+                    <ListItem>
+                      <span>Capacidad ofertada</span>
+                      {rolesInfo.map((item, index) => {
+                        if (item[0] === role[0]) {
+                          return <span key={index}>{item[2]} HH</span>;
+                        }
+                      })}
+                    </ListItem>
+                    <ListItem>
+                      <span>Capacidad residual</span>
+                      {rolesInfo.map((item, i) => {
+                        if (item[0] === role[0]) {
+                          const capacidadResidual =
+                            item[2] - totaldemanda[i][1];
+                          const style =
+                            capacidadResidual < 0 ? { color: "red" } : {};
+                          return (
+                            <span key={i} style={style}>
+                              {capacidadResidual} HH
+                            </span>
                           );
                         }
-                        return cells;
-                      } else {
                         return null; // Return null for elements that don't meet the condition
-                      }
-                    })}
-                  </TableRow>
-                  <TableRow>
-                    <TableCell className="py-1">
-                      {"Capacidad residual"}
-                    </TableCell>
-                    {totalbymonth.map((item, index) => {
-                      if (item.rol == role[0]) {
-                        console.log(item);
-                        return (
-                          <React.Fragment key={index}>
-                            {item.datos.map((dato: any, dataIndex: number) => {
-                              const capacidadResidual =
-                                valuecapacidad - dato[1];
-                              const style =
-                                capacidadResidual < 0 ? { color: "red" } : {};
-                              return (
-                                <TableCell
-                                  className="py-1 text-center"
-                                  key={dataIndex}
-                                  style={style}
-                                >
-                                  {capacidadResidual}
-                                </TableCell>
-                              );
-                            })}
-                          </React.Fragment>
-                        );
-                      } else {
-                        return null; // Return null for elements that don't meet the condition
-                      }
-                    })}
-                  </TableRow>
-                </TableBody>
-              </Table>
-            </div>
-            <div className="flex flex-row py-6">
-              <Card className="w-[20rem] h-full">
-                <Title>Indicadores</Title>
-                <List className="pt-4">
-                  <ListItem>
-                    <span>Número de personas</span>
-                    {rolesInfo.map((item, index) => {
-                      if (item[0] === role[0]) {
-                        return <span key={index}>{item[1]}</span>;
-                      }
-                    })}
-                  </ListItem>
-                  <ListItem>
-                    <span>Demanda del sistema</span>
-                    {totaldemanda.map((item, index) => {
-                      if (item[0] === role[0]) {
-                        return <span key={index}>{item[1]} HH</span>;
-                      }
-                    })}
-                  </ListItem>
-                  <ListItem>
-                    <span>Capacidad ofertada</span>
-                    {rolesInfo.map((item, index) => {
-                      if (item[0] === role[0]) {
-                        return <span key={index}>{item[2]} HH</span>;
-                      }
-                    })}
-                  </ListItem>
-                  <ListItem>
-                    <span>Capacidad residual</span>
-                    {rolesInfo.map((item, i) => {
-                      if (item[0] === role[0]) {
-                        const capacidadResidual = item[2] - totaldemanda[i][1];
-                        const style =
-                          capacidadResidual < 0 ? { color: "red" } : {};
-                        return (
-                          <span key={i} style={style}>
-                            {capacidadResidual} HH
-                          </span>
-                        );
-                      }
-                      return null; // Return null for elements that don't meet the condition
-                    })}
-                  </ListItem>
-                  <ListItem>
-                    <span>Personas necesarias</span>
-                    {totaldemanda.map((item, index) => {
-                      if (item[0] === role[0]) {
-                        const personasActual = rolesInfo[index][1];
-                        const style =
-                          personasActual < item[1] / rolesInfo[index][3]
-                            ? { color: "red" }
-                            : {};
-                        return (
-                          <span key={index} style={style}>
-                            {(item[1] / rolesInfo[index][3]).toFixed(2)}
-                          </span>
-                        );
-                      }
-                      return null;
-                    })}
-                  </ListItem>
-                </List>
-              </Card>
-              <div className="flex flex-row py-5">
-                <Grafico
-                  filter={role[0]}
-                  capacidadofertada={rolesInfo}
-                  demandapromedio={totaldemanda}
-                  demandapormes={totalbymonth}
-                  clas
-                />
-                <Indicador
-                  personasnecesarias={personasnecesarias}
-                  personasactuales={personasactuales}
-                  demandapromedio={totaldemanda} //demanda promedio por rol
-                  filter={role[0]} //rol seleccionado
-                  capacidadofertada={rolesInfo} //capacidad ofertada por rol
-                />
+                      })}
+                    </ListItem>
+                    <ListItem>
+                      <span>Personas necesarias</span>
+                      {totaldemanda.map((item, index) => {
+                        if (item[0] === role[0]) {
+                          const personasActual = rolesInfo[index][1];
+                          const style =
+                            personasActual < item[1] / rolesInfo[index][3]
+                              ? { color: "red" }
+                              : {};
+                          return (
+                            <span key={index} style={style}>
+                              {(item[1] / rolesInfo[index][3]).toFixed(2)}
+                            </span>
+                          );
+                        }
+                        return null;
+                      })}
+                    </ListItem>
+                  </List>
+                </Card>
+                <div className="flex flex-row py-5">
+                  <Grafico
+                    filter={role[0]}
+                    capacidadofertada={rolesInfo}
+                    demandapromedio={totaldemanda}
+                    demandapormes={totalbymonth}
+                    clas
+                  />
+                  <Indicador
+                    personasnecesarias={personasnecesarias}
+                    personasactuales={personasactuales}
+                    demandapromedio={totaldemanda} //demanda promedio por rol
+                    filter={role[0]} //rol seleccionado
+                    capacidadofertada={rolesInfo} //capacidad ofertada por rol
+                  />
+                </div>
               </div>
-            </div>
-            <div>
-              <Riesgos
+              <div>
+                <Riesgos
                   filter={role[0]} //rol seleccionado
                   capacidadofertada={rolesInfo} //capacidad ofertada por rol
                   demandapromedio={totaldemanda} //demanda promedio por rol
@@ -543,11 +575,11 @@ const MyPdfDocument: React.FC<MyPdfDocumentProps> = ({
                   personasactuales={personasactuales} //personas actuales por rol
                 />
               </div>
-          </div>
-        );
-      })}
-      <button onClick={generatePDF}>Download PDF</button>
-    </div>
+            </div>
+          );
+        })}
+      </div>
+    </>
   );
 };
 

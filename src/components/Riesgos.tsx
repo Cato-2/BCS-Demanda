@@ -65,7 +65,7 @@ const Riesgos: React.FC<Props> = (props) => {
   return (
     <div>
       <Callout
-        className="mt-4 py-3"
+        className=""
         title="Riesgos"
         icon={personasnecesarias > personasactuales ? ExclamationCircleIcon : CheckCircleIcon}
         color={personasnecesarias > personasactuales ? "orange" : "green"}
