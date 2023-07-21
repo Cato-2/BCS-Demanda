@@ -30,13 +30,13 @@ const Riesgos: React.FC<Props> = (props) => {
         const capacidadResidual = role[2] - demandapromedio[index][1];
         if (capacidadResidual < 0) {
           riesgosElements.push(
-            <span key={index}>
+            <span className="py-1" key={index}>
               • No se cuenta con la capacidad para cubrir la demanda
             </span>
           );
         } else {
           riesgosElements.push(
-            <span key={index + 1}>
+            <span className="py-1" key={index + 1}>
               • Se cuenta con la capacidad para cubrir la demanda
             </span>
           );
@@ -46,12 +46,12 @@ const Riesgos: React.FC<Props> = (props) => {
     if (personasnecesarias > personasactuales) {
       riesgosElements.push(
         <div className="flex flex-col">
-          <span key="personasnecesarias">
+          <span className="py-1" key="personasnecesarias">
             • Se recomienda revisar la incorporación de capacidad adicional al
             sistema y que las actividades consideren los recursos para solventar
             la capacidad requerida
           </span>
-          <span key="otros">
+          <span className="py-1" key="otros">
             • Las licencias o permisos de colaboradores afectan o podrian
             afectar fuertemente la capacidad del sistema
           </span>
