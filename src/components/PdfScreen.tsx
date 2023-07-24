@@ -326,7 +326,7 @@ const MyPdfDocument: React.FC<MyPdfDocumentProps> = ({
             <div className="p-4 pt-10">
               <div className="capitalize text-xl font-bold">{role[0]}</div>
               <div>
-                <Table className="">
+                <Table className="w-fit">
                   <TableHead>
                     <TableRow>
                       <TableHeaderCell> </TableHeaderCell>
