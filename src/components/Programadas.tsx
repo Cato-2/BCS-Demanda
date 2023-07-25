@@ -121,7 +121,7 @@ function Programadas() {
                 const classes = isLast
                   ? "p-0 px-4"
                   : "p-0 px-4 border-b border-blue-gray-100/50 ";
-                if (tarea.frecuencia == "periodicas" && tarea.id != null) {
+                if (tarea.frecuencia == "periodicas" || tarea.frecuencia == "programada" && tarea.id != null) {
                   return (
                     <tr
                       key={tarea.id}

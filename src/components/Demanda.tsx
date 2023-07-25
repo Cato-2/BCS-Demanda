@@ -9,7 +9,7 @@ import {
   Badge,
 } from "@tremor/react";
 import { SearchSelect, SearchSelectItem } from "@tremor/react";
-import { Card, List, ListItem, Title, Button} from "@tremor/react";
+import { Card, List, ListItem, Title, Button } from "@tremor/react";
 import React from "react";
 import Grafico from "./Grafico";
 import tasks from "../../src-tauri/tareas.json";
@@ -120,6 +120,14 @@ function Demanda() {
     return norutinarias;
   };
 
+  function calculateDuration(startDateStr: string, dueDateStr: string): number {
+    const startDate = new Date(startDateStr);
+    const dueDate = new Date(dueDateStr);
+    const durationInMilliseconds = dueDate.getTime() - startDate.getTime();
+    const durationInDays = durationInMilliseconds / (1000 * 60 * 60 * 24);
+    return durationInDays;
+  }
+
   const programadasbyrole = (Roles: any[], Tasks: any[]) => {
     const programadas: any[] = [];
     Roles.map((role: any) => {
@@ -170,6 +178,7 @@ function Demanda() {
         aux = [];
       }
     });
+    console.log(lastyear);
     return lastyear;
   };
 
@@ -199,6 +208,56 @@ function Demanda() {
   const lastyearNorutina = bymonth(last12Months, norutinariasMes, roles); // esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
   const lastyearProgramada = bymonth(last12Months, programadasMes, roles); // esto no deberia ser así esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
   const [filter, setFilter] = useState("todos");
+
+  const bymonthprogramadas = (rolesbymonth: any, Tasks: any) => {
+    rolesbymonth.map((role: any) => {
+      tasks.map((task: any) => {
+        if (task.roles == role.rol) {
+          if (task.frecuencia == "programada") {
+            let duration = calculateDuration(
+              task["fecha de inicio"],
+              task["fecha de termino"]
+            );
+            let monthstart = task["fecha de inicio"].split("-")[1]; //mes de inicio
+            let monthdue = task["fecha de termino"].split("-")[1]; //mes de termino
+            let yearstart = task["fecha de inicio"].split("-")[0]; //año de inicio
+            let yeardue = task["fecha de termino"].split("-")[0]; //año de termino
+              if (monthstart == monthdue && yearstart == yeardue) {
+                // si la tarea se realiza durante un mismo mes
+                if (
+                  last12Months.find(
+                    (item: any) =>
+                      item ==
+                      `${allmonths[parseInt(monthstart) - 1]} - ${yearstart}`
+                  ) != undefined
+                ) {
+                  let index = last12Months.indexOf(
+                    `${allmonths[parseInt(monthstart) - 1]} - ${yearstart}`
+                  );
+                  role.datos[index][1] = role.datos[index][1] + duration;
+                  console.log(
+                    "mes",
+                    monthstart,
+                    "año",
+                    yearstart,
+                    "index",
+                    index,
+                    role.datos[index][1]
+                  );
+                }
+              }
+            else{
+              console.log('se ejecuta entre dos meses')
+            }
+          }
+        }
+      });
+    });
+
+    console.log("final arr", rolesbymonth);
+  };
+
+  bymonthprogramadas(lastyearProgramada, tareas);
 
   const gettotal = () => {
     let aux: any[] = [];
@@ -271,27 +330,27 @@ function Demanda() {
   return (
     <div>
       <div className="flex flex-row justify-between p-2">
-      <div className="w-[20rem] ">
-        <SearchSelect>
-          {lastyearRutina.map((role) => (
-            <SearchSelectItem
-              key={role.rol}
-              value={role.rol}
-              onClick={() => onClickHandler(role.rol)}
-            >
-              {role.rol}
-            </SearchSelectItem>
-          ))}
-        </SearchSelect>
-      </div>
-      <div className="pr-2">
-        <Link to="/pdf-screen">
+        <div className="w-[20rem] ">
+          <SearchSelect>
+            {lastyearRutina.map((role) => (
+              <SearchSelectItem
+                key={role.rol}
+                value={role.rol}
+                onClick={() => onClickHandler(role.rol)}
+              >
+                {role.rol}
+              </SearchSelectItem>
+            ))}
+          </SearchSelect>
+        </div>
+        <div className="pr-2">
+          <Link to="/pdf-screen">
             <Button>
               <ArrowDownTrayIcon className="w-5 h-5" />
             </Button>
-        </Link>
+          </Link>
+        </div>
       </div>
-      </div> 
       <div className="px-2 pt-0">
         <Card className="overflow-auto max-w-[calc(100vw-17rem)]">
           <Table className="overflow-auto max-w-[calc(100vw-20rem)]">

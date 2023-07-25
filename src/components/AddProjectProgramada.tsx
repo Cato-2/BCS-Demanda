@@ -10,47 +10,89 @@ import {
 } from "@material-tailwind/react";
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 import Select from "react-select";
-
-const colourOptions = [
-  { value: "ocean", label: "Ocean" },
-  { value: "blue", label: "Blue" },
-  { value: "purple", label: "Purple" },
-  { value: "red", label: "Red" },
-  { value: "orange", label: "Orange" },
-  { value: "yellow", label: "Yellow" },
-  { value: "green", label: "Green" },
-  { value: "forest", label: "Forest" },
-  { value: "slate", label: "Slate" },
-  { value: "silver", label: "Silver" },
-];
+import { writeFile, FsTextFileOption } from "@tauri-apps/api/fs";
+import Tasks from "../../src-tauri/tareas.json";
+import path from "path";
+import Roles from "../../src-tauri/roles.json";
+import { start } from "repl";
 
 function AddProjectProgramada() {
   const [open, setOpen] = useState(false);
-  const [checked, setChecked] = useState(true);
-  const [howmany, setHowmany] = useState(0);
-  const [frecuency, setFrecuency] = useState("");
+
+  const [title, settitle] = useState();
+  const [description, setdescription] = useState();
   const [startdate, setstartdate] = useState();
   const [duedate, setduedate] = useState();
-  const divArray = Array.from({ length: howmany }, (_, index) => index + 1);
+  const [duration, setduration] = useState();
+  const [roles, setroles] = useState({value:"", label:""}); // format {value: "nombre", label: "nombre"}
 
-  const handleChangeStart = (e:any) => {
-    setstartdate(e.target.value)
-  }
+  const handleChangeStart = (e: any) => {
+    console.log(e.target.value)
+    setstartdate(e.target.value);
+  };
 
-  const handleChangeDue= (e:any) => {
-    setduedate(e.target.value)
-  } 
+  const handleChangeDue = (e: any) => {
+    console.log(e.target.value)
+    setduedate(e.target.value);
+  };
+
+  const handleChangeTitle = (e: any) => {
+    console.log(e.target.value)
+    settitle(e.target.value);
+  };
+
+  const handleChangeDescription = (e: any) => {
+    console.log(e.target.value)
+    setdescription(e.target.value);
+  };
+  const handleChangeDuration = (e: any) => {
+    console.log(e.target.value)
+    setduration(e.target.value);
+  };
+  const handleChangeRoles = (selectedOption:any) => {
+    console.log(selectedOption)
+    setroles(selectedOption);
+  };
   const handleOpen = () => setOpen(!open);
-  const handleInputChange = (e: any) => {
-    setHowmany(e.target.value);
-  };
-  const handleChecked = () => {
-    setChecked(!checked);
-    console.log(checked);
-  };
-  const handleFrecuency = (e: any) => {
-    setFrecuency(e.target.value);
-    console.log(frecuency);
+
+  let data = Roles.map((role) => {
+    return { value: role.nombre, label: role.nombre };
+  });
+  
+  data.push({ value: "todos", label: "Todos" });
+
+  const addnew = () => {
+    let alltasks = JSON.parse(JSON.stringify(Tasks));
+
+    // Step 2: Add the new task to the array of tasks
+    let newtask = {
+      id: alltasks.length + 1,
+      titulo: title,
+      duracion: duration,
+      roles: roles?.value,
+      "fecha de creacion": startdate,
+      "fecha de inicio": startdate,
+      "fecha de termino": duedate,
+      frecuencia: "programada",
+    };
+    console.log(newtask)
+    alltasks.push(newtask);
+
+    // Step 3: Convert the updated array back to a JSON string
+    alltasks = JSON.stringify(alltasks);
+
+    const f: FsTextFileOption = {
+      path: "./tareas.json",
+      contents: alltasks, // Convert to string
+    };
+    writeFile(f)
+      .then(() => {
+        console.log("Tasks File written");
+      })
+      .catch((error: any) => {
+        console.error("Error writing file:", error);
+      });
+    handleOpen();
   };
 
   return (
@@ -75,6 +117,7 @@ function AddProjectProgramada() {
             <div className="py-2 flex flex-col">
               <label htmlFor="">Titulo</label>
               <input
+                onChange={handleChangeTitle}
                 type="text"
                 className="bg-gray-50 rounded-md border border-gray-300 focus:outline-none px-2 py-1 focus:border-blue-500 "
               />
@@ -84,6 +127,7 @@ function AddProjectProgramada() {
               <textarea
                 name=""
                 id=""
+                onChange={handleChangeDescription}
                 rows={3}
                 className="bg-gray-50 rounded-md border border-gray-300 focus:border-blue-500  focus:outline-none px-2 py-1"
               ></textarea>
@@ -101,14 +145,12 @@ function AddProjectProgramada() {
                 <input
                   type="date"
                   onChange={handleChangeStart}
-                  value = {startdate}
-                  max = {duedate}
+                  max={duedate}
                   className="w-1/2 m-1 bg-gray-50 rounded-md border border-gray-300 focus:border-blue-500  focus:outline-none px-2 py-1"
                 />
                 <input
                   type="date"
                   onChange={handleChangeDue}
-                  value = {duedate}
                   min={startdate}
                   className="w-1/2 m-1 bg-gray-50 rounded-md border border-gray-300 focus:border-blue-500  focus:outline-none px-2 py-1"
                 />
@@ -116,32 +158,28 @@ function AddProjectProgramada() {
             </div>
             <div className="pt-4 flex flex-row">
               <div className="flex flex-col w-1/2 p-1">
-                <label htmlFor="">
-                  Duración total (horas)
-                </label>
+                <label htmlFor="">Duración total (horas)</label>
                 <input
                   type="number"
                   min="0"
+                  onChange={handleChangeDuration}
                   className="m-1 bg-gray-50 rounded-md border border-gray-300 focus:border-blue-500  focus:outline-none px-2 py-1"
                 />
               </div>
               <div className="flex flex-col w-1/2 p-1">
-              <label htmlFor="">
-                Rol
-              </label>
-              <Select
-                isMulti
-                name="colors"
-                options={colourOptions}
-                className=" "
-                classNamePrefix="select"
-                maxMenuHeight={120}
-              />
-            </div>
+                <label htmlFor="">Rol</label>
+                <Select
+                  name="colors"
+                  onChange = {handleChangeRoles}
+                  options={data}
+                  className=" "
+                  classNamePrefix="select"
+                  maxMenuHeight={120}
+                  value = {roles}
+                />
+              </div>
             </div>
             <div className="border-t border-gray-300 my-4"></div>
-
-
           </div>
         </DialogBody>
         <DialogFooter>
@@ -153,7 +191,7 @@ function AddProjectProgramada() {
           >
             <span>Cancel</span>
           </Button>
-          <Button variant="gradient" color="green" onClick={handleOpen}>
+          <Button variant="gradient" color="green" onClick={addnew}>
             <span>Confirm</span>
           </Button>
         </DialogFooter>
