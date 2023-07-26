@@ -16,7 +16,7 @@ import path from "path";
 import Roles from "../../src-tauri/roles.json";
 import { start } from "repl";
 
-function AddProjectProgramada() {
+function AddProjectProgramada(any:any) {
   const [open, setOpen] = useState(false);
 
   const [title, settitle] = useState();
@@ -73,7 +73,7 @@ function AddProjectProgramada() {
       "fecha de creacion": startdate,
       "fecha de inicio": startdate,
       "fecha de termino": duedate,
-      frecuencia: "programada",
+      frecuencia: any.tipo,
     };
     console.log(newtask)
     alltasks.push(newtask);

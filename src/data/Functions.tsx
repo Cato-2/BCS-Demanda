@@ -198,11 +198,11 @@ export function calculateDuration(startDateStr: string, dueDateStr: string): num
     return durationInDays;
   }
 
-export const bymonthprogramadas = (rolesbymonth: any, Tasks: any, last12Months:any) => {
+export const bymonthprogramadas = (rolesbymonth: any, Tasks: any, last12Months:any, tipo:string) => {
     rolesbymonth.map((role: any) => {
       Tasks.map((task: any) => {
         if (task.roles == role.rol || role.rol == "todos") {
-          if (task.frecuencia == "programada") {
+          if ((task.frecuencia == "programada" && tipo == "programada") || (task.frecuencia == "no rutinaria" && tipo == "no rutinaria")) {
             let duration = calculateDuration(
               task["fecha de inicio"],
               task["fecha de termino"]
@@ -214,7 +214,7 @@ export const bymonthprogramadas = (rolesbymonth: any, Tasks: any, last12Months:a
             let daystart = task["fecha de inicio"].split("-")[2]; //dia de inicio
             let daydue = task["fecha de termino"].split("-")[2]; //dia de termino
             if (monthstart == monthdue && yearstart == yeardue) {
-              // si la tarea se realiza durante un mismo mes
+              // si la tarea se realiza durante un mismo mes  revisar cuando es un puro mes en no rutinaria
               if (
                 last12Months.find(
                   (item: any) =>
@@ -233,6 +233,7 @@ export const bymonthprogramadas = (rolesbymonth: any, Tasks: any, last12Months:a
                 task["fecha de inicio"],
                 task["fecha de termino"]
               );
+              console.log("role", role)
 
               const firstMonth = 30 - parseInt(daystart);
               const lastMonth = parseInt(daydue);

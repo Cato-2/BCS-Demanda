@@ -78,7 +78,7 @@ function Programadas() {
               icon={<MagnifyingGlassIcon />}
             />
           </div>
-          <AddProjectProgramada />
+          <AddProjectProgramada tipo="programada"/>
         </div>
       </div>
       <Card className="max-h-[calc(100vh-9rem)] h-fit shadow-none bg-white border tabla mx-5 px-2">

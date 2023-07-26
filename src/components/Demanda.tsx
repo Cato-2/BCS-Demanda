@@ -20,13 +20,27 @@ import Roles from "./Roles";
 import { useState } from "react";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
-import {allmonths, getLast12Months, norutinariasbyrole, getcapacidadvaluebyfilter, rutinariasbyrole,getPersonasNecesarias, averagetotal, programadasbyrole, bymonth, getroledata, gettotal, getAllMonths, calculateDuration, bymonthprogramadas} from "../data/Functions"
+import {
+  allmonths,
+  getLast12Months,
+  norutinariasbyrole,
+  getcapacidadvaluebyfilter,
+  rutinariasbyrole,
+  getPersonasNecesarias,
+  averagetotal,
+  programadasbyrole,
+  bymonth,
+  getroledata,
+  gettotal,
+  getAllMonths,
+  calculateDuration,
+  bymonthprogramadas,
+} from "../data/Functions";
 
 const roles = RolesList; //json
 const tareas = tasks; //json
 
 function Demanda() {
-
   const last12Months = getLast12Months();
   const norutinariasMes = norutinariasbyrole(roles, tareas);
   const rutinariasMes = rutinariasbyrole(roles, tareas);
@@ -36,11 +50,26 @@ function Demanda() {
   const lastyearNorutina = bymonth(last12Months, norutinariasMes, roles); // esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
   const lastyearProgramada = bymonth(last12Months, programadasMes, roles); // esto no deberia ser así esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
   const [filter, setFilter] = useState("todos");
-  bymonthprogramadas(lastyearProgramada, tareas, last12Months); //agrega actividades con fecha de inicio y termino a cada mes sgun corresponda
-  const totalbymonth = gettotal(lastyearRutina, lastyearNorutina, lastyearProgramada);
+  bymonthprogramadas(lastyearProgramada, tareas, last12Months, "programada"); //agrega actividades con fecha de inicio y termino a cada mes sgun corresponda
+  bymonthprogramadas(lastyearNorutina, tareas, last12Months, "no rutinaria");
+  const totalbymonth = gettotal(
+    lastyearRutina,
+    lastyearNorutina,
+    lastyearProgramada
+  );
   const totaldemanda = averagetotal(totalbymonth);
-  const personasnecesarias = getPersonasNecesarias("necesarias",totaldemanda, rolesInfo, filter);
-  const personasactuales = getPersonasNecesarias("actuales",totaldemanda, rolesInfo, filter);
+  const personasnecesarias = getPersonasNecesarias(
+    "necesarias",
+    totaldemanda,
+    rolesInfo,
+    filter
+  );
+  const personasactuales = getPersonasNecesarias(
+    "actuales",
+    totaldemanda,
+    rolesInfo,
+    filter
+  );
   const valuecapacidad: number = getcapacidadvaluebyfilter(rolesInfo, filter);
 
   const onClickHandler = (value: string) => {
