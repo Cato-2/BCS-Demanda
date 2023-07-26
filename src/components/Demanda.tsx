@@ -120,13 +120,6 @@ function Demanda() {
     return norutinarias;
   };
 
-  function calculateDuration(startDateStr: string, dueDateStr: string): number {
-    const startDate = new Date(startDateStr);
-    const dueDate = new Date(dueDateStr);
-    const durationInMilliseconds = dueDate.getTime() - startDate.getTime();
-    const durationInDays = durationInMilliseconds / (1000 * 60 * 60 * 24);
-    return durationInDays;
-  }
 
   const programadasbyrole = (Roles: any[], Tasks: any[]) => {
     const programadas: any[] = [];
@@ -208,11 +201,47 @@ function Demanda() {
   const lastyearNorutina = bymonth(last12Months, norutinariasMes, roles); // esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
   const lastyearProgramada = bymonth(last12Months, programadasMes, roles); // esto no deberia ser así esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
   const [filter, setFilter] = useState("todos");
+  
+  function getAllMonths(startDateString: string, endDateString: string): number[][] {
+    // Convert the input strings to Date objects
+    const startDate = new Date(startDateString);
+    const endDate = new Date(endDateString);
+  
+    // Initialize an empty array to store the months
+    let allMonths: number[][] = [];
+  
+    // Loop through the months
+    let currentMonth = new Date(startDate);
+    while (currentMonth <= endDate) {
+      allMonths.push(formatMonth(currentMonth));
+      // Move to the next month
+      currentMonth.setMonth(currentMonth.getMonth() + 1);
+    }
+  
+    // remove first and last item
+    allMonths = allMonths.slice(1, -1);
+  
+    return allMonths;
+  }
+  
+  function formatMonth(date: Date): number[] {
+    const month = date.getMonth() + 1;
+    const year = date.getFullYear();
+    return [month, year];
+  }
+
+  function calculateDuration(startDateStr: string, dueDateStr: string): number {
+    const startDate = new Date(startDateStr);
+    const dueDate = new Date(dueDateStr);
+    const durationInMilliseconds = dueDate.getTime() - startDate.getTime();
+    const durationInDays = durationInMilliseconds / (1000 * 60 * 60 * 24);
+    return durationInDays;
+  }
 
   const bymonthprogramadas = (rolesbymonth: any, Tasks: any) => {
     rolesbymonth.map((role: any) => {
       tasks.map((task: any) => {
-        if (task.roles == role.rol) {
+        if (task.roles == role.rol || role.rol == "todos") {
           if (task.frecuencia == "programada") {
             let duration = calculateDuration(
               task["fecha de inicio"],
@@ -222,32 +251,122 @@ function Demanda() {
             let monthdue = task["fecha de termino"].split("-")[1]; //mes de termino
             let yearstart = task["fecha de inicio"].split("-")[0]; //año de inicio
             let yeardue = task["fecha de termino"].split("-")[0]; //año de termino
-              if (monthstart == monthdue && yearstart == yeardue) {
-                // si la tarea se realiza durante un mismo mes
-                if (
-                  last12Months.find(
-                    (item: any) =>
-                      item ==
-                      `${allmonths[parseInt(monthstart) - 1]} - ${yearstart}`
-                  ) != undefined
-                ) {
-                  let index = last12Months.indexOf(
+            let daystart = task["fecha de inicio"].split("-")[2]; //dia de inicio
+            let daydue = task["fecha de termino"].split("-")[2]; //dia de termino
+            if (monthstart == monthdue && yearstart == yeardue) {
+              // si la tarea se realiza durante un mismo mes
+              if (
+                last12Months.find(
+                  (item: any) =>
+                    item ==
                     `${allmonths[parseInt(monthstart) - 1]} - ${yearstart}`
-                  );
-                  role.datos[index][1] = role.datos[index][1] + duration;
-                  console.log(
-                    "mes",
-                    monthstart,
-                    "año",
-                    yearstart,
-                    "index",
-                    index,
-                    role.datos[index][1]
-                  );
-                }
+                ) != undefined
+              ) {
+                let index = last12Months.indexOf(
+                  `${allmonths[parseInt(monthstart) - 1]} - ${yearstart}`
+                );
+                role.datos[index][1] = role.datos[index][1] + duration;
+                console.log(
+                  "mes",
+                  monthstart,
+                  "año",
+                  yearstart,
+                  "index",
+                  index,
+                  role.datos[index][1]
+                );
               }
-            else{
-              console.log('se ejecuta entre dos meses')
+            } else {
+              //si ejecuta entre dos o mas meses, dividir duracion en meses desde inicio hasta termino
+              let months = getAllMonths(
+                task["fecha de inicio"],
+                task["fecha de termino"]
+              );
+
+              console.log(months);
+
+              const firstMonth = 30 - parseInt(daystart);
+              const lastMonth = parseInt(daydue);
+              let total = 0;
+              if(months.length == 0){
+                total = firstMonth + lastMonth;
+                console.log('yes1')
+              }
+              else{
+                total = firstMonth + lastMonth + 30*(parseInt(monthdue)-parseInt(monthstart)-1);
+                
+              }
+              const hoursPerDay = duration / total;
+              const firstMonthHours = hoursPerDay * firstMonth;
+              const secondMonthHours = hoursPerDay * lastMonth;
+              if (
+                last12Months.find(
+                  (item: any) =>
+                    item ==
+                    `${allmonths[parseInt(monthstart) - 1]} - ${yearstart}`
+                ) != undefined
+              ) {
+                let index = last12Months.indexOf(
+                  `${allmonths[parseInt(monthstart) - 1]} - ${yearstart}`
+                );
+                role.datos[index][1] = role.datos[index][1] + firstMonthHours;
+                console.log(
+                  "mes",
+                  monthstart,
+                  "año",
+                  yearstart,
+                  "index",
+                  index,
+                  role.datos[index][1]
+                );
+              }
+              if (
+                last12Months.find(
+                  (item: any) =>
+                    item == `${allmonths[parseInt(monthdue) - 1]} - ${yeardue}`
+                ) != undefined
+              ) {
+                let index = last12Months.indexOf(
+                  `${allmonths[parseInt(monthdue) - 1]} - ${yeardue}`
+                );
+                role.datos[index][1] = role.datos[index][1] + secondMonthHours;
+                console.log(
+                  "mes",
+                  monthstart,
+                  "año",
+                  yearstart,
+                  "index",
+                  index,
+                  role.datos[index][1]
+                );
+              }
+              if(months.length > 0){
+                console.log('yes')
+                months.map((month: any) => {
+                  if (
+                    last12Months.find(
+                      (item: any) =>
+                        item ==
+                        `${allmonths[parseInt(month[0]) - 1]} - ${month[1]}`
+                    ) != undefined
+                  ) {
+                    let index = last12Months.indexOf(
+                      `${allmonths[parseInt(month[0]) - 1]} - ${month[1]}`
+                    );
+                    role.datos[index][1] =
+                      role.datos[index][1] + hoursPerDay * 30;
+                    console.log(
+                      "mes",
+                      month[0],
+                      "año",
+                      month[1],
+                      "index",
+                      index,
+                      role.datos[index][1]
+                    );
+                  }
+                });
+              }
             }
           }
         }
