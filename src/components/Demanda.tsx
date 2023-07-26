@@ -296,7 +296,8 @@ function Demanda() {
                 total = firstMonth + lastMonth + 30*(parseInt(monthdue)-parseInt(monthstart)-1);
                 
               }
-              const hoursPerDay = duration / total;
+              const hoursPerDay = task.duracion / total;
+              console.log(task.duracion, total, hoursPerDay)
               const firstMonthHours = hoursPerDay * firstMonth;
               const secondMonthHours = hoursPerDay * lastMonth;
               if (
