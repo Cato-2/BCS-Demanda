@@ -171,7 +171,6 @@ function Demanda() {
         aux = [];
       }
     });
-    console.log(lastyear);
     return lastyear;
   };
 
@@ -201,34 +200,34 @@ function Demanda() {
   const lastyearNorutina = bymonth(last12Months, norutinariasMes, roles); // esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
   const lastyearProgramada = bymonth(last12Months, programadasMes, roles); // esto no deberia ser así esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
   const [filter, setFilter] = useState("todos");
-  
+
   function getAllMonths(startDateString: string, endDateString: string): number[][] {
     // Convert the input strings to Date objects
     const startDate = new Date(startDateString);
     const endDate = new Date(endDateString);
-  
+
     // Initialize an empty array to store the months
     let allMonths: number[][] = [];
-  
-    // Loop through the months
+
+    // Loop through the months starting from the month after the start date
     let currentMonth = new Date(startDate);
-    while (currentMonth <= endDate) {
-      allMonths.push(formatMonth(currentMonth));
-      // Move to the next month
-      currentMonth.setMonth(currentMonth.getMonth() + 1);
+    currentMonth.setMonth(currentMonth.getMonth() + 1); // Move to the next month
+    while (currentMonth < endDate) {
+        allMonths.push(formatMonth(currentMonth));
+        // Move to the next month
+        currentMonth.setMonth(currentMonth.getMonth() + 1);
     }
-  
-    // remove first and last item
-    allMonths = allMonths.slice(1, -1);
-  
+
     return allMonths;
-  }
-  
-  function formatMonth(date: Date): number[] {
+}
+
+function formatMonth(date: Date): number[] {
     const month = date.getMonth() + 1;
     const year = date.getFullYear();
     return [month, year];
-  }
+}
+
+
 
   function calculateDuration(startDateStr: string, dueDateStr: string): number {
     const startDate = new Date(startDateStr);
@@ -266,15 +265,6 @@ function Demanda() {
                   `${allmonths[parseInt(monthstart) - 1]} - ${yearstart}`
                 );
                 role.datos[index][1] = role.datos[index][1] + duration;
-                console.log(
-                  "mes",
-                  monthstart,
-                  "año",
-                  yearstart,
-                  "index",
-                  index,
-                  role.datos[index][1]
-                );
               }
             } else {
               //si ejecuta entre dos o mas meses, dividir duracion en meses desde inicio hasta termino
@@ -283,21 +273,19 @@ function Demanda() {
                 task["fecha de termino"]
               );
 
-              console.log(months);
-
               const firstMonth = 30 - parseInt(daystart);
               const lastMonth = parseInt(daydue);
               let total = 0;
               if(months.length == 0){
                 total = firstMonth + lastMonth;
-                console.log('yes1')
               }
               else{
-                total = firstMonth + lastMonth + 30*(parseInt(monthdue)-parseInt(monthstart)-1);
+                total = firstMonth + lastMonth + 30*(Math.abs(parseInt(monthdue)-parseInt(monthstart)-1));
+                console.log("?", (parseInt(monthdue)-parseInt(monthstart)-1))
                 
               }
               const hoursPerDay = task.duracion / total;
-              console.log(task.duracion, total, hoursPerDay)
+              console.log("alog", task.duracion,total)
               const firstMonthHours = hoursPerDay * firstMonth;
               const secondMonthHours = hoursPerDay * lastMonth;
               if (
@@ -311,15 +299,7 @@ function Demanda() {
                   `${allmonths[parseInt(monthstart) - 1]} - ${yearstart}`
                 );
                 role.datos[index][1] = role.datos[index][1] + firstMonthHours;
-                console.log(
-                  "mes",
-                  monthstart,
-                  "año",
-                  yearstart,
-                  "index",
-                  index,
-                  role.datos[index][1]
-                );
+
               }
               if (
                 last12Months.find(
@@ -331,18 +311,9 @@ function Demanda() {
                   `${allmonths[parseInt(monthdue) - 1]} - ${yeardue}`
                 );
                 role.datos[index][1] = role.datos[index][1] + secondMonthHours;
-                console.log(
-                  "mes",
-                  monthstart,
-                  "año",
-                  yearstart,
-                  "index",
-                  index,
-                  role.datos[index][1]
-                );
+
               }
               if(months.length > 0){
-                console.log('yes')
                 months.map((month: any) => {
                   if (
                     last12Months.find(
@@ -351,11 +322,14 @@ function Demanda() {
                         `${allmonths[parseInt(month[0]) - 1]} - ${month[1]}`
                     ) != undefined
                   ) {
+                    console.log(`${allmonths[parseInt(month[0]) - 1]} - ${month[1]}`)
                     let index = last12Months.indexOf(
                       `${allmonths[parseInt(month[0]) - 1]} - ${month[1]}`
                     );
+                    console.log(month,role.datos[index][1])
                     role.datos[index][1] =
                       role.datos[index][1] + hoursPerDay * 30;
+                    console.log("text", role.datos[index][1], hoursPerDay )
                     console.log(
                       "mes",
                       month[0],
@@ -496,7 +470,7 @@ function Demanda() {
                             className="p-0 text-center"
                             key={dataIndex}
                           >
-                            {dato[1]}
+                            {dato[1].toFixed(0)}
                           </TableCell>
                         ))}
                       </React.Fragment>
@@ -516,7 +490,7 @@ function Demanda() {
                             className="p-0 text-center"
                             key={dataIndex}
                           >
-                            {dato[1]}
+                            {dato[1].toFixed(0)}
                           </TableCell>
                         ))}
                       </React.Fragment>
@@ -534,7 +508,7 @@ function Demanda() {
                             className="p-0 text-center"
                             key={dataIndex}
                           >
-                            {dato[1]}
+                            {dato[1].toFixed(0)}
                           </TableCell>
                         ))}
                       </React.Fragment>
@@ -552,7 +526,7 @@ function Demanda() {
                             className="p-0 text-center"
                             key={dataIndex}
                           >
-                            {dato[1]}
+                            {dato[1].toFixed(0)}
                           </TableCell>
                         ))}
                       </React.Fragment>
@@ -567,7 +541,7 @@ function Demanda() {
                     for (let i = 0; i < last12Months.length; i++) {
                       cells.push(
                         <TableCell className="p-0 text-center" key={index + i}>
-                          {role[2]}
+                          {role[2].toFixed(0)}
                         </TableCell>
                       );
                     }
@@ -594,7 +568,7 @@ function Demanda() {
                               key={dataIndex}
                               style={style}
                             >
-                              {capacidadResidual}
+                              {capacidadResidual.toFixed(0)}
                             </TableCell>
                           );
                         })}
