@@ -225,7 +225,7 @@ export const bymonthprogramadas = (rolesbymonth: any, Tasks: any, last12Months:a
                 let index = last12Months.indexOf(
                   `${allmonths[parseInt(monthstart) - 1]} - ${yearstart}`
                 );
-                role.datos[index][1] = role.datos[index][1] + duration;
+                role.datos[index][1] = role.datos[index][1] + parseInt(task.duracion);
               }
             } else {
               //si ejecuta entre dos o mas meses, dividir duracion en meses desde inicio hasta termino
@@ -233,7 +233,6 @@ export const bymonthprogramadas = (rolesbymonth: any, Tasks: any, last12Months:a
                 task["fecha de inicio"],
                 task["fecha de termino"]
               );
-              console.log("role", role)
 
               const firstMonth = 30 - parseInt(daystart);
               const lastMonth = parseInt(daydue);
@@ -295,8 +294,6 @@ export const bymonthprogramadas = (rolesbymonth: any, Tasks: any, last12Months:a
         }
       });
     });
-
-    console.log("final arr", rolesbymonth);
   };
 
 export const gettotal = (lastyearRutina:any, lastyearNorutina:any, lastyearProgramada:any) => {

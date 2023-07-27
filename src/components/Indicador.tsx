@@ -27,20 +27,15 @@ const needle = (
   aux2: any //demanda
 ) => {
   let yellow = aux*1.2
-  console.log( "capacidad", aux, "demanda", aux2, "yellow", yellow)
   if(aux >= aux2){
-    console.log("capaciddad mayor igual a demanda")
     value = 25
   }
   else if( aux < aux2 && aux2 < yellow ){
     value = 63
-    console.log("capaciddad menor a demanda y menor a amarillo ")
 
   }
   else{
     value = 85
-    console.log("capacidad mayor a", yellow)
-
   }
   
   let total = 0;
