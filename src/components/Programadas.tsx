@@ -184,7 +184,7 @@ function Programadas() {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {tarea["fecha de creacion"]}
+                            {tarea["fecha de inicio"]}
                           </Typography>
                         </div>
                       </td>
@@ -194,7 +194,7 @@ function Programadas() {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {tarea["fecha de creacion"]}
+                          {tarea["fecha de termino"]}
                         </Typography>
                       </td>
                       <td

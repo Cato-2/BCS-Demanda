@@ -26,7 +26,7 @@ import {
 import { useState } from "react";
 import data from "../../src-tauri/tareas.json";
 import AddProjectProgramada from "./AddProjectProgramada";
-const TABLE_HEAD = ["Id", "Titulo", "Duración", "Roles", "Creación", ""];
+const TABLE_HEAD = ["Id", "Titulo", "Duración", "Roles", "Fecha de inicio", "Fecha de término", ""];
 
 const TABLE_ROWS = data;
 
@@ -176,7 +176,16 @@ function NoRoutine() {
                           color="blue-gray"
                           className="font-normal"
                         >
-                          {tarea["fecha de creacion"]}
+                          {tarea["fecha de inicio"]}
+                        </Typography>
+                      </td>
+                      <td className={`${classes}`}>
+                        <Typography
+                          variant="small"
+                          color="blue-gray"
+                          className="font-normal"
+                        >
+                          {tarea["fecha de termino"]}
                         </Typography>
                       </td>
                       <td

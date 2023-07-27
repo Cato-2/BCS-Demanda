@@ -68,6 +68,7 @@ function AddProjectProgramada(any:any) {
     let newtask = {
       id: alltasks.length + 1,
       titulo: title,
+      descripcion: description,
       duracion: duration,
       roles: roles?.value,
       "fecha de creacion": startdate,

@@ -1,2 +1,3 @@
 - al leer un nuevo excel revisar que todas las tareas tengan duracion
 - cambiar columna rutinarias, en vez de true, poner el tipo, es decir, rutinaria, no rutinaria, programada
+- if fecha en blanco, poner rol de ocasional o periodicas

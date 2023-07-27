@@ -10,126 +10,113 @@ import {
 } from "@material-tailwind/react";
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 import Select from "react-select";
-
-const colourOptions = [
-  { value: "ocean", label: "Ocean" },
-  { value: "blue", label: "Blue" },
-  { value: "purple", label: "Purple" },
-  { value: "red", label: "Red" },
-  { value: "orange", label: "Orange" },
-  { value: "yellow", label: "Yellow" },
-  { value: "green", label: "Green" },
-  { value: "forest", label: "Forest" },
-  { value: "slate", label: "Slate" },
-  { value: "silver", label: "Silver" },
-];
+import Roles from "../../src-tauri/roles.json";
+import { writeFile, FsTextFileOption } from "@tauri-apps/api/fs";
+import Tasks from "../../src-tauri/tareas.json";
 
 function AddProject(props: any) {
-  const [open, setOpen] = useState(false);
-  const [checked, setChecked] = useState(true);
-  const [howmany, setHowmany] = useState(0);
-  const [frecuency, setFrecuency] = useState("");
+  const [open, setOpen] = useState<boolean>(false);
+  const [title, settitle] = useState<string>();
+  const [description, setdescription] = useState<string>("");
+  const [duration, setduration] = useState<number>(0);
+  const [roles, setroles] = useState<{ value: string; label: string }>({ value: "", label: "" });
+  const [howmany, setHowmany] = useState<number>(0);
+  const [frecuency, setFrecuency] = useState<string>("");
+
   const divArray = Array.from({ length: howmany }, (_, index) => index + 1);
 
   const handleOpen = () => setOpen(!open);
-  const handleInputChange = (e: any) => {
+
+  const handleInputChangeHowmany = (e: any) => {
     setHowmany(e.target.value);
   };
-  const handleChecked = () => {
-    setChecked(!checked);
-    console.log(checked);
-  };
+
   const handleFrecuency = (e: any) => {
     setFrecuency(e.target.value);
-    console.log(frecuency);
   };
 
-  const specify = () => {
-    if (frecuency != "Diaria" && frecuency != "" && frecuency != "Anual") {
-      return (
-        <div>
-          <label htmlFor="">Especificar?</label>
-          <Checkbox defaultChecked onClick={handleChecked} />
-        </div>
-      );
-    }
+  const handleChangeTitle = (e: any) => {
+    console.log(e.target.value);
+    settitle(e.target.value);
   };
 
-  const option = () => {
-    if (checked === true) {
-      if (frecuency === "Semanal") {
-        return (
-          <>
-            <div>
-              <label htmlFor="" className="pr-2">
-                Cuando:
-              </label>
-              <select
-                name=""
-                id=""
-                className="w-fit m-1 bg-gray-50 rounded-md border border-gray-300 focus:border-blue-500  focus:outline-none px-2 py-1"
-              >
-                <option value="">Seleccione una opción</option>
-                <option value="">Lunes</option>
-                <option value="">Martes</option>
-                <option value="">Miercoles</option>
-                <option value="">Jueves</option>
-                <option value="">Viernes</option>
-                <option value="">Sabado</option>
-                <option value="">Domingo</option>
-              </select>
-            </div>
-          </>
-        );
-      } else if (frecuency === "Mensual") {
-        return (
-          <div>
-            <label htmlFor="" className="pr-2">
-              Cuando:
-            </label>
-            <select
-              name=""
-              id=""
-              className="w-fit m-1 bg-gray-50 rounded-md border border-gray-300 focus:border-blue-500  focus:outline-none px-2 py-1"
-            >
-              <option value="">Seleccione una opción</option>
-              <option value="">Semana 1 (Días 1 a 7)</option>
-              <option value="">Semana 2 (Días 8 a 14)</option>
-              <option value="">Semana 3 (Días 15 a 21)</option>
-              <option value="">Semana 4 (Días 22 a 28)</option>
-              <option value="">Semana 5 (Días 29 a 31)</option>
-            </select>
-          </div>
-        );
-      } else if (frecuency === "Anual") {
-        return (
-          <div>
-            <label htmlFor="" className="pr-2">
-              Cuando:
-            </label>
-            <select
-              name=""
-              id=""
-              className="w-fit m-1 bg-gray-50 rounded-md border border-gray-300 focus:border-blue-500  focus:outline-none px-2 py-1"
-            >
-              <option value="">Seleccione una opción</option>
-              <option value="">Enero</option>
-              <option value="">Febrero</option>
-              <option value="">Marzo</option>
-              <option value="">Abril</option>
-              <option value="">Junio</option>
-              <option value="">Julio</option>
-              <option value="">Agosto</option>
-              <option value="">Septiembre</option>
-              <option value="">Octubre</option>
-              <option value="">Noviembre</option>
-              <option value="">Diciembre</option>
-            </select>
-          </div>
-        );
-      }
-    }
+  const handleChangeDescription = (e: any) => {
+    console.log(e.target.value);
+    setdescription(e.target.value);
   };
+  const handleChangeDuration = (e: any) => {
+    console.log(e.target.value);
+    setduration(e.target.value);
+  };
+  const handleChangeRoles = (selectedOption: any) => {
+    console.log(selectedOption);
+    setroles(selectedOption);
+  };
+  function getFormattedToday(): string {
+    const today: Date = new Date();
+    const year: number = today.getFullYear();
+    const month: number = today.getMonth() + 1; // Months are 0-based, so we add 1
+    const day: number = today.getDate();
+  
+    // Pad single-digit months and days with leading zeros
+    const formattedMonth: string = month.toString().padStart(2, '0');
+    const formattedDay: string = day.toString().padStart(2, '0');
+  
+    // Combine the components in the "yyyy-mm-dd" format
+    const formattedDate: string = `${year}-${formattedMonth}-${formattedDay}`;
+  
+    return formattedDate;
+  }
+
+  function extractNumberFromString(str:any) {
+    const regex = /\d+/; // This regex will match one or more digits in the string.
+    const match = str.match(regex);
+    if (match) {
+      return parseInt(match[0], 10); // Convert the matched string to an integer.
+    }
+    return 0; // Return 0 if no number is found.
+  }
+
+  let data = Roles.map((role) => {
+    return { value: role.nombre, label: role.nombre };
+  });
+
+  data.push({ value: "todos", label: "Todos" });
+
+  const addnew = () => {
+    let alltasks = JSON.parse(JSON.stringify(Tasks));
+
+    // Step 2: Add the new task to the array of tasks
+    let newtask = {
+      id: alltasks.length + 1,
+      titulo: title,
+      descripcion: description,
+      duracion: extractNumberFromString(duration),
+      roles: roles?.value,
+      fecha_creacion: getFormattedToday(),
+      frecuencia: frecuency,
+      "cuantas veces": extractNumberFromString(howmany),
+    };
+    console.log(newtask)
+    alltasks.push(newtask);
+
+    // Step 3: Convert the updated array back to a JSON string
+    alltasks = JSON.stringify(alltasks);
+
+    const f: FsTextFileOption = {
+      path: "./tareas.json",
+      contents: alltasks, // Convert to string
+    };
+    writeFile(f)
+      .then(() => {
+        console.log("Tasks File written");
+      })
+      .catch((error: any) => {
+        console.error("Error writing file:", error);
+      });
+    handleOpen();
+  };
+
 
   return (
     <>
@@ -142,15 +129,20 @@ function AddProject(props: any) {
       >
         <UserPlusIcon strokeWidth={2} className="h-4 w-4 " /> Agregar Tarea
       </Button>
-      <Dialog open={open} handler={handleOpen} className="flex flex-col overflow-y-auto max-h-[90%]"> 
+      <Dialog
+        open={open}
+        handler={handleOpen}
+        className="flex flex-col overflow-y-auto max-h-[90%]"
+      >
         <DialogHeader>Agregar tarea {props.tipo}</DialogHeader>
         <DialogBody divider>
-          <div >
+          <div>
             <div className="py-2 flex flex-col">
               <label htmlFor="">Titulo</label>
               <input
                 type="text"
-                className="bg-gray-50 rounded-md border border-gray-300 focus:outline-none px-2 py-1 focus:border-blue-500 " 
+                className="bg-gray-50 rounded-md border border-gray-300 focus:outline-none px-2 py-1 focus:border-blue-500 "
+                onChange={handleChangeTitle}
               />
             </div>
             <div className="flex flex-col py-2">
@@ -159,27 +151,34 @@ function AddProject(props: any) {
                 name=""
                 id=""
                 rows={3}
+                onChange={handleChangeDescription}
                 className="bg-gray-50 rounded-md border border-gray-300 focus:border-blue-500  focus:outline-none px-2 py-1"
               ></textarea>
             </div>
             <div className="flex flex-col">
               <div className="flex-row justify-between flex">
                 <label htmlFor="" className="w-1/2 p-1">
-                  Fecha de inicio
+                  Duración (horas)
                 </label>
                 <label htmlFor="" className="w-1/2 p-1">
-                  Duración (horas)
+                  Roles
                 </label>
               </div>
               <div className="flex flex-row justify-between">
                 <input
-                  type="date"
-                  className="w-1/2 m-1 bg-gray-50 rounded-md border border-gray-300 focus:border-blue-500  focus:outline-none px-2 py-1"
-                />
-                <input
                   type="number"
                   min="0"
                   className="w-1/2 m-1 bg-gray-50 rounded-md border border-gray-300 focus:border-blue-500  focus:outline-none px-2 py-1"
+                  onChange={handleChangeDuration}
+                />
+                <Select
+                  name="colors"
+                  onChange={handleChangeRoles}
+                  options={data}
+                  className=" w-1/2 m-1"
+                  classNamePrefix="select"
+                  maxMenuHeight={120}
+                  value = {roles}
                 />
               </div>
             </div>
@@ -200,39 +199,20 @@ function AddProject(props: any) {
                   className="w-1/2 m-1 bg-gray-50 rounded-md border border-gray-300 focus:border-blue-500  focus:outline-none px-2 py-1"
                 >
                   <option value="">Seleccione una opción</option>
-                  <option value="Diaria">Diaria</option>
-                  <option value="Semanal">Semanal</option>
-                  <option value="Mensual">Mensual</option>
-                  <option value="Anual">Anual</option>
+                  <option value="diaria">Diaria</option>
+                  <option value="semanal">Semanal</option>
+                  <option value="quincenal">Quincenal</option>
+                  <option value="mensual">Mensual</option>
                 </select>
                 <input
-                  onChange={handleInputChange}
+                  onChange={handleInputChangeHowmany}
                   type="number"
                   min="0"
                   className="w-1/2 m-1 bg-gray-50 rounded-md border border-gray-300 focus:border-blue-500  focus:outline-none px-2 py-1"
                 />
               </div>
             </div>
-            {specify()}
-            {divArray.map((item, index) => (
-              <div key={index}>{option()}</div>
-            ))}
             <div className="border-t border-gray-300 my-4"></div>
-
-            <div className="flex flex-col h-[8rem]">
-              <label htmlFor="" className="w-1/2 p-1">
-                Rol
-              </label>
-                <Select
-                  isMulti
-                  name="colors"
-                  options={colourOptions}
-                  className=" w-full"
-                  classNamePrefix="select"
-                  maxMenuHeight={120}
-                  
-                />
-            </div>
           </div>
         </DialogBody>
         <DialogFooter>
@@ -244,7 +224,7 @@ function AddProject(props: any) {
           >
             <span>Cancel</span>
           </Button>
-          <Button variant="gradient" color="green" onClick={handleOpen}>
+          <Button variant="gradient" color="green" onClick={addnew}>
             <span>Confirm</span>
           </Button>
         </DialogFooter>
