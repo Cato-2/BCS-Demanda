@@ -11,7 +11,7 @@ const oR = 100;
 const RADIAN = Math.PI / 180;
 const data = [
 
-  { name: "> 100%", value: 50, color: "green" },
+  { name: "< 100%", value: 50, color: "green" },
   { name: "< 120%", value: 25, color: "#F0DE36" },
   { name: "> 120%", value: 25, color: "red" },
 ];
@@ -88,7 +88,7 @@ function Indicador(any: any) {
 
   
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col pt-0">
       <PieChart width={320} height={210}>
         <Pie
           dataKey="value"

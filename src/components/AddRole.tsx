@@ -30,6 +30,15 @@ function AddRole() {
     sethoras(e.target.value);
   };
 
+  function extractNumberFromString(str:any) {
+    const regex = /\d+/; // This regex will match one or more digits in the string.
+    const match = str.match(regex);
+    if (match) {
+      return parseInt(match[0], 10); // Convert the matched string to an integer.
+    }
+    return 0; // Return 0 if no number is found.
+  }
+
   const addnew = () => {
     let allroles = JSON.parse(JSON.stringify(Roles));
 
@@ -37,8 +46,8 @@ function AddRole() {
     let newrol = {
       id: allroles.length + 1,
       nombre: nombre,
-      cantidad: cantidad,
-      "horas semanales": horas,
+      cantidad: extractNumberFromString(cantidad),
+      "horas semanales": extractNumberFromString(horas),
     };
     console.log(newrol);
     allroles.push(newrol);
@@ -59,6 +68,7 @@ function AddRole() {
       });
     handleOpen();
   };
+
   return (
     <>
       <Button

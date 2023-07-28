@@ -34,8 +34,12 @@ const rows = data;
 
 
 function Roles() {
+  const [search, setSearch] = useState("");
 
-  console.log(rows)
+  const handleSearch = (event: any) => {
+    setSearch(event.target.value);
+    console.log(search);
+  };
 
   return (
     <>
@@ -48,7 +52,7 @@ function Roles() {
         </div>
         <div className="flex shrink-0 flex-col gap-2 lg:flex-row">
         <div className="w-68">
-          <Input label="Buscar" icon={<MagnifyingGlassIcon/>} />
+          <Input label="Buscar" icon={<MagnifyingGlassIcon/>} onChange={handleSearch} />
         </div>
           <AddRole />
         </div>
@@ -81,7 +85,13 @@ function Roles() {
               </tr>
             </thead>
             <tbody>
-              {rows.map((rol) => {
+              {rows.filter((row) => {
+                const searchLowerCase = search.toLowerCase().trim();
+                const tituloLowerCase = row.nombre.toLowerCase().trim();
+                return (
+                  !searchLowerCase || tituloLowerCase.includes(searchLowerCase)
+                );
+              }).map((rol) => {
                   const isLast = rol.id === rows.length - 1;
                   const classes = isLast
                     ? "p-0 px-4"

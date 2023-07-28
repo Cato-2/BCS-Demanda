@@ -113,8 +113,10 @@ function ProjectsTable() {
                 const searchLowerCase = search.toLowerCase().trim();
                 const tituloLowerCase = row.titulo.toLowerCase().trim();
                 const rolLowerCase = row.roles.toLowerCase().trim();
+                const frecuenciaLoweCase = row.frecuencia.toLowerCase().trim()
+                //fecha
                 return (
-                  !searchLowerCase || tituloLowerCase.includes(searchLowerCase) || rolLowerCase.includes(searchLowerCase)
+                  !searchLowerCase || tituloLowerCase.includes(searchLowerCase) || rolLowerCase.includes(searchLowerCase) || frecuenciaLoweCase.includes(searchLowerCase)
                 );
               }).map((tarea) => {
                 const isLast = tarea.id === TABLE_ROWS.length - 1;
