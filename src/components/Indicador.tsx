@@ -11,9 +11,9 @@ const oR = 100;
 const RADIAN = Math.PI / 180;
 const data = [
 
-  { name: "D", value: 50, color: "green" },
-  { name: "E", value: 25, color: "yellow" },
-  { name: "G", value: 25, color: "red" },
+  { name: "> 100%", value: 50, color: "green" },
+  { name: "< 120%", value: 25, color: "#F0DE36" },
+  { name: "> 120%", value: 25, color: "red" },
 ];
 const needle = (
   value: any,
@@ -89,7 +89,7 @@ function Indicador(any: any) {
   
   return (
     <div className="flex flex-col">
-      <PieChart width={300} height={210}>
+      <PieChart width={320} height={210}>
         <Pie
           dataKey="value"
           startAngle={180}
@@ -101,6 +101,9 @@ function Indicador(any: any) {
           outerRadius={oR}
           fill="#8884d8"
           stroke="none"
+          nameKey="name" 
+          label={(entry) => entry.name} 
+          labelLine={false} 
         >
           {data.map((entry, index) => (
             <Cell key={`cell-${index}`} fill={entry.color} />
@@ -108,7 +111,7 @@ function Indicador(any: any) {
         </Pie>
         {needle(value, data, cx, cy, iR, oR, "#d0d000", aux, aux2)}
       </PieChart>
-      <div></div>
+      <div className="w-full text-center pt-2">Demanda</div>
     </div>
   );
 }

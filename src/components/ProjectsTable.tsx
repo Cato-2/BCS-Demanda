@@ -29,6 +29,7 @@ const TABLE_HEAD = [
   "Id",
   "Titulo",
   "Duración (horas)",
+  "Frecuencia",
   "Roles",
   "Creación",
   "",
@@ -102,12 +103,6 @@ function ProjectsTable() {
                       className="flex items-center justify-between gap-2 font-normal leading-none opacity-70"
                     >
                       {head}{" "}
-                      {index !== TABLE_HEAD.length - 1 && (
-                        <ChevronUpDownIcon
-                          strokeWidth={2}
-                          className="h-4 w-4"
-                        />
-                      )}
                     </Typography>
                   </th>
                 ))}
@@ -132,7 +127,7 @@ function ProjectsTable() {
                       key={tarea.id}
                       className="hover:bg-blue-gray-100/30 bg-white"
                     >
-                      <td className={`${classes}`}>
+                      <td className={`${classes}  bg-blue-gray-100/20`}>
                         <div className="flex items-center gap-3">
                           <div className="flex flex-col">
                             <Typography
@@ -171,7 +166,20 @@ function ProjectsTable() {
                           </div>
                         </div>
                       </td>
-                      <td className={`${classes} w-2/10`}>
+                      <td className={`${classes}`}>
+                        <div className="flex items-center gap-3">
+                          <div className="flex flex-col ">
+                            <Typography
+                              variant="small"
+                              color="blue-gray"
+                              className="font-normal capitalize"
+                            >
+                              {tarea.frecuencia}
+                            </Typography>
+                          </div>
+                        </div>
+                      </td>
+                      <td className={`${classes} w-2/10  bg-blue-gray-100/20`}>
                         <div className="flex flex-col">
                           <Typography
                             variant="small"

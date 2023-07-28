@@ -19,6 +19,9 @@ import {
   FaHome,
   FaAngleDown,
   FaAngleUp,
+  FaTasks,
+  FaTh
+  
 } from "react-icons/fa";
 
 function Sidenav() {
@@ -55,7 +58,7 @@ function Sidenav() {
               onClick={toggleDropdown}
             >
               <ListItemPrefix className="icon">
-                <FaUsers />
+                <FaTasks />
               </ListItemPrefix>
               <span className="flex flex-row justify-between w-full pr-6 cursor-pointer">
                 Tareas
@@ -101,7 +104,7 @@ function Sidenav() {
             to="/roles"
           >
             <ListItemPrefix className="icon">
-              <FaUserTag />
+              <FaUsers />
             </ListItemPrefix>
             <span>Roles</span>
           </Link>
@@ -113,7 +116,7 @@ function Sidenav() {
             to="/demanda"
           >
             <ListItemPrefix className="icon">
-              <FaUserTag />
+              <FaTh/>
             </ListItemPrefix>
             <span>Demanda</span>
           </Link>

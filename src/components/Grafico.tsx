@@ -13,72 +13,29 @@ import {
   ResponsiveContainer,
 } from "recharts";
 
-const data = [
-  {
-    name: "Page A",
-    capacidad: 600,
-    demanda: 800,
-
-  },
-  {
-    name: "Page B",
-    capacidad: 600,
-    demanda: 400,
-
-  },
-  {
-    name: "Page C",
-    capacidad: 600,
-    demanda: 1098,
-
-  },
-  {
-    name: "Page D",
-    capacidad: 600,
-    demanda: 1200,
-
-  },
-  {
-    name: "Page E",
-    capacidad: 600,
-    demanda: 1108,
-
-  },
-  {
-    name: "Page F",
-    capacidad: 600,
-    demanda: 680,
-
-  },
-  {
-    name: "Page C",
-    capacidad: 600,
-    demanda: 1098,
-
-  },
-  {
-    name: "Page D",
-    capacidad: 600,
-    demanda: 1200,
-
-  },
-  {
-    name: "Page E",
-    capacidad: 600,
-    demanda: 500,
-
-  },
-  {
-    name: "Page F",
-    capacidad: 600,
-    demanda: 680,
-
-  },
-];
 export default function Grafico(any: any) {
+  let capacidad = 0;
+  let demanda = 0;
+  const style = () => {
+    let yellow = capacidad*1.2
+    if(capacidad >= demanda){
+      return "green"
+    }
+    else if( capacidad < demanda && demanda < yellow ){
+      return "yellow"
+    }
+    else{
+      return "red"
+    }
+  }
   const getdata = () => {
     let aux: any[] = [];
-    let capacidad = 0;
+
+    any.demandapromedio.map((item:any, index:any)=>{
+      if(item[0] == any.filter){
+        demanda = item[1]
+      }
+    })
     any.capacidadofertada.map((item: any) => {
       if (item[0] == any.filter) {
         capacidad = item[2];
@@ -117,8 +74,8 @@ export default function Grafico(any: any) {
       <YAxis />
       <Tooltip />
       <Legend />
-      <Area type="monotone" dataKey="capacidad" fill="#8884d8" stroke="#8884d8" />
-      <Line type="monotone" dataKey="demanda" stroke="#185a7d" dot={false} />
+      <Area type="monotone" dataKey="capacidad" fill="#68B984" stroke="#5F8D4E" />
+      <Line type="monotone" dataKey="demanda" stroke={style()} dot={false} />
     </ComposedChart>
   );
 }

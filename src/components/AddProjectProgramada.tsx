@@ -27,30 +27,24 @@ function AddProjectProgramada(any:any) {
   const [roles, setroles] = useState({value:"", label:""}); // format {value: "nombre", label: "nombre"}
 
   const handleChangeStart = (e: any) => {
-    console.log(e.target.value)
     setstartdate(e.target.value);
   };
 
   const handleChangeDue = (e: any) => {
-    console.log(e.target.value)
     setduedate(e.target.value);
   };
 
   const handleChangeTitle = (e: any) => {
-    console.log(e.target.value)
     settitle(e.target.value);
   };
 
   const handleChangeDescription = (e: any) => {
-    console.log(e.target.value)
     setdescription(e.target.value);
   };
   const handleChangeDuration = (e: any) => {
-    console.log(e.target.value)
     setduration(e.target.value);
   };
   const handleChangeRoles = (selectedOption:any) => {
-    console.log(selectedOption)
     setroles(selectedOption);
   };
   const handleOpen = () => setOpen(!open);
@@ -112,7 +106,7 @@ function AddProjectProgramada(any:any) {
         handler={handleOpen}
         className="flex flex-col overflow-y-auto max-h-[90%]"
       >
-        <DialogHeader>Agregar tarea Programada</DialogHeader>
+        <DialogHeader>Agregar tarea</DialogHeader>
         <DialogBody divider>
           <div>
             <div className="py-2 flex flex-col">
