@@ -28,7 +28,7 @@ import data from "../../src-tauri/tareas.json";
 const TABLE_HEAD = [
   "Id",
   "Titulo",
-  "Duración",
+  "Duración (horas)",
   "Roles",
   "Fecha de inicio",
   "Fecha de término",

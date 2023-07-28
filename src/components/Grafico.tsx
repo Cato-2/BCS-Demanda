@@ -22,7 +22,7 @@ export default function Grafico(any: any) {
       return "green"
     }
     else if( capacidad < demanda && demanda < yellow ){
-      return "yellow"
+      return "#F0DE36"
     }
     else{
       return "red"

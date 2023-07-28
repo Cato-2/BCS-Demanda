@@ -26,26 +26,10 @@ import {
 import { useState } from "react";
 import data from "../../src-tauri/tareas.json";
 import AddProjectProgramada from "./AddProjectProgramada";
-const TABLE_HEAD = ["Id", "Titulo", "Duración", "Roles", "Fecha de inicio", "Fecha de término", ""];
+const TABLE_HEAD = ["Id", "Titulo", "Duración (horas)", "Roles", "Fecha de inicio", "Fecha de término", ""];
 
 const TABLE_ROWS = data;
 
-interface Row {
-  img: string;
-  name: string;
-  email: string;
-  job: string;
-  org: string;
-  online: boolean;
-  date: string;
-  id: number;
-  duracion: string;
-  test: string;
-}
-
-interface ArrayRow {
-  rows: Row[];
-}
 
 function NoRoutine() {
   const [search, setSearch] = useState("");
