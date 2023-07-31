@@ -23,7 +23,7 @@ function Layout({ children }: LayoutProps): JSX.Element {
       <div>
         <Sidenav />
       </div>
-      <div className="w-full overflow-auto max-h-screen">
+      <div className="w-full overflow-auto max-h-screen bg-[#fcfcfc]">
         {children}
       </div>
     </div>
