@@ -87,7 +87,7 @@ function NoRoutine() {
                 return (
                   !searchLowerCase || tituloLowerCase.includes(searchLowerCase) || rolLowerCase.includes(searchLowerCase)
                 );
-              }).map((tarea) => {
+              }).map((tarea:any) => {
                 const isLast = tarea.id === TABLE_ROWS.length - 1;
                 const classes = isLast
                   ? "p-0 px-4"

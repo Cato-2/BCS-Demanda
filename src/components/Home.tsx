@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Topnav from "./Topnav";
 import ExcelToJSON from "../data/ExcelToJson";
+import { Link } from "react-router-dom";
 import {
   Card,
   CardBody,
@@ -74,6 +75,7 @@ function Home() {
     "Diciembre",
   ];
 
+
   const months2: string[] = [
     "Ene",
     "Feb",
@@ -131,7 +133,7 @@ function Home() {
       data.push({
         name: index,
         Ofertada: rolesInfo[index][2],
-        Residual: pv,
+        Sobrecarga: pv,
       });
     });
     data = data.slice(0, data.length - 1);
@@ -142,7 +144,7 @@ function Home() {
   const data = graphdata();
 
   return (
-    <div className="w-full h-full pb-4 px-5 pt-8  gap-8">
+    <div className="w-full h-full pb-4 px-5 pt-6  gap-8">
       <div className="flex flex-row h-full">
         <div className="w-full h-auto">
           <div className="flex justify-center pr-6">
@@ -168,7 +170,7 @@ function Home() {
                         Capacidad
                       </TableHeaderCell>
                       <TableHeaderCell className="p-0 px-2 text-center">
-                        Requerido
+                        Faltante
                       </TableHeaderCell>
                       <TableHeaderCell className="p-0 px-2">
                         Estado
@@ -225,7 +227,7 @@ function Home() {
               </CardBody>
             </Card>
             <Card className="ring-1 ring-gray-300 rounded-lg mt-4">
-              <CardBody>
+              <CardBody className="flex justify-center">
                 <div className="w-fit">
                   <div className="text-center">Demanda</div>
                   <BarChart
@@ -257,7 +259,7 @@ function Home() {
                     <Tooltip />
                     <Legend />
                     <Bar dataKey="Ofertada" stackId="a" fill="#37B24D" />
-                    <Bar dataKey="Residual" stackId="a" fill="#E03131" />
+                    <Bar dataKey="Sobrecarga" stackId="a" fill="#E03131" />
                   </BarChart>
                 </div>
               </CardBody>
@@ -276,6 +278,12 @@ function Home() {
               </div>
               <div className="pb-8">
                 <Typography variant="h6" color="blue-gray" className="mb-2">
+                  Descargar plantilla de datos
+                </Typography>
+                <Button><a  href="../../public/plantilla.xlsx" download="plantilla capacidad">Descargar Excel</a></Button>
+              </div>
+              <div className="pb-8">
+                <Typography variant="h6" color="blue-gray" className="mb-2">
                   Exportar datos a excel
                 </Typography>
                 <Button>Descargar Excel</Button>
@@ -284,7 +292,9 @@ function Home() {
                 <Typography variant="h6" color="blue-gray" className="mb-2">
                   Exportar dashboard a PDF
                 </Typography>
+                <Link to="/pdf-screen">
                 <Button>Descargar PDF</Button>
+                </Link>
               </div>
             </CardBody>
           </Card>

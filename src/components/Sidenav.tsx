@@ -1,5 +1,4 @@
 import React from "react";
-import { SidenavData } from "./SidenavData";
 import { Link, useLocation } from "react-router-dom";
 import * as FaIcons from "react-icons/fa";
 import {

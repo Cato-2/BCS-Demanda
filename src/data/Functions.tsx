@@ -83,8 +83,9 @@ export const norutinariasbyrole = (Roles: any[], Tasks: any[]) => {
       Tasks.map((task: any) => {
         if (task.roles == role.nombre || task.roles == "todos") {
           //task.roles.indexOf(role.nombre) !== -1
-          if (task.frecuencia == "periodicas") {
-            acu = task.duracion * 4 * 1.5 + acu;
+          if (task.frecuencia == "ocasionales") {
+            acu = task.duracion * 4 * 0.75 + acu;
+            console.log(role.nombre, task.duracion, acu, task.titulo)
           }
         }
       });
@@ -110,8 +111,8 @@ export const programadasbyrole = (Roles: any[], Tasks: any[]) => {
       Tasks.map((task: any) => {
         if (task.roles == role.nombre || task.roles == "todos") {
           //task.roles.indexOf(role.nombre) !== -1
-          if (task.frecuencia == "ocasionales") {
-            acu = task.duracion * 4 * 0.75 + acu;
+          if (task.frecuencia == "periodicas") {
+            acu = task.duracion * 4 * 1.5 + acu;
           }
           //if tiene fecha de inicio y fecha de termino calcular la cantidad de meses y multiplicar por la duracion
           //no se realizaria la multiplicacion por 4 ni por 0.75 porque ya se considera en la duracion

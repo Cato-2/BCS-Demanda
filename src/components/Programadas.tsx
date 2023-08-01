@@ -35,6 +35,18 @@ const TABLE_HEAD = [
   "",
 ];
 
+interface Tarea {
+  id: number;
+  titulo: string;
+  duracion: string;
+  roles: string;
+  frecuencia: string;
+  "fecha de inicio": string;
+  "fecha de termino": string;
+}
+
+
+
 const TABLE_ROWS = data;
 
 function Programadas() {
@@ -50,7 +62,7 @@ function Programadas() {
       <div className="pb-4 px-5 pt-8 flex w-full items-center justify-between gap-8 bg-[#fcfcfc]  whitespace-nowrap">
         <div>
           <Typography variant="h5" color="blue-gray">
-            Actividades programadas
+            Tareas programadas
           </Typography>
         </div>
         <div className="flex shrink-0 flex-col gap-2 lg:flex-row">
@@ -93,7 +105,7 @@ function Programadas() {
                 return (
                   !searchLowerCase || tituloLowerCase.includes(searchLowerCase) || rolLowerCase.includes(searchLowerCase)
                 );
-              }).map((tarea) => {
+              }).map((tarea:any) => {
                 const isLast = tarea.id === TABLE_ROWS.length - 1;
                 const classes = isLast
                   ? "p-0 px-4"

@@ -1,3 +1,20 @@
 - al leer un nuevo excel revisar que todas las tareas tengan duracion
-- cambiar columna rutinarias, en vez de true, poner el tipo, es decir, rutinaria, no rutinaria, programada
 - if fecha en blanco, poner rol de ocasional o periodicas
+- exportar json a excel
+- validacion a los formularios
+- funcion eliminar tareas y roles
+- desplegar datos en modal por cada tarea
+- ver que pasa cuando no hay datos
+
+- programado -> si no ingresa frecuencia periodica 0.75 * 4 * duracion
+- no rutinaria -> si no ingresa frecuencia ocacional 1.5 * 4 * duracion
+- rutinaria -> si no ingresa frecuencia frecuente 2.5 * 4 * duracion
+
+- cambiar mensaje de riesgo en vista demanda
+- minimizar sidebar
+- agregar repetir cada año a formulario programados
+- agregar loading y confirmacion a import excel
+- arreglar errores
+- fecha de creacion solo guardar cuando se crea item desde el programa
+
+- porque descarga .htm despues de construirlo
