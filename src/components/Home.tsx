@@ -49,6 +49,7 @@ import {
 } from "recharts";
 import tasks from "../../src-tauri/tareas.json";
 import RolesList from "../../src-tauri/roles.json";
+import {JsonToExcel} from "../data/JsontoExcel";
 
 const roles = RolesList; //json
 const tareas = tasks; //json
@@ -132,12 +133,11 @@ function Home() {
       const pv = Math.max(0, item.datos[month][1] - rolesInfo[index][2]);
       data.push({
         name: index,
-        Ofertada: rolesInfo[index][2],
+        Capacidad: rolesInfo[index][2],
         Sobrecarga: pv,
       });
     });
     data = data.slice(0, data.length - 1);
-    console.log(data);
     return data;
   };
 
@@ -156,7 +156,7 @@ function Home() {
             <Card className="ring-1 ring-gray-300 rounded-lg">
               <CardBody>
                 <Typography variant="h5" color="blue-gray" className="mb-2">
-                  Mes de {months[month]}
+                  Mes Actual
                 </Typography>
                 <Table className="py-2 max-h-[17rem] overflow-auto">
                   <TableHead>
@@ -179,7 +179,6 @@ function Home() {
                   </TableHead>
                   <TableBody>
                     {totalbymonth.map((item: any, index: number) => {
-                      console.log(item);
                       return (
                         <TableRow key={index} className="text-center">
                           <TableCell className="capitalize p-0">
@@ -258,7 +257,7 @@ function Home() {
                     />
                     <Tooltip />
                     <Legend />
-                    <Bar dataKey="Ofertada" stackId="a" fill="#37B24D" />
+                    <Bar dataKey="Capacidad" stackId="a" fill="#37B24D" />
                     <Bar dataKey="Sobrecarga" stackId="a" fill="#E03131" />
                   </BarChart>
                 </div>
@@ -286,7 +285,7 @@ function Home() {
                 <Typography variant="h6" color="blue-gray" className="mb-2">
                   Exportar datos a excel
                 </Typography>
-                <Button>Descargar Excel</Button>
+                <JsonToExcel/>
               </div>
               <div className="pb-2">
                 <Typography variant="h6" color="blue-gray" className="mb-2">

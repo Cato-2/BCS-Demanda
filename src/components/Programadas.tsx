@@ -54,7 +54,6 @@ function Programadas() {
 
   const handleSearch = (event: any) => {
     setSearch(event.target.value);
-    console.log(search);
   };
 
   return (

@@ -36,20 +36,16 @@ function AddProject(props: any) {
   };
 
   const handleChangeTitle = (e: any) => {
-    console.log(e.target.value);
     settitle(e.target.value);
   };
 
   const handleChangeDescription = (e: any) => {
-    console.log(e.target.value);
     setdescription(e.target.value);
   };
   const handleChangeDuration = (e: any) => {
-    console.log(e.target.value);
     setduration(e.target.value);
   };
   const handleChangeRoles = (selectedOption: any) => {
-    console.log(selectedOption);
     setroles(selectedOption);
   };
   function getFormattedToday(): string {
@@ -97,7 +93,6 @@ function AddProject(props: any) {
       frecuencia: frecuency,
       "cuantas veces": extractNumberFromString(howmany),
     };
-    console.log(newtask)
     alltasks.push(newtask);
 
     // Step 3: Convert the updated array back to a JSON string

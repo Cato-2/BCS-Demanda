@@ -58,7 +58,6 @@ function ProjectsTable() {
 
   const handleSearch = (event: any) => {
     setSearch(event.target.value);
-    console.log(search);
   };
 
   const formatDate = (dateString:string) => {

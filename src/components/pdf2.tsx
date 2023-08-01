@@ -425,7 +425,6 @@ function PdfScreen() {
                         </TableCell>
                         {totalbymonth.map((item, index) => {
                           if (item.rol == role[0]) {
-                            console.log(item);
                             return (
                               <React.Fragment key={index}>
                                 {item.datos.map(

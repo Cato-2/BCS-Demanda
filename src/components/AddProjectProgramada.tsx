@@ -70,7 +70,6 @@ function AddProjectProgramada(any:any) {
       "fecha de termino": duedate,
       frecuencia: any.tipo,
     };
-    console.log(newtask)
     alltasks.push(newtask);
 
     // Step 3: Convert the updated array back to a JSON string

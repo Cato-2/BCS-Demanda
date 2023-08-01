@@ -85,7 +85,6 @@ export const norutinariasbyrole = (Roles: any[], Tasks: any[]) => {
           //task.roles.indexOf(role.nombre) !== -1
           if (task.frecuencia == "ocasionales") {
             acu = task.duracion * 4 * 0.75 + acu;
-            console.log(role.nombre, task.duracion, acu, task.titulo)
           }
         }
       });

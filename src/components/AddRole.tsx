@@ -49,7 +49,6 @@ function AddRole() {
       cantidad: extractNumberFromString(cantidad),
       "horas semanales": extractNumberFromString(horas),
     };
-    console.log(newrol);
     allroles.push(newrol);
 
     // Step 3: Convert the updated array back to a JSON string
