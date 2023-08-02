@@ -10,16 +10,21 @@ export const JsonToExcel: React.FC = () => {
     const [JsonDataRoles, setJsonDataRoles] = useState<any[]>([]);
 
     const handleClick = () => {
-        const worksheet = XLSX.utils.json_to_sheet(tasks);
+        // Convert "meses especificos" array to comma-separated strings in "tasks" data.
+        const tasksWithCommaSeparatedMonths = tasks.map((task) => ({
+            ...task,
+            'meses especificos': task['meses especificos'] ? task['meses especificos'].join(',') : '',
+          }));
+    
+        const worksheet = XLSX.utils.json_to_sheet(tasksWithCommaSeparatedMonths);
         const workSheet2 = XLSX.utils.json_to_sheet(roles);
-
+    
         const workbook = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(workbook, worksheet, "Tareas");
-        XLSX.utils.book_append_sheet(workbook, workSheet2, "Roles");
-        	
-        XLSX.writeFile(workbook, "demanda.xlsx");
-
-    };
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Tareas');
+        XLSX.utils.book_append_sheet(workbook, workSheet2, 'Roles');
+    
+        XLSX.writeFile(workbook, 'demanda.xlsx');
+      };
     return (
         <div>
             <div>

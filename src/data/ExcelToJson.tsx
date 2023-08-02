@@ -23,7 +23,12 @@ const ExcelToJSON: React.FC = () => {
         const jsonDataWithHeaders = jsonData.slice(1).map((row: any[]) => {
           const rowData: any = {};
           headerRow.forEach((header: string, index: number) => {
-            rowData[header] = row[index];
+            if (header === 'meses especificos') {
+              // Split the comma-separated string back into an array
+              rowData[header] = row[index].split(',').filter(Boolean); // filter(Boolean) to remove empty elements
+            } else {
+              rowData[header] = row[index];
+            }
           });
           return rowData;
         });
