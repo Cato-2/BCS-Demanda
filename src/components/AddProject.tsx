@@ -92,6 +92,7 @@ function AddProject(props: any) {
       fecha_creacion: getFormattedToday(),
       frecuencia: frecuency,
       "cuantas veces": extractNumberFromString(howmany),
+      tipo: props.tipo,
     };
     alltasks.push(newtask);
 

@@ -18,3 +18,5 @@
 - fecha de creacion solo guardar cuando se crea item desde el programa
 
 - porque descarga .htm despues de construirlo
+
+- agregar a addproject, si es anual entonces que meses

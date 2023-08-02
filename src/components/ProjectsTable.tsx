@@ -122,7 +122,7 @@ function ProjectsTable() {
                 const classes = isLast
                   ? "p-0 px-4"
                   : "p-0 px-4 border-b border-blue-gray-100/50 ";
-                if ((tarea.frecuencia == "frecuente" || tarea.frecuencia == "diaria" || tarea.frecuencia == "semanal" || tarea.frecuencia == "quincenal" || tarea.frecuencia == "mensual")&& tarea.id != null) {
+                if (tarea.id != null && tarea.tipo == "rutinaria") {
                   return (
                     <tr
                       key={tarea.id}

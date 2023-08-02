@@ -49,7 +49,7 @@ import {
 } from "recharts";
 import tasks from "../../src-tauri/tareas.json";
 import RolesList from "../../src-tauri/roles.json";
-import {JsonToExcel} from "../data/JsontoExcel";
+import {JsonToExcel} from "../data/JsonToExcel";
 
 const roles = RolesList; //json
 const tareas = tasks; //json

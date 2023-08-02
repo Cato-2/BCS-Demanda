@@ -42,7 +42,7 @@ export const rutinariasbyrole = (Roles: any[], Tasks: any[]) => {
     let acu = 0;
     if (role.nombre != undefined) {
       Tasks.map((task: any) => {
-        if (task.roles == role.nombre || task.roles == "todos") {
+        if ((task.roles == role.nombre || task.roles == "todos") && task.tipo == "rutinaria") {
           //task.roles.indexOf(role.nombre) !== -1
           if (task.frecuencia == "frecuente") {
             acu = task.duracion * 4 * 2.5 + acu;
@@ -108,14 +108,23 @@ export const programadasbyrole = (Roles: any[], Tasks: any[]) => {
     let acu = 0;
     if (role.nombre != undefined) {
       Tasks.map((task: any) => {
-        if (task.roles == role.nombre || task.roles == "todos") {
+        if ((task.roles == role.nombre || task.roles == "todos") && task.tipo == "programadas") {
           //task.roles.indexOf(role.nombre) !== -1
           if (task.frecuencia == "periodicas") {
             acu = task.duracion * 4 * 1.5 + acu;
           }
-          //if tiene fecha de inicio y fecha de termino calcular la cantidad de meses y multiplicar por la duracion
-          //no se realizaria la multiplicacion por 4 ni por 0.75 porque ya se considera en la duracion
-          // se suma a acu
+          if(task.frecuencia == "diaria"){
+            acu = task.duracion * 4 * 5 * task["cuantas veces"] + acu; //4 semanas, 5 dias cada una
+          }
+          if(task.frecuencia == "semanal"){
+            acu = task.duracion * 4 * task["cuantas veces"] + acu; //4 semanas
+          }
+          if(task.frecuencia == "quincenal"){
+            acu = task.duracion * 2 * task["cuantas veces"] + acu; //2 semanas
+          }
+          if(task.frecuencia == "mensual"){
+            acu = task.duracion * task["cuantas veces"] + acu; //1 mes
+          }
         }
       });
       programadas.push([role.nombre, acu]);

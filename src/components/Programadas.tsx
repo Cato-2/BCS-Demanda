@@ -4,7 +4,7 @@ import {
   MagnifyingGlassCircleIcon,
 } from "@heroicons/react/24/outline";
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
-import AddProjectProgramada from "./AddProjectProgramada";
+import AddProject from "./AddProject";
 import EditProject from "./EditProject";
 import ViewProject from "./ViewProject";
 import {
@@ -35,18 +35,6 @@ const TABLE_HEAD = [
   "",
 ];
 
-interface Tarea {
-  id: number;
-  titulo: string;
-  duracion: string;
-  roles: string;
-  frecuencia: string;
-  "fecha de inicio": string;
-  "fecha de termino": string;
-}
-
-
-
 const TABLE_ROWS = data;
 
 function Programadas() {
@@ -72,7 +60,7 @@ function Programadas() {
               icon={<MagnifyingGlassIcon />}
             />
           </div>
-          <AddProjectProgramada tipo="programada"/>
+          <AddProject tipo="programadas"/>
         </div>
       </div>
       <Card className="max-h-[calc(100vh-9rem)] h-fit shadow-none bg-white border tabla mx-5 px-2">
@@ -109,7 +97,7 @@ function Programadas() {
                 const classes = isLast
                   ? "p-0 px-4"
                   : "p-0 px-4 border-b border-blue-gray-100/50 ";
-                if (tarea.frecuencia == "periodicas" || tarea.frecuencia == "programada" && tarea.id != null) {
+                if (tarea.tipo == "programadas" && tarea.id != null) {
                   return (
                     <tr
                       key={tarea.id}
@@ -172,18 +160,9 @@ function Programadas() {
                             color="blue-gray"
                             className="font-normal"
                           >
-                            {tarea["fecha de inicio"]}
+                            {tarea.frecuencia}
                           </Typography>
                         </div>
-                      </td>
-                      <td className={`${classes}`}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {tarea["fecha de termino"]}
-                        </Typography>
                       </td>
                       <td
                         className={`${classes}  bg-blue-gray-100/20 flex-row flex-auto flex justify-center w-auto`}
