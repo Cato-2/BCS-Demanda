@@ -35,6 +35,7 @@ import {
   getAllMonths,
   calculateDuration,
   bymonthprogramadas,
+  bymonthyearly,
 } from "../data/Functions";
 
 const roles = RolesList; //json
@@ -52,6 +53,7 @@ function Demanda() {
   const [filter, setFilter] = useState("todos");
   bymonthprogramadas(lastyearProgramada, tareas, last12Months, "programada"); //agrega actividades con fecha de inicio y termino a cada mes sgun corresponda
   bymonthprogramadas(lastyearNorutina, tareas, last12Months, "no rutinaria");
+  bymonthyearly(lastyearProgramada, tareas, last12Months, "programadas");
   const totalbymonth = gettotal(
     lastyearRutina,
     lastyearNorutina,

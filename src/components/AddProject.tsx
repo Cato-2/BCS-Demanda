@@ -19,9 +19,23 @@ function AddProject(props: any) {
   const [title, settitle] = useState<string>();
   const [description, setdescription] = useState<string>("");
   const [duration, setduration] = useState<number>(0);
-  const [roles, setroles] = useState<{ value: string; label: string }>({ value: "", label: "" });
+  const [roles, setroles] = useState<{ value: string; label: string }>({
+    value: "",
+    label: "",
+  });
   const [howmany, setHowmany] = useState<number>(0);
   const [frecuency, setFrecuency] = useState<string>("");
+  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+
+  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>, index: number) => {
+    const { value } = event.target;
+    setSelectedOptions((prevSelectedOptions) => {
+      const updatedOptions = [...prevSelectedOptions];
+      updatedOptions[index] = value;
+      console.log(updatedOptions)
+      return updatedOptions;
+    });
+  };
 
   const divArray = Array.from({ length: howmany }, (_, index) => index + 1);
 
@@ -53,18 +67,18 @@ function AddProject(props: any) {
     const year: number = today.getFullYear();
     const month: number = today.getMonth() + 1; // Months are 0-based, so we add 1
     const day: number = today.getDate();
-  
+
     // Pad single-digit months and days with leading zeros
-    const formattedMonth: string = month.toString().padStart(2, '0');
-    const formattedDay: string = day.toString().padStart(2, '0');
-  
+    const formattedMonth: string = month.toString().padStart(2, "0");
+    const formattedDay: string = day.toString().padStart(2, "0");
+
     // Combine the components in the "yyyy-mm-dd" format
     const formattedDate: string = `${year}-${formattedMonth}-${formattedDay}`;
-  
+
     return formattedDate;
   }
 
-  function extractNumberFromString(str:any) {
+  function extractNumberFromString(str: any) {
     const regex = /\d+/; // This regex will match one or more digits in the string.
     const match = str.match(regex);
     if (match) {
@@ -93,6 +107,7 @@ function AddProject(props: any) {
       frecuencia: frecuency,
       "cuantas veces": extractNumberFromString(howmany),
       tipo: props.tipo,
+      "meses especificos": selectedOptions,
     };
     alltasks.push(newtask);
 
@@ -112,7 +127,6 @@ function AddProject(props: any) {
       });
     handleOpen();
   };
-
 
   return (
     <>
@@ -174,7 +188,7 @@ function AddProject(props: any) {
                   className=" w-1/2 m-1"
                   classNamePrefix="select"
                   maxMenuHeight={120}
-                  value = {roles}
+                  value={roles}
                 />
               </div>
             </div>
@@ -199,6 +213,7 @@ function AddProject(props: any) {
                   <option value="semanal">Semanal</option>
                   <option value="quincenal">Quincenal</option>
                   <option value="mensual">Mensual</option>
+                  <option value="anual">Anual</option>
                 </select>
                 <input
                   onChange={handleInputChangeHowmany}
@@ -206,6 +221,33 @@ function AddProject(props: any) {
                   min="0"
                   className="w-1/2 m-1 bg-gray-50 rounded-md border border-gray-300 focus:border-blue-500  focus:outline-none px-2 py-1"
                 />
+              </div>
+              <div className="pt-4">
+                {frecuency === "anual" &&
+                  props.tipo === "programadas" &&
+                  Array.from({ length: howmany }).map((_, index) => (
+                    <div key={index}>
+                      <label htmlFor="">Especificar</label>
+                      <select 
+                      value={selectedOptions[index] || ""}
+                      onChange={(event) => handleSelectChange(event, index)}
+                      className="w-1/2 m-1 bg-gray-50 rounded-md border border-gray-300 focus:border-blue-500  focus:outline-none px-2 py-1">
+                        <option value="">Seleccione una opción</option>
+                        <option value="enero">Enero</option>
+                        <option value="febrero">Febrero</option>
+                        <option value="marzo">Marzo</option>
+                        <option value="abril">Abril</option>
+                        <option value="mayo">Mayo</option>
+                        <option value="junio">Junio</option>
+                        <option value="julio">Julio</option>
+                        <option value="agosto">Agosto</option>
+                        <option value="septiembre">Septiembre</option>
+                        <option value="octubre">Octubre</option>
+                        <option value="noviembre">Noviembre</option>
+                        <option value="diciembre">Diciembre</option>
+                      </select>
+                    </div>
+                  ))}
               </div>
             </div>
             <div className="border-t border-gray-300 my-4"></div>

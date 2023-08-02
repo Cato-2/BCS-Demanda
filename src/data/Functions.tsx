@@ -226,6 +226,36 @@ export function calculateDuration(
   return durationInDays;
 }
 
+export const bymonthyearly = (
+  rolesbymonth: any,
+  Tasks: any,
+  last12Months: any,
+  tipo: string
+) => {
+  rolesbymonth.map((roles:any)=>{
+    Tasks.map((task:any)=>{
+      if((task.roles == roles.rol || roles.rol == "todos") && task.tipo == tipo && task.frecuencia == "anual"){
+          task["meses especificos"].map((month:any)=>{
+            if(last12Months.find((item:any)=>item.slice(0, 3) == month)!=undefined){
+              console.log(month, task.duracion, roles.rol, roles.datos)
+              let index = last12Months.findIndex((item: any) => item.slice(0, 3) === month);
+              roles.datos[index][1] = roles.datos[index][1] + task.duracion;
+            }
+            else{
+              console.log(month, last12Months)
+            }
+          }
+          )
+      }
+    })
+  }
+  )
+}
+
+
+        
+
+  
 export const bymonthprogramadas = (
   rolesbymonth: any,
   Tasks: any,
