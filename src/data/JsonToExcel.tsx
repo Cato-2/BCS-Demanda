@@ -28,7 +28,7 @@ export const JsonToExcel: React.FC = () => {
     return (
         <div>
             <div>
-                <Button onClick={handleClick }>Descargar Excel1</Button>
+                <Button onClick={handleClick }>Descargar Excel</Button>
             </div>
         </div>
     );

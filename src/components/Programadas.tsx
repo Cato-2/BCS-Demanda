@@ -30,8 +30,7 @@ const TABLE_HEAD = [
   "Titulo",
   "Duración (horas)",
   "Roles",
-  "Fecha de inicio",
-  "Fecha de término",
+  "Frecuencia",
   "",
 ];
 
@@ -165,9 +164,9 @@ function Programadas() {
                         </div>
                       </td>
                       <td
-                        className={`${classes}  bg-blue-gray-100/20 flex-row flex-auto flex justify-center w-auto`}
+                        className={`${classes}  flex-row flex-auto flex justify-center w-auto`}
                       >
-                        <EditProject id={tarea.id} />
+                        <EditProject id={tarea.id} tipo="programadas" tarea={tarea}/>
                         <ViewProject id={tarea.id} />
                       </td>
                     </tr>

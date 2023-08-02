@@ -168,7 +168,7 @@ function AddProject(props: any) {
             <div className="flex flex-col">
               <div className="flex-row justify-between flex">
                 <label htmlFor="" className="w-1/2 p-1">
-                  Duración (horas)
+                  Duración Total (horas)
                 </label>
                 <label htmlFor="" className="w-1/2 p-1">
                   Roles
