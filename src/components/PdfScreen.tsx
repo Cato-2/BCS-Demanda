@@ -28,7 +28,6 @@ import Riesgos from "./Riesgos";
 import tasks from "../../src-tauri/tareas.json";
 import RolesList from "../../src-tauri/roles.json";
 import { Link } from "react-router-dom";
-
 import {
   getLast12Months,
   norutinariasbyrole,
@@ -41,6 +40,8 @@ import {
   getAllMonths,
   calculateDuration,
   bymonthprogramadas,
+  bymonthyearly,
+
 } from "../data/Functions";
 
 const allmonths = [
@@ -62,7 +63,6 @@ const allmonths = [
 
 const roles = RolesList; //json
 const tareas = tasks; //json
-
 const last12Months = getLast12Months();
 const norutinariasMes = norutinariasbyrole(roles, tareas);
 const rutinariasMes = rutinariasbyrole(roles, tareas);
@@ -70,22 +70,23 @@ const programadasMes = programadasbyrole(roles, tareas);
 const rolesInfo = getroledata(roles);
 const lastyearRutina = bymonth(last12Months, rutinariasMes, roles);
 const lastyearNorutina = bymonth(last12Months, norutinariasMes, roles); // esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
-const lastyearProgramada = bymonth(last12Months, programadasMes, roles); // esto no deberia ser así esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
-bymonthprogramadas(lastyearProgramada, tareas, last12Months, "programada"); //agrega actividades con fecha de inicio y termino a cada mes sgun corresponda
-bymonthprogramadas(lastyearNorutina, tareas, last12Months, "no rutinaria");
+const lastyearProgramada = bymonth(last12Months, programadasMes, roles);
 
+
+bymonthprogramadas(lastyearProgramada, tareas, last12Months, "programadas"); //agrega actividades con fecha de inicio y termino a cada mes sgun corresponda
+bymonthprogramadas(lastyearNorutina, tareas, last12Months, "no rutinarias");
+bymonthyearly(lastyearProgramada, tareas, last12Months, "programadas");
 const totalbymonth = gettotal(
   lastyearRutina,
   lastyearNorutina,
   lastyearProgramada
 );
-const totaldemanda = averagetotal(totalbymonth);
-
+const totaldemanda = averagetotal(totalbymonth);  
 const getPersonasNecesarias = (tipo: string, rolnombre: string) => {
   // Calculate the required number of people for the selected role
   let aux = 0;
 
-  totaldemanda.forEach((role, index) => {
+  totaldemanda.forEach((role:any, index:any) => {
     if (role[0] === rolnombre) {
       if (tipo === "necesarias") {
         aux = role[1] / rolesInfo[index][3];
@@ -181,7 +182,7 @@ const MyPdfDocument: React.FC<MyPdfDocumentProps> = ({
                         {"Actividades programadas"}
                       </TableCell>
                       {lastyearProgramada.map(
-                        (item, index) =>
+                        (item:any, index:any) =>
                           item.rol == role[0] && (
                             <React.Fragment key={index}>
                               {item.datos.map(
@@ -203,7 +204,7 @@ const MyPdfDocument: React.FC<MyPdfDocumentProps> = ({
                         {"Actividades de no rutina"}
                       </TableCell>
                       {lastyearNorutina.map(
-                        (item, index) =>
+                        (item:any, index:any) =>
                           item.rol === role[0] && (
                             <React.Fragment key={index}>
                               {item.datos.map(
@@ -225,7 +226,7 @@ const MyPdfDocument: React.FC<MyPdfDocumentProps> = ({
                         {"Actividades de rutina"}
                       </TableCell>
                       {lastyearRutina.map(
-                        (item, index) =>
+                        (item:any, index:any) =>
                           item.rol === role[0] && (
                             <React.Fragment key={index}>
                               {item.datos.map(

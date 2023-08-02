@@ -27,12 +27,15 @@ function AddProject(props: any) {
   const [frecuency, setFrecuency] = useState<string>("");
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
-  const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>, index: number) => {
+  const handleSelectChange = (
+    event: React.ChangeEvent<HTMLSelectElement>,
+    index: number
+  ) => {
     const { value } = event.target;
     setSelectedOptions((prevSelectedOptions) => {
       const updatedOptions = [...prevSelectedOptions];
       updatedOptions[index] = value;
-      console.log(updatedOptions)
+      console.log(updatedOptions);
       return updatedOptions;
     });
   };
@@ -167,9 +170,17 @@ function AddProject(props: any) {
             </div>
             <div className="flex flex-col">
               <div className="flex-row justify-between flex">
-                <label htmlFor="" className="w-1/2 p-1">
-                  Duración Total (horas)
-                </label>
+                {props.tipo == "programadas" && (
+                  <label htmlFor="" className="w-1/2 p-1">
+                    Duración por mes (horas)
+                  </label>
+                )}
+                {props.tipo == "rutinarias" && (
+                  <label htmlFor="" className="w-1/2 p-1">
+                    Duración total tarea (horas)
+                  </label>
+                )}
+
                 <label htmlFor="" className="w-1/2 p-1">
                   Roles
                 </label>
@@ -228,10 +239,11 @@ function AddProject(props: any) {
                   Array.from({ length: howmany }).map((_, index) => (
                     <div key={index}>
                       <label htmlFor="">Especificar</label>
-                      <select 
-                      value={selectedOptions[index] || ""}
-                      onChange={(event) => handleSelectChange(event, index)}
-                      className="w-1/2 m-1 bg-gray-50 rounded-md border border-gray-300 focus:border-blue-500  focus:outline-none px-2 py-1">
+                      <select
+                        value={selectedOptions[index] || ""}
+                        onChange={(event) => handleSelectChange(event, index)}
+                        className="w-1/2 m-1 bg-gray-50 rounded-md border border-gray-300 focus:border-blue-500  focus:outline-none px-2 py-1"
+                      >
                         <option value="">Seleccione una opción</option>
                         <option value="enero">Enero</option>
                         <option value="febrero">Febrero</option>

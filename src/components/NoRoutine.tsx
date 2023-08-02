@@ -26,6 +26,7 @@ import {
 import { useState } from "react";
 import data from "../../src-tauri/tareas.json";
 import AddProjectProgramada from "./AddProjectProgramada";
+
 const TABLE_HEAD = ["Id", "Titulo", "Duración (horas)", "Roles", "Fecha de inicio", "Fecha de término", ""];
 
 const TABLE_ROWS = data;
@@ -55,7 +56,7 @@ function NoRoutine() {
               icon={<MagnifyingGlassIcon />}
             />
           </div>
-          <AddProjectProgramada tipo="no rutinaria"/>
+          <AddProjectProgramada tipo="no rutinarias"/>
         </div>
       </div>
       <Card className="max-h-[calc(100vh-9rem)] h-fit shadow-none bg-white border tabla mx-5 px-2">
@@ -92,7 +93,7 @@ function NoRoutine() {
                 const classes = isLast
                   ? "p-0 px-4"
                   : "p-0 px-4 border-b border-blue-gray-100/50 ";
-                if ((tarea.frecuencia == "ocasionales" || tarea.frecuencia=="no rutinaria") && tarea.id != null) {
+                if ((tarea.frecuencia == "ocasionales" || tarea.frecuencia=="no rutinarias") && tarea.id != null) {
                   return (
                     <tr
                       key={tarea.id}
@@ -169,7 +170,6 @@ function NoRoutine() {
                       <td
                         className={`${classes}  bg-blue-gray-100/20 flex-row flex-auto flex justify-center w-auto`}
                       >
-                        <EditProject id={tarea.id} />
                         <ViewProject id={tarea.id} />
                       </td>
                     </tr>

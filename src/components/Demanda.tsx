@@ -35,32 +35,35 @@ import {
   getAllMonths,
   calculateDuration,
   bymonthprogramadas,
-  bymonthyearly,
+  bymonthyearly
 } from "../data/Functions";
 
 const roles = RolesList; //json
 const tareas = tasks; //json
 
 function Demanda() {
-  const last12Months = getLast12Months();
-  const norutinariasMes = norutinariasbyrole(roles, tareas);
-  const rutinariasMes = rutinariasbyrole(roles, tareas);
-  const programadasMes = programadasbyrole(roles, tareas);
-  const rolesInfo = getroledata(roles);
-  const lastyearRutina = bymonth(last12Months, rutinariasMes, roles);
-  const lastyearNorutina = bymonth(last12Months, norutinariasMes, roles); // esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
-  const lastyearProgramada = bymonth(last12Months, programadasMes, roles); // esto no deberia ser así esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
-  const [filter, setFilter] = useState("todos");
-  bymonthprogramadas(lastyearProgramada, tareas, last12Months, "programada"); //agrega actividades con fecha de inicio y termino a cada mes sgun corresponda
-  bymonthprogramadas(lastyearNorutina, tareas, last12Months, "no rutinaria");
-  bymonthyearly(lastyearProgramada, tareas, last12Months, "programadas");
-  const totalbymonth = gettotal(
-    lastyearRutina,
-    lastyearNorutina,
-    lastyearProgramada
-  );
-  const totaldemanda = averagetotal(totalbymonth);
-  const personasnecesarias = getPersonasNecesarias(
+
+ const last12Months = getLast12Months();
+ const norutinariasMes = norutinariasbyrole(roles, tareas);
+ const rutinariasMes = rutinariasbyrole(roles, tareas);
+ const programadasMes = programadasbyrole(roles, tareas);
+ const rolesInfo = getroledata(roles);
+ const lastyearRutina = bymonth(last12Months, rutinariasMes, roles);
+ const lastyearNorutina = bymonth(last12Months, norutinariasMes, roles); // esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
+ const lastyearProgramada = bymonth(last12Months, programadasMes, roles);
+
+bymonthprogramadas(lastyearProgramada, tareas, last12Months, "programadas"); //agrega actividades con fecha de inicio y termino a cada mes sgun corresponda
+bymonthprogramadas(lastyearNorutina, tareas, last12Months, "no rutinarias");
+bymonthyearly(lastyearProgramada, tareas, last12Months, "programadas");
+const totalbymonth = gettotal(
+  lastyearRutina,
+  lastyearNorutina,
+  lastyearProgramada
+);
+const totaldemanda = averagetotal(totalbymonth);  
+
+const [filter, setFilter] = useState("todos");
+   const personasnecesarias = getPersonasNecesarias(
     "necesarias",
     totaldemanda,
     rolesInfo,

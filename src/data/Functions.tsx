@@ -42,16 +42,20 @@ export const rutinariasbyrole = (Roles: any[], Tasks: any[]) => {
     let acu = 0;
     if (role.nombre != undefined) {
       Tasks.map((task: any) => {
-        if ((task.roles == role.nombre || task.roles == "todos") && task.tipo == "rutinaria") {
+        if ((task.roles == role.nombre || task.roles == "todos") && task.tipo == "rutinarias") {
           //task.roles.indexOf(role.nombre) !== -1
           if (task.frecuencia == "frecuente") {
-            acu = task.duracion * 4 * 2.5 + acu;
+            acu = task.duracion * 4 * task["cuantas veces"] + acu;
+            console.log("frecuente", acu, task.roles)
           }
           if(task.frecuencia == "diaria"){
             acu = task.duracion * 4 * 5 * task["cuantas veces"] + acu; //4 semanas, 5 dias cada una
+            console.log("diaria", task.id, task.roles, acu, task.duracion, task["cuantas veces"])
           }
           if(task.frecuencia == "semanal"){
             acu = task.duracion * 4 * task["cuantas veces"] + acu; //4 semanas
+            console.log("semanal",task.id, task.roles, acu, task.duracion, task["cuantas veces"])
+
           }
           if(task.frecuencia == "quincenal"){
             acu = task.duracion * 2 * task["cuantas veces"] + acu; //2 semanas
@@ -111,7 +115,7 @@ export const programadasbyrole = (Roles: any[], Tasks: any[]) => {
         if ((task.roles == role.nombre || task.roles == "todos") && task.tipo == "programadas") {
           //task.roles.indexOf(role.nombre) !== -1
           if (task.frecuencia == "periodicas") {
-            acu = task.duracion * 4 * 1.5 + acu;
+            acu = task.duracion * 4 * task["cuantas veces"] + acu;
           }
           if(task.frecuencia == "diaria"){
             acu = task.duracion * 4 * 5 * task["cuantas veces"] + acu; //4 semanas, 5 dias cada una
@@ -199,7 +203,9 @@ export function getAllMonths(
 
   // Loop through the months starting from the month after the start date
   let currentMonth = new Date(startDate);
+  currentMonth.setDate(1); // Reset the day to 1
   currentMonth.setMonth(currentMonth.getMonth() + 1); // Move to the next month
+
   while (currentMonth < endDate) {
     allMonths.push(formatMonth(currentMonth));
     // Move to the next month
@@ -209,9 +215,11 @@ export function getAllMonths(
   return allMonths;
 }
 
+
 function formatMonth(date: Date): number[] {
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
+  console.log("formatmonth",month, year)
   return [month, year];
 }
 
@@ -266,8 +274,8 @@ export const bymonthprogramadas = (
     Tasks.map((task: any) => {
       if (task.roles == role.rol || role.rol == "todos") {
         if (
-          (task.frecuencia == "programada" && tipo == "programada") ||
-          (task.frecuencia == "no rutinaria" && tipo == "no rutinaria")
+          (task.frecuencia == "programadas" && tipo == "programadas") ||
+          (task.frecuencia == "no rutinarias" && tipo == "no rutinarias")
         ) {
           let duration = calculateDuration(
             task["fecha de inicio"],
@@ -300,6 +308,7 @@ export const bymonthprogramadas = (
               task["fecha de inicio"],
               task["fecha de termino"]
             );
+            console.log("months", months)
 
             const firstMonth = 30 - parseInt(daystart);
             const lastMonth = parseInt(daydue);
@@ -360,6 +369,7 @@ export const bymonthprogramadas = (
       }
     });
   });
+  return rolesbymonth;
 };
 
 export const gettotal = (

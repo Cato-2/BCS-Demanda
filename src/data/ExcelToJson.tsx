@@ -2,6 +2,16 @@ import React, { ChangeEvent, useState } from "react";
 import * as XLSX from "xlsx";
 import { writeFile, FsTextFileOption } from "@tauri-apps/api/fs";
 
+
+const formatDate = (excelDate: number) => {
+  const epochStart = new Date(Date.UTC(1899, 11, 30)); // Excel epoch starts from 1900-01-01, but has a bug for 1900 being a leap year
+  const date = new Date(epochStart.getTime() + excelDate * 86400000);
+  const year = date.getUTCFullYear();
+  const month = String(date.getUTCMonth() + 1).padStart(2, "0");
+  const day = String(date.getUTCDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
 const ExcelToJSON: React.FC = () => {
   const [xlsxDataTask, setXlsxDataTask] = useState<any[]>([]);
   const [xlsxDataRoles, setXlsxDataRoles] = useState<any[]>([]);
@@ -28,6 +38,11 @@ const ExcelToJSON: React.FC = () => {
               rowData[header] = row[index].split(',').filter(Boolean); // filter(Boolean) to remove empty elements
             } else {
               rowData[header] = row[index];
+            }
+            if(header == 'fecha de inicio' || header == 'fecha de termino') {
+              if(row[index] != undefined){
+                rowData[header] = formatDate(row[index]);
+              }
             }
           });
           return rowData;

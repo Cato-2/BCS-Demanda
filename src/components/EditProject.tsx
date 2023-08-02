@@ -78,7 +78,7 @@ function EditProject(props:
     setroles(selectedOption);
   };
   const update = () => {
-    tasks.map((task) => {
+    tasks.map((task:any) => {
       if (task.id == id) {
         task.titulo = title;
         task.descripcion = description;

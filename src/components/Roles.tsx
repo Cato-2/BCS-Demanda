@@ -154,7 +154,7 @@ function Roles() {
                         </Typography>
                       </td>
                       <td className={`${classes}  bg-blue-gray-100/20 flex-row flex-auto flex justify-center w-auto`}>
-                          <EditProject id={rol.id} />
+                          
                           <ViewProject id={rol.id}/>
                       </td>
                     </tr>

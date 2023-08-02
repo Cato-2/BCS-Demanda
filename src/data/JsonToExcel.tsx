@@ -11,7 +11,7 @@ export const JsonToExcel: React.FC = () => {
 
     const handleClick = () => {
         // Convert "meses especificos" array to comma-separated strings in "tasks" data.
-        const tasksWithCommaSeparatedMonths = tasks.map((task) => ({
+        const tasksWithCommaSeparatedMonths = tasks.map((task:any) => ({
             ...task,
             'meses especificos': task['meses especificos'] ? task['meses especificos'].join(',') : '',
           }));

@@ -83,7 +83,7 @@ function ProjectsTable() {
               icon={<MagnifyingGlassIcon />}
             />
           </div>
-          <AddProject tipo="rutinaria" />
+          <AddProject tipo="rutinarias" />
         </div>
       </div>
       <Card className="max-h-[calc(100vh-9rem)] h-fit shadow-none bg-white border tabla px-2 ">
@@ -122,7 +122,7 @@ function ProjectsTable() {
                 const classes = isLast
                   ? "p-0 px-4"
                   : "p-0 px-4 border-b border-blue-gray-100/50 ";
-                if (tarea.id != null && tarea.tipo == "rutinaria") {
+                if (tarea.id != null && tarea.tipo == "rutinarias") {
                   return (
                     <tr
                       key={tarea.id}
@@ -203,7 +203,7 @@ function ProjectsTable() {
                       <td
                         className={`${classes}  bg-blue-gray-100/20 flex-row flex-auto flex justify-center w-auto`}
                       >
-                        <EditProject id={tarea.id} />
+                        <EditProject id={tarea.id} tarea={tarea} tipo="rutinarias"/>
                         <ViewProject id={tarea.id} />
                       </td>
                     </tr>
