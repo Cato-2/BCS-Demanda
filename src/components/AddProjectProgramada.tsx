@@ -152,7 +152,7 @@ function AddProjectProgramada(any:any) {
             </div>
             <div className="pt-4 flex flex-row">
               <div className="flex flex-col w-1/2 p-1">
-                <label htmlFor="">Duración total (horas)</label>
+                <label htmlFor="">Duración por mes (horas)</label>
                 <input
                   type="number"
                   min="0"

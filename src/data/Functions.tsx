@@ -42,25 +42,41 @@ export const rutinariasbyrole = (Roles: any[], Tasks: any[]) => {
     let acu = 0;
     if (role.nombre != undefined) {
       Tasks.map((task: any) => {
-        if ((task.roles == role.nombre || task.roles == "todos") && task.tipo == "rutinarias") {
+        if (
+          (task.roles == role.nombre || task.roles == "todos") &&
+          task.tipo == "rutinarias"
+        ) {
           //task.roles.indexOf(role.nombre) !== -1
           if (task.frecuencia == "frecuente") {
             acu = task.duracion * 4 * task["cuantas veces"] + acu;
-            console.log("frecuente", acu, task.roles)
+            console.log("frecuente", acu, task.roles);
           }
-          if(task.frecuencia == "diaria"){
+          if (task.frecuencia == "diaria") {
             acu = task.duracion * 4 * 5 * task["cuantas veces"] + acu; //4 semanas, 5 dias cada una
-            console.log("diaria", task.id, task.roles, acu, task.duracion, task["cuantas veces"])
+            console.log(
+              "diaria",
+              task.id,
+              task.roles,
+              acu,
+              task.duracion,
+              task["cuantas veces"]
+            );
           }
-          if(task.frecuencia == "semanal"){
+          if (task.frecuencia == "semanal") {
             acu = task.duracion * 4 * task["cuantas veces"] + acu; //4 semanas
-            console.log("semanal",task.id, task.roles, acu, task.duracion, task["cuantas veces"])
-
+            console.log(
+              "semanal",
+              task.id,
+              task.roles,
+              acu,
+              task.duracion,
+              task["cuantas veces"]
+            );
           }
-          if(task.frecuencia == "quincenal"){
+          if (task.frecuencia == "quincenal") {
             acu = task.duracion * 2 * task["cuantas veces"] + acu; //2 semanas
           }
-          if(task.frecuencia == "mensual"){
+          if (task.frecuencia == "mensual") {
             acu = task.duracion * task["cuantas veces"] + acu; //1 mes
           }
         }
@@ -112,21 +128,24 @@ export const programadasbyrole = (Roles: any[], Tasks: any[]) => {
     let acu = 0;
     if (role.nombre != undefined) {
       Tasks.map((task: any) => {
-        if ((task.roles == role.nombre || task.roles == "todos") && task.tipo == "programadas") {
+        if (
+          (task.roles == role.nombre || task.roles == "todos") &&
+          task.tipo == "programadas"
+        ) {
           //task.roles.indexOf(role.nombre) !== -1
           if (task.frecuencia == "periodicas") {
             acu = task.duracion * 4 * task["cuantas veces"] + acu;
           }
-          if(task.frecuencia == "diaria"){
+          if (task.frecuencia == "diaria") {
             acu = task.duracion * 4 * 5 * task["cuantas veces"] + acu; //4 semanas, 5 dias cada una
           }
-          if(task.frecuencia == "semanal"){
+          if (task.frecuencia == "semanal") {
             acu = task.duracion * 4 * task["cuantas veces"] + acu; //4 semanas
           }
-          if(task.frecuencia == "quincenal"){
+          if (task.frecuencia == "quincenal") {
             acu = task.duracion * 2 * task["cuantas veces"] + acu; //2 semanas
           }
-          if(task.frecuencia == "mensual"){
+          if (task.frecuencia == "mensual") {
             acu = task.duracion * task["cuantas veces"] + acu; //1 mes
           }
         }
@@ -215,11 +234,10 @@ export function getAllMonths(
   return allMonths;
 }
 
-
 function formatMonth(date: Date): number[] {
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
-  console.log("formatmonth",month, year)
+  console.log("formatmonth", month, year);
   return [month, year];
 }
 
@@ -240,30 +258,34 @@ export const bymonthyearly = (
   last12Months: any,
   tipo: string
 ) => {
-  rolesbymonth.map((roles:any)=>{
-    Tasks.map((task:any)=>{
-      if((task.roles == roles.rol || roles.rol == "todos") && task.tipo == tipo && task.frecuencia == "anual"){
-          task["meses especificos"].map((month:any)=>{
-            if(last12Months.find((item:any)=>item.slice(0, 3) == month)!=undefined){
-              console.log(month, task.duracion, roles.rol, roles.datos)
-              let index = last12Months.findIndex((item: any) => item.slice(0, 3) === month);
-              roles.datos[index][1] = roles.datos[index][1] + task.duracion;
-            }
-            else{
-              console.log(month, last12Months)
-            }
+  rolesbymonth.map((roles: any) => {
+    Tasks.map((task: any) => {
+      if (
+        (task.roles == roles.rol || roles.rol == "todos") &&
+        task.tipo == tipo &&
+        task.frecuencia == "anual"
+      ) {
+        task["meses especificos"].map((month: any) => {
+          month = month.slice(0, 3);
+
+          if (
+            last12Months.find((item: any) => item.slice(0, 3) == month) !=
+            undefined
+          ) {
+            console.log(month, task.duracion, roles.rol, roles.datos);
+            let index = last12Months.findIndex(
+              (item: any) => item.slice(0, 3).toLowerCase() === month.slice(0, 3).toLowerCase()
+            );
+            roles.datos[index][1] = roles.datos[index][1] + task.duracion;
+          } else {
+            console.log(month.slice(0, 3), last12Months);
           }
-          )
+        });
       }
-    })
-  }
-  )
-}
+    });
+  });
+};
 
-
-        
-
-  
 export const bymonthprogramadas = (
   rolesbymonth: any,
   Tasks: any,
@@ -277,92 +299,99 @@ export const bymonthprogramadas = (
           (task.frecuencia == "programadas" && tipo == "programadas") ||
           (task.frecuencia == "no rutinarias" && tipo == "no rutinarias")
         ) {
-          let duration = calculateDuration(
-            task["fecha de inicio"],
-            task["fecha de termino"]
-          );
-          let monthstart = task["fecha de inicio"].split("-")[1]; //mes de inicio
-          let monthdue = task["fecha de termino"].split("-")[1]; //mes de termino
-          let yearstart = task["fecha de inicio"].split("-")[0]; //año de inicio
-          let yeardue = task["fecha de termino"].split("-")[0]; //año de termino
-          let daystart = task["fecha de inicio"].split("-")[2]; //dia de inicio
-          let daydue = task["fecha de termino"].split("-")[2]; //dia de termino
-          if (monthstart == monthdue && yearstart == yeardue) {
-            // si la tarea se realiza durante un mismo mes  revisar cuando es un puro mes en no rutinaria
-            if (
-              last12Months.find(
-                (item: any) =>
-                  item ==
-                  `${allmonths[parseInt(monthstart) - 1]} - ${yearstart}`
-              ) != undefined
-            ) {
-              let index = last12Months.indexOf(
-                `${allmonths[parseInt(monthstart) - 1]} - ${yearstart}`
-              );
-              role.datos[index][1] =
-                role.datos[index][1] + parseInt(task.duracion);
-            }
-          } else {
-            //si ejecuta entre dos o mas meses, dividir duracion en meses desde inicio hasta termino
-            let months = getAllMonths(
+          if (
+            task["fecha de inicio"] != undefined ||
+            task["fecha de termino"] != undefined ||
+            task["fecha de termino"] != null ||
+            task["fecha de inicio"] != null
+          ) {
+            let duration = calculateDuration(
               task["fecha de inicio"],
               task["fecha de termino"]
             );
-            console.log("months", months)
-
-            const firstMonth = 30 - parseInt(daystart);
-            const lastMonth = parseInt(daydue);
-            let total = 0;
-            if (months.length == 0) {
-              total = firstMonth + lastMonth;
-            } else {
-              total =
-                firstMonth +
-                lastMonth +
-                30 * Math.abs(parseInt(monthdue) - parseInt(monthstart) - 1);
-            }
-            const hoursPerDay = task.duracion / total;
-            const firstMonthHours = hoursPerDay * firstMonth;
-            const secondMonthHours = hoursPerDay * lastMonth;
-            if (
-              last12Months.find(
-                (item: any) =>
-                  item ==
+            let monthstart = task["fecha de inicio"].split("-")[1]; //mes de inicio
+            let monthdue = task["fecha de termino"].split("-")[1]; //mes de termino
+            let yearstart = task["fecha de inicio"].split("-")[0]; //año de inicio
+            let yeardue = task["fecha de termino"].split("-")[0]; //año de termino
+            let daystart = task["fecha de inicio"].split("-")[2]; //dia de inicio
+            let daydue = task["fecha de termino"].split("-")[2]; //dia de termino
+            if (monthstart == monthdue && yearstart == yeardue) {
+              // si la tarea se realiza durante un mismo mes  revisar cuando es un puro mes en no rutinaria
+              if (
+                last12Months.find(
+                  (item: any) =>
+                    item ==
+                    `${allmonths[parseInt(monthstart) - 1]} - ${yearstart}`
+                ) != undefined
+              ) {
+                let index = last12Months.indexOf(
                   `${allmonths[parseInt(monthstart) - 1]} - ${yearstart}`
-              ) != undefined
-            ) {
-              let index = last12Months.indexOf(
-                `${allmonths[parseInt(monthstart) - 1]} - ${yearstart}`
+                );
+                role.datos[index][1] =
+                  role.datos[index][1] + parseInt(task.duracion);
+              }
+            } else {
+              //si ejecuta entre dos o mas meses, dividir duracion en meses desde inicio hasta termino
+              let months = getAllMonths(
+                task["fecha de inicio"],
+                task["fecha de termino"]
               );
-              role.datos[index][1] = role.datos[index][1] + firstMonthHours;
-            }
-            if (
-              last12Months.find(
-                (item: any) =>
-                  item == `${allmonths[parseInt(monthdue) - 1]} - ${yeardue}`
-              ) != undefined
-            ) {
-              let index = last12Months.indexOf(
-                `${allmonths[parseInt(monthdue) - 1]} - ${yeardue}`
-              );
-              role.datos[index][1] = role.datos[index][1] + secondMonthHours;
-            }
-            if (months.length > 0) {
-              months.map((month: any) => {
-                if (
-                  last12Months.find(
-                    (item: any) =>
-                      item ==
+              console.log("months", months);
+
+              const firstMonth = 30 - parseInt(daystart);
+              const lastMonth = parseInt(daydue);
+              let total = 0;
+              if (months.length == 0) {
+                total = firstMonth + lastMonth;
+              } else {
+                total =
+                  firstMonth +
+                  lastMonth +
+                  30 * Math.abs(parseInt(monthdue) - parseInt(monthstart) - 1);
+              }
+              const hoursPerDay = task.duracion / total;
+              const firstMonthHours = hoursPerDay * firstMonth;
+              const secondMonthHours = hoursPerDay * lastMonth;
+              if (
+                last12Months.find(
+                  (item: any) =>
+                    item ==
+                    `${allmonths[parseInt(monthstart) - 1]} - ${yearstart}`
+                ) != undefined
+              ) {
+                let index = last12Months.indexOf(
+                  `${allmonths[parseInt(monthstart) - 1]} - ${yearstart}`
+                );
+                role.datos[index][1] = role.datos[index][1] + firstMonthHours;
+              }
+              if (
+                last12Months.find(
+                  (item: any) =>
+                    item == `${allmonths[parseInt(monthdue) - 1]} - ${yeardue}`
+                ) != undefined
+              ) {
+                let index = last12Months.indexOf(
+                  `${allmonths[parseInt(monthdue) - 1]} - ${yeardue}`
+                );
+                role.datos[index][1] = role.datos[index][1] + secondMonthHours;
+              }
+              if (months.length > 0) {
+                months.map((month: any) => {
+                  if (
+                    last12Months.find(
+                      (item: any) =>
+                        item ==
+                        `${allmonths[parseInt(month[0]) - 1]} - ${month[1]}`
+                    ) != undefined
+                  ) {
+                    let index = last12Months.indexOf(
                       `${allmonths[parseInt(month[0]) - 1]} - ${month[1]}`
-                  ) != undefined
-                ) {
-                  let index = last12Months.indexOf(
-                    `${allmonths[parseInt(month[0]) - 1]} - ${month[1]}`
-                  );
-                  role.datos[index][1] =
-                    role.datos[index][1] + hoursPerDay * 30;
-                }
-              });
+                    );
+                    role.datos[index][1] =
+                      role.datos[index][1] + hoursPerDay * 30;
+                  }
+                });
+              }
             }
           }
         }

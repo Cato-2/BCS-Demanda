@@ -31,7 +31,6 @@ const TABLE_HEAD = [
   "Duración (horas)",
   "Frecuencia",
   "Roles",
-  "Creación",
   "",
 ];
 
@@ -110,12 +109,12 @@ function ProjectsTable() {
             <tbody>
               {TABLE_ROWS.filter((row) => {
                 const searchLowerCase = search.toLowerCase().trim();
-                const tituloLowerCase = row.titulo.toLowerCase().trim();
-                const rolLowerCase = row.roles.toLowerCase().trim();
-                const frecuenciaLoweCase = row.frecuencia.toLowerCase().trim()
+                const tituloLowerCase = row.titulo?.toLowerCase().trim();
+                const rolLowerCase = row.roles?.toLowerCase().trim();
+                const frecuenciaLoweCase = row.frecuencia?.toLowerCase().trim()
                 //fecha
                 return (
-                  !searchLowerCase || tituloLowerCase.includes(searchLowerCase) || rolLowerCase.includes(searchLowerCase) || frecuenciaLoweCase.includes(searchLowerCase)
+                  !searchLowerCase || tituloLowerCase?.includes(searchLowerCase) || rolLowerCase?.includes(searchLowerCase) || frecuenciaLoweCase?.includes(searchLowerCase)
                 );
               }).map((tarea) => {
                 const isLast = tarea.id === TABLE_ROWS.length - 1;
@@ -190,15 +189,6 @@ function ProjectsTable() {
                             {tarea.roles}
                           </Typography>
                         </div>
-                      </td>
-                      <td className={`${classes}`}>
-                        <Typography
-                          variant="small"
-                          color="blue-gray"
-                          className="font-normal"
-                        >
-                          {formatDate(String(tarea["fecha de creacion"]))}
-                        </Typography>
                       </td>
                       <td
                         className={`${classes}  bg-blue-gray-100/20 flex-row flex-auto flex justify-center w-auto`}

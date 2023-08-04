@@ -35,7 +35,9 @@ const ExcelToJSON: React.FC = () => {
           headerRow.forEach((header: string, index: number) => {
             if (header === 'meses especificos') {
               // Split the comma-separated string back into an array
-              rowData[header] = row[index].split(',').filter(Boolean); // filter(Boolean) to remove empty elements
+              if(row[index] != undefined || row[index] != null){
+                rowData[header] = row[index].split(',').filter(Boolean); // filter(Boolean) to remove empty elements
+              }
             } else {
               rowData[header] = row[index];
             }
