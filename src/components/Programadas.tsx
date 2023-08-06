@@ -31,6 +31,7 @@ const TABLE_HEAD = [
   "Duración (horas)",
   "Roles",
   "Frecuencia",
+  "meses",
   "",
 ];
 
@@ -59,7 +60,7 @@ function Programadas() {
               icon={<MagnifyingGlassIcon />}
             />
           </div>
-          <AddProject tipo="programadas"/>
+          <AddProject tipo="programadas" />
         </div>
       </div>
       <Card className="max-h-[calc(100vh-9rem)] h-fit shadow-none bg-white border tabla mx-5 px-2">
@@ -89,9 +90,11 @@ function Programadas() {
                 const tituloLowerCase = row.titulo?.toLowerCase().trim();
                 const rolLowerCase = row.roles?.toLowerCase().trim();
                 return (
-                  !searchLowerCase || tituloLowerCase?.includes(searchLowerCase) || rolLowerCase?.includes(searchLowerCase)
+                  !searchLowerCase ||
+                  tituloLowerCase?.includes(searchLowerCase) ||
+                  rolLowerCase?.includes(searchLowerCase)
                 );
-              }).map((tarea:any) => {
+              }).map((tarea: any) => {
                 const isLast = tarea.id === TABLE_ROWS.length - 1;
                 const classes = isLast
                   ? "p-0 px-4"
@@ -163,10 +166,30 @@ function Programadas() {
                           </Typography>
                         </div>
                       </td>
+                      <td className={`${classes}`}>
+                        <div className="flex flex-col">
+                          <Typography
+                            variant="body1"
+                            color="textSecondary"
+                            className="font-normal"
+                          >
+                            {tarea["meses especificos"]?.map(
+                              (mes: any, index: number) =>
+                                index !== tarea["meses especificos"].length - 1
+                                  ? mes + ", "
+                                  : mes
+                            )}
+                          </Typography>
+                        </div>
+                      </td>
                       <td
-                        className={`${classes}  flex-row flex-auto flex justify-center w-auto`}
+                        className={`${classes}  bg-blue-gray-100/20`}
                       >
-                        <EditProject id={tarea.id} tipo="programadas" tarea={tarea}/>
+                        <EditProject
+                          id={tarea.id}
+                          tipo="programadas"
+                          tarea={tarea}
+                        />
                         <ViewProject id={tarea.id} />
                       </td>
                     </tr>

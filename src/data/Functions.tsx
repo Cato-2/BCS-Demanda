@@ -48,36 +48,19 @@ export const rutinariasbyrole = (Roles: any[], Tasks: any[]) => {
         ) {
           //task.roles.indexOf(role.nombre) !== -1
           if (task.frecuencia == "frecuente") {
-            acu = task.duracion * 4 * task["cuantas veces"] + acu;
-            console.log("frecuente", acu, task.roles);
+            acu = (task.duracion * 4 * 2,5) + acu;
           }
           if (task.frecuencia == "diaria") {
             acu = task.duracion * 4 * 5 * task["cuantas veces"] + acu; //4 semanas, 5 dias cada una
-            console.log(
-              "diaria",
-              task.id,
-              task.roles,
-              acu,
-              task.duracion,
-              task["cuantas veces"]
-            );
           }
           if (task.frecuencia == "semanal") {
-            acu = task.duracion * 4 * task["cuantas veces"] + acu; //4 semanas
-            console.log(
-              "semanal",
-              task.id,
-              task.roles,
-              acu,
-              task.duracion,
-              task["cuantas veces"]
-            );
+            acu = (task.duracion * 4 * task["cuantas veces"]) + acu; //4 semanas
           }
           if (task.frecuencia == "quincenal") {
-            acu = task.duracion * 2 * task["cuantas veces"] + acu; //2 semanas
+            acu = (task.duracion * 2 * task["cuantas veces"]) + acu; //2 semanas
           }
           if (task.frecuencia == "mensual") {
-            acu = task.duracion * task["cuantas veces"] + acu; //1 mes
+            acu = (task.duracion * task["cuantas veces"]) + acu; //1 mes
           }
         }
       });
@@ -104,7 +87,7 @@ export const norutinariasbyrole = (Roles: any[], Tasks: any[]) => {
         if (task.roles == role.nombre || task.roles == "todos") {
           //task.roles.indexOf(role.nombre) !== -1
           if (task.frecuencia == "ocasionales") {
-            acu = task.duracion * 4 * 0.75 + acu;
+            acu = (task.duracion * 4 * 0.75) + acu;
           }
         }
       });
@@ -134,19 +117,19 @@ export const programadasbyrole = (Roles: any[], Tasks: any[]) => {
         ) {
           //task.roles.indexOf(role.nombre) !== -1
           if (task.frecuencia == "periodicas") {
-            acu = task.duracion * 4 * task["cuantas veces"] + acu;
+            acu = (task.duracion * 4 * 1,5) + acu;
           }
           if (task.frecuencia == "diaria") {
-            acu = task.duracion * 4 * 5 * task["cuantas veces"] + acu; //4 semanas, 5 dias cada una
+            acu = (task.duracion * 4 * 5 * task["cuantas veces"]) + acu; //4 semanas, 5 dias cada una
           }
           if (task.frecuencia == "semanal") {
-            acu = task.duracion * 4 * task["cuantas veces"] + acu; //4 semanas
+            acu = (task.duracion * 4 * task["cuantas veces"]) + acu; //4 semanas
           }
           if (task.frecuencia == "quincenal") {
-            acu = task.duracion * 2 * task["cuantas veces"] + acu; //2 semanas
+            acu = (task.duracion * 2 * task["cuantas veces"]) + acu; //2 semanas
           }
           if (task.frecuencia == "mensual") {
-            acu = task.duracion * task["cuantas veces"] + acu; //1 mes
+            acu = (task.duracion * task["cuantas veces"]) + acu; //1 mes
           }
         }
       });
@@ -237,7 +220,6 @@ export function getAllMonths(
 function formatMonth(date: Date): number[] {
   const month = date.getMonth() + 1;
   const year = date.getFullYear();
-  console.log("formatmonth", month, year);
   return [month, year];
 }
 
@@ -269,16 +251,17 @@ export const bymonthyearly = (
           month = month.slice(0, 3);
 
           if (
-            last12Months.find((item: any) => item.slice(0, 3) == month) !=
-            undefined
+            last12Months.find(
+              (item: any) =>
+                item.slice(0, 3).toUpperCase() == month.toUpperCase()
+            ) != undefined
           ) {
-            console.log(month, task.duracion, roles.rol, roles.datos);
             let index = last12Months.findIndex(
-              (item: any) => item.slice(0, 3).toLowerCase() === month.slice(0, 3).toLowerCase()
+              (item: any) =>
+                item.slice(0, 3).toUpperCase() ===
+                month.slice(0, 3).toUpperCase()
             );
             roles.datos[index][1] = roles.datos[index][1] + task.duracion;
-          } else {
-            console.log(month.slice(0, 3), last12Months);
           }
         });
       }
@@ -336,7 +319,6 @@ export const bymonthprogramadas = (
                 task["fecha de inicio"],
                 task["fecha de termino"]
               );
-              console.log("months", months);
 
               const firstMonth = 30 - parseInt(daystart);
               const lastMonth = parseInt(daydue);

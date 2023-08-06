@@ -22,3 +22,5 @@
 - agregar a addproject, si es anual entonces que meses
 
 - reiniciar datos de modal al cancelar
+
+- revisar calculos de programado, no rutinaria y rutinaria
