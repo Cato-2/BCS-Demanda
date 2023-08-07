@@ -63,14 +63,14 @@ const Riesgos: React.FC<Props> = (props) => {
   };
 
   return (
-    <div>
+    <div className="w-fit">
       <Callout
         className=""
         title="Riesgos"
         icon={personasnecesarias > personasactuales ? ExclamationCircleIcon : CheckCircleIcon}
         color={personasnecesarias > personasactuales ? "orange" : "green"}
       >
-        <div className="flex flex-col">{renderRiesgos()}</div>
+        <div className="flex flex-col w-fit">{renderRiesgos()}</div>
       </Callout>
     </div>
   );

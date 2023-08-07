@@ -28,14 +28,17 @@ const needle = (
 ) => {
   let yellow = aux*1.2
   if(aux >= aux2){
-    value = 25
+    value = (aux2 / aux) * 100 * 0.5
   }
   else if( aux < aux2 && aux2 < yellow ){
-    value = 63
+    value = ((((aux2 / aux) * 100) -100) * 1.25) + 50
 
   }
   else{
-    value = 85
+    value = ((((aux2 / aux) * 100) -120) * 0.8) + 75
+    if(value > 100){
+      value = 100
+    }
   }
   
   let total = 0;
@@ -111,7 +114,7 @@ function Indicador(any: any) {
         </Pie>
         {needle(value, data, cx, cy, iR, oR, "#d0d000", aux, aux2)}
       </PieChart>
-      <div className="w-full text-center pt-2">Demanda</div>
+      <div className="w-full text-center pt-2">Demanda {((aux2 / aux) * 100).toFixed(1)}%</div>
     </div>
   );
 }

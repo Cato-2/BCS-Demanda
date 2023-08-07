@@ -130,7 +130,7 @@ const MyPdfDocument: React.FC<MyPdfDocumentProps> = ({
           pdfRef.current!.childNodes[i] as HTMLElement
         );
         const imgData = canvas.toDataURL("image/png");
-        pdf.addImage(imgData, "PNG", 10, 10, 270, 130); // Adjust the width and height as needed
+        pdf.addImage(imgData, "PNG", 10, 10, 340, 130); // Adjust the width and height as needed
         if (i !== roleList.length - 1) {
           pdf.addPage("landscape"); // Add a new horizontal page for each graph
         }

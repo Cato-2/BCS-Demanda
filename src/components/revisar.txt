@@ -6,8 +6,8 @@
 - desplegar datos en modal por cada tarea
 - ver que pasa cuando no hay datos
 
-- programado -> si no ingresa frecuencia periodica 0.75 * 4 * duracion
-- no rutinaria -> si no ingresa frecuencia ocacional 1.5 * 4 * duracion
+- programado -> si no ingresa frecuencia periodica 1.5 * 4 * duracion
+- no rutinaria -> si no ingresa frecuencia ocacional 0.75 * 4 * duracion
 - rutinaria -> si no ingresa frecuencia frecuente 2.5 * 4 * duracion
 
 - cambiar mensaje de riesgo en vista demanda
