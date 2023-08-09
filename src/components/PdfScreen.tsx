@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+import html2canvas from 'html2canvas';
+
 import {
   ComposedChart,
   Line,
@@ -22,8 +23,8 @@ import {
   Button,
 } from "@tremor/react";
 import { Card, List, ListItem, Title } from "@tremor/react";
-import Grafico from "./Grafico";
-import Indicador from "./Indicador";
+import Grafico2 from "./Grafico2";
+import Indicador2 from "./Indicador2";
 import Riesgos from "./Riesgos";
 import tasks from "../../src-tauri/tareas.json";
 import RolesList from "../../src-tauri/roles.json";
@@ -68,20 +69,18 @@ const norutinariasMes = norutinariasbyrole(roles, tareas);
 const rutinariasMes = rutinariasbyrole(roles, tareas);
 const programadasMes = programadasbyrole(roles, tareas);
 const rolesInfo = getroledata(roles);
-const lastyearRutina = bymonth(last12Months, rutinariasMes, roles);
-const lastyearNorutina = bymonth(last12Months, norutinariasMes, roles); // esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
-const lastyearProgramada = bymonth(last12Months, programadasMes, roles);
-
-
+let lastyearRutina = bymonth(last12Months, rutinariasMes, roles);
+let lastyearNorutina = bymonth(last12Months, norutinariasMes, roles); // esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
+let lastyearProgramada = bymonth(last12Months, programadasMes, roles);
 bymonthprogramadas(lastyearProgramada, tareas, last12Months, "programadas"); //agrega actividades con fecha de inicio y termino a cada mes sgun corresponda
 bymonthprogramadas(lastyearNorutina, tareas, last12Months, "no rutinarias");
 bymonthyearly(lastyearProgramada, tareas, last12Months, "programadas");
-const totalbymonth = gettotal(
+let totalbymonth = gettotal(
   lastyearRutina,
   lastyearNorutina,
   lastyearProgramada
 );
-const totaldemanda = averagetotal(totalbymonth);  
+const totaldemanda = averagetotal(totalbymonth);
 const getPersonasNecesarias = (tipo: string, rolnombre: string) => {
   // Calculate the required number of people for the selected role
   let aux = 0;
@@ -130,7 +129,7 @@ const MyPdfDocument: React.FC<MyPdfDocumentProps> = ({
           pdfRef.current!.childNodes[i] as HTMLElement
         );
         const imgData = canvas.toDataURL("image/png");
-        pdf.addImage(imgData, "PNG", 10, 10, 340, 130); // Adjust the width and height as needed
+        pdf.addImage(imgData, "PNG", 10, 10, 280, 130); // Adjust the width and height as needed
         if (i !== roleList.length - 1) {
           pdf.addPage("landscape"); // Add a new horizontal page for each graph
         }
@@ -389,14 +388,14 @@ const MyPdfDocument: React.FC<MyPdfDocumentProps> = ({
                   </List>
                 </Card>
                 <div className="flex flex-row py-5">
-                  <Grafico
+                  <Grafico2
                     filter={role[0]}
                     capacidadofertada={rolesInfo}
                     demandapromedio={totaldemanda}
                     demandapormes={totalbymonth}
                     clas
                   />
-                  <Indicador
+                  <Indicador2
                     personasnecesarias={personasnecesarias}
                     personasactuales={personasactuales}
                     demandapromedio={totaldemanda} //demanda promedio por rol

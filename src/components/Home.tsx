@@ -34,6 +34,7 @@ import {
   getAllMonths,
   calculateDuration,
   bymonthprogramadas,
+  bymonthyearly
 } from "../data/Functions";
 import {
   BarChart,
@@ -78,6 +79,7 @@ function Home() {
 
 
   const months2: string[] = [
+    "",
     "Ene",
     "Feb",
     "Mar",
@@ -95,7 +97,6 @@ function Home() {
   const today2 = `${months2[month]} - ${year}`;
 
   const today = `${months[month]} ${day}, ${year}`;
-
   const last12Months = getLast12Months(); //ultimos 12 meses
   const norutinariasMes = norutinariasbyrole(roles, tareas); //datos por rol no rutinarias
   const rutinariasMes = rutinariasbyrole(roles, tareas); //datos por rol rutinarias
@@ -107,6 +108,8 @@ function Home() {
   const [filter, setFilter] = useState("todos");
   bymonthprogramadas(lastyearProgramada, tareas, last12Months, "programada"); //agrega actividades con fecha de inicio y termino a cada mes sgun corresponda
   bymonthprogramadas(lastyearNorutina, tareas, last12Months, "no rutinaria");
+  bymonthyearly(lastyearProgramada, tareas, last12Months, "programadas");
+
   const totalbymonth = gettotal(
     lastyearRutina,
     lastyearNorutina,
@@ -127,10 +130,11 @@ function Home() {
   );
   const valuecapacidad: number = getcapacidadvaluebyfilter(rolesInfo, filter);
 
+
   const graphdata = () => {
     let data: any = [];
     totalbymonth.map((item: any, index: number) => {
-      const pv = Math.max(0, item.datos[month][1] - rolesInfo[index][2]);
+      const pv = Math.max(0, item.datos[month-1][1] - rolesInfo[index][2]);
       data.push({
         name: index,
         Capacidad: rolesInfo[index][2],
@@ -156,7 +160,7 @@ function Home() {
             <Card className="ring-1 ring-gray-300 rounded-lg">
               <CardBody>
                 <Typography variant="h5" color="blue-gray" className="mb-2">
-                  Mes Actual
+                  Mes Actual 
                 </Typography>
                 <Table className="py-2 max-h-[17rem] overflow-auto">
                   <TableHead>
@@ -188,14 +192,14 @@ function Home() {
                             {item.rol}
                           </TableCell>
                           <TableCell className="px-2 p-0 text-center">
-                            {item.datos[month][1].toFixed(0)} HH
+                            {item.datos[month-1][1].toFixed(0)} HH
                           </TableCell>
                           <TableCell className="px-2 p-0 text-center">
                             {rolesInfo[index][2].toFixed(0)} HH
                           </TableCell>
                           <TableCell className="px-2 p-0 text-center">
                             {(
-                              rolesInfo[index][2] - item.datos[month][1]
+                              rolesInfo[index][2] - item.datos[month-1][1]
                             ).toFixed(0)}{" "}
                             HH
                           </TableCell>
@@ -203,17 +207,17 @@ function Home() {
                             <Badge
                               style={{
                                 backgroundColor:
-                                  item.datos[month][1] > rolesInfo[index][2]
+                                  item.datos[month-1][1] > rolesInfo[index][2]
                                     ? "#FFC9C9"
                                     : "#D3F9D8",
                                 color:
-                                  item.datos[month][1] > rolesInfo[index][2]
+                                  item.datos[month-1][1] > rolesInfo[index][2]
                                     ? "#E03131"
                                     : "#37B24D",
                               }}
                               className="px-3 py-1 rounded-md"
                             >
-                              {item.datos[month][1] > rolesInfo[index][2]
+                              {item.datos[month-1][1] > rolesInfo[index][2]
                                 ? "Sobrecarga"
                                 : "Normal"}
                             </Badge>
@@ -275,12 +279,7 @@ function Home() {
                 </Typography>
                 <ExcelToJSON />
               </div>
-              <div className="pb-8">
-                <Typography variant="h6" color="blue-gray" className="mb-2">
-                  Descargar plantilla de datos
-                </Typography>
-                <Button><a  href="../../public/plantilla.xlsx" download="plantilla capacidad">Descargar Excel</a></Button>
-              </div>
+
               <div className="pb-8">
                 <Typography variant="h6" color="blue-gray" className="mb-2">
                   Exportar datos a excel

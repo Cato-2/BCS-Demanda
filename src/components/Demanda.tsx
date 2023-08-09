@@ -20,6 +20,8 @@ import Roles from "./Roles";
 import { useState } from "react";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
+import Select from "react-select";
+
 import {
   allmonths,
   getLast12Months,
@@ -35,35 +37,38 @@ import {
   getAllMonths,
   calculateDuration,
   bymonthprogramadas,
-  bymonthyearly
+  bymonthyearly,
+  applyfilter,
+  getcapacidad,
+  getpersonas,
+  gettotaldemandafilter,
+  getaveragecapacidad
 } from "../data/Functions";
 
 const roles = RolesList; //json
 const tareas = tasks; //json
 
 function Demanda() {
+  const last12Months = getLast12Months();
+  const norutinariasMes = norutinariasbyrole(roles, tareas);
+  const rutinariasMes = rutinariasbyrole(roles, tareas);
+  const programadasMes = programadasbyrole(roles, tareas);
+  const rolesInfo = getroledata(roles);
+  let lastyearRutina = bymonth(last12Months, rutinariasMes, roles);
+  let lastyearNorutina = bymonth(last12Months, norutinariasMes, roles); // esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
+  let lastyearProgramada = bymonth(last12Months, programadasMes, roles);
+  bymonthprogramadas(lastyearProgramada, tareas, last12Months, "programadas"); //agrega actividades con fecha de inicio y termino a cada mes sgun corresponda
+  bymonthprogramadas(lastyearNorutina, tareas, last12Months, "no rutinarias");
+  bymonthyearly(lastyearProgramada, tareas, last12Months, "programadas");
+  let totalbymonth = gettotal(
+    lastyearRutina,
+    lastyearNorutina,
+    lastyearProgramada
+  );
+  const totaldemanda = averagetotal(totalbymonth);
 
- const last12Months = getLast12Months();
- const norutinariasMes = norutinariasbyrole(roles, tareas);
- const rutinariasMes = rutinariasbyrole(roles, tareas);
- const programadasMes = programadasbyrole(roles, tareas);
- const rolesInfo = getroledata(roles);
- const lastyearRutina = bymonth(last12Months, rutinariasMes, roles);
- const lastyearNorutina = bymonth(last12Months, norutinariasMes, roles); // esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
- const lastyearProgramada = bymonth(last12Months, programadasMes, roles);
-
-bymonthprogramadas(lastyearProgramada, tareas, last12Months, "programadas"); //agrega actividades con fecha de inicio y termino a cada mes sgun corresponda
-bymonthprogramadas(lastyearNorutina, tareas, last12Months, "no rutinarias");
-bymonthyearly(lastyearProgramada, tareas, last12Months, "programadas");
-const totalbymonth = gettotal(
-  lastyearRutina,
-  lastyearNorutina,
-  lastyearProgramada
-);
-const totaldemanda = averagetotal(totalbymonth);  
-
-const [filter, setFilter] = useState("todos");
-   const personasnecesarias = getPersonasNecesarias(
+  const [filter, setFilter] = useState("todos");
+  const personasnecesarias = getPersonasNecesarias(
     "necesarias",
     totaldemanda,
     rolesInfo,
@@ -75,27 +80,48 @@ const [filter, setFilter] = useState("todos");
     rolesInfo,
     filter
   );
-  const valuecapacidad: number = getcapacidadvaluebyfilter(rolesInfo, filter);
 
   const onClickHandler = (value: string) => {
     setFilter(value);
   };
 
+  let data = roles.map((role: any) => {
+    return { value: role.nombre, label: role.nombre };
+  });
+
+  const [filter2, setfilter2] = useState([]);
+
+  lastyearProgramada = applyfilter(lastyearProgramada, filter2);
+  lastyearNorutina = applyfilter(lastyearNorutina, filter2);
+  lastyearRutina = applyfilter(lastyearRutina, filter2);
+  totalbymonth = applyfilter(totalbymonth, filter2);
+  const handleChangeRoles = (selectedOption: any) => {
+    setfilter2(selectedOption);
+  };
+  const arrcapacidad = getcapacidad(rolesInfo, filter2);
+  const numpersonas = getpersonas(rolesInfo, filter2);
+  const valuecapacidad: number = getcapacidadvaluebyfilter(
+    arrcapacidad,
+    filter
+  );
+
+
+  const capacidadResidual =
+    arrcapacidad[0] - gettotaldemandafilter(totaldemanda, filter2);
+  const colorStyle = capacidadResidual < 0 ? "red" : "inherit";
+
   return (
     <div>
       <div className="flex flex-row justify-between p-2">
-        <div className="w-[20rem] ">
-          <SearchSelect>
-            {lastyearRutina.map((role) => (
-              <SearchSelectItem
-                key={role.rol}
-                value={role.rol}
-                onClick={() => onClickHandler(role.rol)}
-              >
-                {role.rol}
-              </SearchSelectItem>
-            ))}
-          </SearchSelect>
+        <div className="w-full pr-4">
+          <Select
+            isMulti
+            name="colors"
+            options={data}
+            onChange={handleChangeRoles}
+            className="basic-multi-select"
+            classNamePrefix="select"
+          />
         </div>
         <div className="pr-2">
           <Link to="/pdf-screen">
@@ -121,122 +147,86 @@ const [filter, setFilter] = useState("todos");
                 <TableCell className="p-0">
                   {"Actividades programadas"}
                 </TableCell>
-                {lastyearProgramada.map(
-                  (role, index) =>
-                    role.rol === filter && (
-                      <React.Fragment key={index}>
-                        {role.datos.map((dato: any, dataIndex: number) => (
-                          <TableCell
-                            className="p-0 text-center"
-                            key={dataIndex}
-                          >
-                            {dato[1].toFixed(0)}
-                          </TableCell>
-                        ))}
-                      </React.Fragment>
-                    )
-                )}
+                {lastyearProgramada.map((role, index) => (
+                  <React.Fragment key={index}>
+                    {role.datos.map((dato: any, dataIndex: number) => (
+                      <TableCell className="p-0 text-center" key={dataIndex}>
+                        {dato[1].toFixed(0)}
+                      </TableCell>
+                    ))}
+                  </React.Fragment>
+                ))}
               </TableRow>
               <TableRow>
                 <TableCell className="p-0">
                   {"Actividades de no rutina"}
                 </TableCell>
-                {lastyearNorutina.map(
-                  (role, index) =>
-                    role.rol === filter && (
-                      <React.Fragment key={index}>
-                        {role.datos.map((dato: any, dataIndex: number) => (
-                          <TableCell
-                            className="p-0 text-center"
-                            key={dataIndex}
-                          >
-                            {dato[1].toFixed(0)}
-                          </TableCell>
-                        ))}
-                      </React.Fragment>
-                    )
-                )}
+                {lastyearNorutina.map((role, index) => (
+                  <React.Fragment key={index}>
+                    {role.datos.map((dato: any, dataIndex: number) => (
+                      <TableCell className="p-0 text-center" key={dataIndex}>
+                        {dato[1].toFixed(0)}
+                      </TableCell>
+                    ))}
+                  </React.Fragment>
+                ))}
               </TableRow>
               <TableRow>
                 <TableCell className="p-0">{"Actividades de rutina"}</TableCell>
-                {lastyearRutina.map(
-                  (role, index) =>
-                    role.rol === filter && (
-                      <React.Fragment key={index}>
-                        {role.datos.map((dato: any, dataIndex: number) => (
-                          <TableCell
-                            className="p-0 text-center"
-                            key={dataIndex}
-                          >
-                            {dato[1].toFixed(0)}
-                          </TableCell>
-                        ))}
-                      </React.Fragment>
-                    )
-                )}
+                {lastyearRutina.map((role, index) => (
+                  <React.Fragment key={index}>
+                    {role.datos.map((dato: any, dataIndex: number) => (
+                      <TableCell className="p-0 text-center" key={dataIndex}>
+                        {dato[1].toFixed(0)}
+                      </TableCell>
+                    ))}
+                  </React.Fragment>
+                ))}
               </TableRow>
               <TableRow className="bg-gray-200 font-bold">
                 <TableCell className="p-0">{"Total demanda"}</TableCell>
-                {totalbymonth.map(
-                  (role, index) =>
-                    role.rol == filter && (
-                      <React.Fragment key={index}>
-                        {role.datos.map((dato: any, dataIndex: number) => (
-                          <TableCell
-                            className="p-0 text-center"
-                            key={dataIndex}
-                          >
-                            {dato[1].toFixed(0)}
-                          </TableCell>
-                        ))}
-                      </React.Fragment>
-                    )
-                )}
+                {totalbymonth.map((role, index) => (
+                  <React.Fragment key={index}>
+                    {role.datos.map((dato: any, dataIndex: number) => (
+                      <TableCell className="p-0 text-center" key={dataIndex}>
+                        {dato[1].toFixed(0)}
+                      </TableCell>
+                    ))}
+                  </React.Fragment>
+                ))}
               </TableRow>
               <TableRow>
                 <TableCell className="p-0">{"Capacidad ofertada"}</TableCell>
-                {rolesInfo.map((role, index) => {
-                  if (role[0] === filter) {
-                    const cells = [];
-                    for (let i = 0; i < last12Months.length; i++) {
-                      cells.push(
-                        <TableCell className="p-0 text-center" key={index + i}>
-                          {role[2].toFixed(0)}
-                        </TableCell>
-                      );
-                    }
-                    return cells;
-                  } else {
-                    return null; // Return null for elements that don't meet the condition
-                  }
+                {arrcapacidad.map((role, index) => {
+                  return (
+                    <TableCell className="p-0 text-center" key={index}>
+                      {role}
+                    </TableCell>
+                  );
                 })}
               </TableRow>
               <TableRow>
                 <TableCell className="p-0">{"Capacidad residual"}</TableCell>
                 {totalbymonth.map((role, index) => {
-                  if (role.rol === filter) {
-                    return (
-                      <React.Fragment key={index}>
-                        {role.datos.map((dato: any, dataIndex: number) => {
-                          // Assuming `valuecapacidad` is a number, you may want to add a parseFloat or parseInt here if needed.
-                          const capacidadResidual = valuecapacidad - dato[1];
-                          const style =
-                            capacidadResidual < 0 ? { color: "red" } : {};
-                          return (
-                            <TableCell
-                              className="p-0 text-center"
-                              key={dataIndex}
-                              style={style}
-                            >
-                              {capacidadResidual.toFixed(0)}
-                            </TableCell>
-                          );
-                        })}
-                      </React.Fragment>
-                    );
-                  } else {
-                    return null; // Return null for elements that don't meet the condition
-                  }
+                  return (
+                    <React.Fragment key={index}>
+                      {role.datos.map((dato: any, dataIndex: number) => {
+                        // Assuming `valuecapacidad` is a number, you may want to add a parseFloat or parseInt here if needed.
+                        const capacidadResidual = valuecapacidad - dato[1];
+                        const style =
+                          capacidadResidual < 0 ? { color: "red" } : {};
+                        return (
+                          <TableCell
+                            className="p-0 text-center"
+                            key={dataIndex}
+                            style={style}
+                          >
+                            {capacidadResidual.toFixed(0)}
+                          </TableCell>
+                        );
+                      })}
+                    </React.Fragment>
+                  );
                 })}
               </TableRow>
             </TableBody>
@@ -250,61 +240,32 @@ const [filter, setFilter] = useState("todos");
             <List className="pt-4">
               <ListItem>
                 <span>Número de personas</span>
-                {rolesInfo.map((role, index) => {
-                  if (role[0] === filter) {
-                    return <span key={index}>{role[1].toFixed(0)}</span>;
-                  }
-                })}
+                <span>{numpersonas}</span>
               </ListItem>
               <ListItem>
                 <span>Demanda del sistema</span>
-                {totaldemanda.map((role, index) => {
-                  if (role[0] === filter) {
-                    return <span key={index}>{role[1].toFixed(0)} HH</span>;
-                  }
-                })}
+
+                <span>{gettotaldemandafilter(totaldemanda, filter2).toFixed(0)} HH</span>
               </ListItem>
               <ListItem>
                 <span>Capacidad ofertada</span>
-                {rolesInfo.map((role, index) => {
-                  if (role[0] === filter) {
-                    return <span key={index}>{role[2].toFixed(0)} HH</span>;
-                  }
-                })}
+                <span>{arrcapacidad[0].toFixed(0)} HH</span>
               </ListItem>
               <ListItem>
                 <span>Capacidad residual</span>
-                {rolesInfo.map((role, i) => {
-                  if (role[0] === filter) {
-                    const capacidadResidual = role[2] - totaldemanda[i][1];
-                    const style = capacidadResidual < 0 ? { color: "red" } : {};
-                    return (
-                      <span key={i} style={style}>
-                        {capacidadResidual.toFixed(0)} HH
-                      </span>
-                    );
-                  }
-                  return null; // Return null for elements that don't meet the condition
-                })}
+                <span style={{ color: colorStyle }}>
+                  {`${capacidadResidual.toFixed(0)} HH`}
+                </span>
               </ListItem>
               <ListItem>
-                <span>Personas necesarias</span>
-                {totaldemanda.map((role, index) => {
-                  if (role[0] === filter) {
-                    const personasActual = rolesInfo[index][1];
-                    const style =
-                      personasActual < role[1] / rolesInfo[index][3]
-                        ? { color: "red" }
-                        : {};
-                    return (
-                      <span key={index} style={style}>
-                        {(role[1] / rolesInfo[index][3]).toFixed(1)}
-                      </span>
-                    );
-                  }
-                  return null;
-                })}
-              </ListItem>
+      <span>Personas necesarias</span>
+      <span>
+        {(
+          gettotaldemandafilter(totaldemanda, filter2) /
+          (getcapacidad(rolesInfo, filter2)[0])
+        ).toFixed(1)}
+      </span>
+    </ListItem>
             </List>
           </Card>
         </div>
@@ -312,17 +273,17 @@ const [filter, setFilter] = useState("todos");
           <Card className="max-w-full min-w-[18rem] overflow-auto flex flex-row h-[18rem] p-0 pt-6">
             <Grafico
               filter={filter}
-              capacidadofertada={rolesInfo}
-              demandapromedio={totaldemanda}
+              capacidadofertada={getaveragecapacidad(rolesInfo, filter2)}
+              demandapromedio={gettotaldemandafilter(totaldemanda, filter2)}
               demandapormes={totalbymonth}
               clas
             />
             <Indicador
               personasnecesarias={personasnecesarias}
               personasactuales={personasactuales}
-              demandapromedio={totaldemanda} //demanda promedio por rol
+              demandapromedio={gettotaldemandafilter(totaldemanda, filter2)} //demanda promedio por rol
               filter={filter} //rol seleccionado
-              capacidadofertada={rolesInfo} //capacidad ofertada por rol
+              capacidadofertada={getaveragecapacidad(rolesInfo, filter2)} //capacidad ofertada por rol
             />
           </Card>
         </div>

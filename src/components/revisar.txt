@@ -12,7 +12,6 @@
 
 - cambiar mensaje de riesgo en vista demanda
 - minimizar sidebar
-- agregar repetir cada año a formulario programados
 - agregar loading y confirmacion a import excel
 - arreglar errores
 - fecha de creacion solo guardar cuando se crea item desde el programa
@@ -24,3 +23,5 @@
 - reiniciar datos de modal al cancelar
 
 - revisar calculos de programado, no rutinaria y rutinaria
+
+{JSON.stringify(import.meta.env.VITE_API_URL)}

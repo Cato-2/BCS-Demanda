@@ -70,7 +70,7 @@ const Riesgos: React.FC<Props> = (props) => {
         icon={personasnecesarias > personasactuales ? ExclamationCircleIcon : CheckCircleIcon}
         color={personasnecesarias > personasactuales ? "orange" : "green"}
       >
-        <div className="flex flex-col w-fit">{renderRiesgos()}</div>
+        <div key="1" className="flex flex-col w-fit">{renderRiesgos()}</div>
       </Callout>
     </div>
   );

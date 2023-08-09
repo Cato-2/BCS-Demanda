@@ -31,7 +31,7 @@ const TABLE_HEAD = [
   "Duración (horas)",
   "Roles",
   "Frecuencia",
-  "meses",
+  "Meses",
   "",
 ];
 
@@ -160,7 +160,7 @@ function Programadas() {
                           <Typography
                             variant="small"
                             color="blue-gray"
-                            className="font-normal"
+                            className="font-normal capitalize"
                           >
                             {tarea.frecuencia}
                           </Typography>
@@ -169,9 +169,9 @@ function Programadas() {
                       <td className={`${classes}`}>
                         <div className="flex flex-col">
                           <Typography
-                            variant="body1"
-                            color="textSecondary"
-                            className="font-normal"
+                            variant="small"
+                            color="blue-gray"
+                            className="font-normal whitespace-break-spaces capitalize"
                           >
                             {tarea["meses especificos"]?.map(
                               (mes: any, index: number) =>

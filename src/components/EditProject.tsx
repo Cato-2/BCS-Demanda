@@ -49,7 +49,6 @@ function EditProject(props:
     setSelectedOptions((prevSelectedOptions) => {
       const updatedOptions = [...prevSelectedOptions];
       updatedOptions[index] = value;
-      console.log(updatedOptions)
       return updatedOptions;
     });
   };

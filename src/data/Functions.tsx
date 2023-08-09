@@ -48,19 +48,19 @@ export const rutinariasbyrole = (Roles: any[], Tasks: any[]) => {
         ) {
           //task.roles.indexOf(role.nombre) !== -1
           if (task.frecuencia == "frecuente") {
-            acu = (task.duracion * 4 * 2,5) + acu;
+            acu = (task.duracion * 4 * 2, 5) + acu;
           }
           if (task.frecuencia == "diaria") {
             acu = task.duracion * 4 * 5 * task["cuantas veces"] + acu; //4 semanas, 5 dias cada una
           }
           if (task.frecuencia == "semanal") {
-            acu = (task.duracion * 4 * task["cuantas veces"]) + acu; //4 semanas
+            acu = task.duracion * 4 * task["cuantas veces"] + acu; //4 semanas
           }
           if (task.frecuencia == "quincenal") {
-            acu = (task.duracion * 2 * task["cuantas veces"]) + acu; //2 semanas
+            acu = task.duracion * 2 * task["cuantas veces"] + acu; //2 semanas
           }
           if (task.frecuencia == "mensual") {
-            acu = (task.duracion * task["cuantas veces"]) + acu; //1 mes
+            acu = task.duracion * task["cuantas veces"] + acu; //1 mes
           }
         }
       });
@@ -87,7 +87,7 @@ export const norutinariasbyrole = (Roles: any[], Tasks: any[]) => {
         if (task.roles == role.nombre || task.roles == "todos") {
           //task.roles.indexOf(role.nombre) !== -1
           if (task.frecuencia == "ocasionales") {
-            acu = (task.duracion * 4 * 0.75) + acu;
+            acu = task.duracion * 4 * 0.75 + acu;
           }
         }
       });
@@ -117,19 +117,19 @@ export const programadasbyrole = (Roles: any[], Tasks: any[]) => {
         ) {
           //task.roles.indexOf(role.nombre) !== -1
           if (task.frecuencia == "periodicas") {
-            acu = (task.duracion * 4 * 1,5) + acu;
+            acu = (task.duracion * 4 * 1, 5) + acu;
           }
           if (task.frecuencia == "diaria") {
-            acu = (task.duracion * 4 * 5 * task["cuantas veces"]) + acu; //4 semanas, 5 dias cada una
+            acu = task.duracion * 4 * 5 * task["cuantas veces"] + acu; //4 semanas, 5 dias cada una
           }
           if (task.frecuencia == "semanal") {
-            acu = (task.duracion * 4 * task["cuantas veces"]) + acu; //4 semanas
+            acu = task.duracion * 4 * task["cuantas veces"] + acu; //4 semanas
           }
           if (task.frecuencia == "quincenal") {
-            acu = (task.duracion * 2 * task["cuantas veces"]) + acu; //2 semanas
+            acu = task.duracion * 2 * task["cuantas veces"] + acu; //2 semanas
           }
           if (task.frecuencia == "mensual") {
-            acu = (task.duracion * task["cuantas veces"]) + acu; //1 mes
+            acu = task.duracion * task["cuantas veces"] + acu; //1 mes
           }
         }
       });
@@ -441,12 +441,122 @@ export const getPersonasNecesarias = (
 };
 
 export const getcapacidadvaluebyfilter = (
-  rolesInfo: any,
+  arr: any,
   filter: string
 ): number => {
-  const foundRole = rolesInfo.find((item: any) => item[0] === filter);
-  if (foundRole) {
-    return foundRole[2];
+  return arr[0]; // Or any default value if role with the specified filter is not found
+};
+
+export const applyfilter = (lista: any, filtros: any) => {
+  let aux: any[] = [];
+  if (!Array.isArray(filtros)) {
+    // Handle the case when filtros is not an array
+    return aux;
   }
-  return 0; // Or any default value if role with the specified filter is not found
+  const last12months = getLast12Months();
+  let data: any[] = [];
+  last12months.map((item, index) => {
+    data.push([item, 0]);
+  });
+  aux.push({ rol: "filtro", datos: data });
+  lista.map((item: any, index: any) => {
+    const filtro = filtros.find((f: any) => f.value == item.rol);
+    if (filtro) {
+      item.datos.map((month: any, index: any) => {
+        aux[0].datos[index][1] = aux[0].datos[index][1] + month[1];
+      });
+    }
+  });
+  if (filtros.length == 0) {
+    const search = lista.find((f: any) => f.rol == "todos");
+    if (search) {
+      aux = [];
+      aux.push(search);
+    }
+  }
+  return aux;
+};
+
+export const getcapacidad = (rolesInfo: any, filtros: any) => {
+  let cells: any[] = [];
+  const months = getLast12Months();
+  let aux = 0;
+  for (let i = 0; i < months.length; i++) {
+    cells[i] = 0; // Initialize cells[i] as a number
+    
+    rolesInfo.forEach((item: any) => {
+      const filtro = filtros.find((f: any) => f.value == item[0]);
+      if (filtro) {
+        aux=1;
+        cells[i] += item[2];
+      }
+    });
+    if(aux == 0){
+      const filtro = rolesInfo.find((f: any) => f[0] == "todos");
+      if(filtro){
+        cells[i] = filtro[2]
+      }
+    }
+  }
+  aux=0;
+  return cells;
+};
+
+export const getpersonas = (rolesInfo: any, filtros: any) => {
+  let cells = 0;
+  const months = getLast12Months();
+  let aux = 0;
+
+    rolesInfo.forEach((item: any) => {
+      const filtro = filtros.find((f: any) => f.value == item[0]);
+      if (filtro) {
+        aux=1;
+        cells += item[1];
+      }
+    });
+    if(aux == 0){
+      const filtro = rolesInfo.find((f: any) => f[0] == "todos");
+      if(filtro){
+        cells = filtro[1]
+      }
+  }
+  aux=0;
+  return cells.toFixed(0);
+};
+
+export const gettotaldemandafilter = (totaldemanda:any, filtros:any):number =>{
+  let aux:number = 0;
+  totaldemanda.map((item:any,index:any)=>{
+    const filtro = filtros.find((f: any) => f.value == item[0]);
+    if(filtro){
+      aux+=item[1]
+    }
+  })
+  if(aux==0){
+    const filtro = totaldemanda.find((f: any) => f[0] == "todos");
+    if(filtro){
+      aux = filtro[1]
+    }
+  }
+
+  return aux
+}
+
+export const getaveragecapacidad= (rolesInfo: any, filtros: any) => {
+  let aux = 0;
+
+    rolesInfo.forEach((item: any) => {
+      const filtro = filtros.find((f: any) => f.value == item[0]);
+      if (filtro) {
+        aux += item[2];
+      }
+    });
+    if(aux == 0){
+      const filtro = rolesInfo.find((f: any) => f[0] == "todos");
+      if(filtro){
+        aux = filtro[2]
+      }
+    }
+
+  return aux;
 };

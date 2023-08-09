@@ -35,7 +35,6 @@ function AddProject(props: any) {
     setSelectedOptions((prevSelectedOptions) => {
       const updatedOptions = [...prevSelectedOptions];
       updatedOptions[index] = value;
-      console.log(updatedOptions);
       return updatedOptions;
     });
   };

@@ -69,10 +69,26 @@ const needle = (
   ];
 };
 
-function Indicador(any: any) {
+function Indicador2(any: any) {
 
-  let aux = any.capacidadofertada
-  let aux2 = any.demandapromedio
+  let aux = 0
+  let aux2 = 0
+  const getvalue = () => {
+    any.capacidadofertada.map((item:any, index:any)=>{
+      if(item[0] == any.filter){
+        aux= item[2]
+      }
+    })  
+    any.demandapromedio.map((item:any, index:any)=>{
+      if(item[0] == any.filter){
+        aux2 = item[1]
+      }
+    })
+
+  }
+
+  getvalue()
+
   
   return (
     <div className="flex flex-col pt-0">
@@ -103,4 +119,4 @@ function Indicador(any: any) {
   );
 }
 
-export default Indicador;
+export default Indicador2;
