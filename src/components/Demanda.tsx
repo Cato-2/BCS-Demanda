@@ -292,7 +292,7 @@ function Demanda() {
         <Riesgos
           filter={filter} //rol seleccionado
           capacidadofertada={rolesInfo} //capacidad ofertada por rol
-          demandapromedio={totaldemanda} //demanda promedio por rol
+          demandapromedio={gettotaldemandafilter(totaldemanda, filter2)} //demanda promedio por rol
           demandapormes={totalbymonth} //demanda por mes por rol
           personasnecesarias={personasnecesarias} //personas necesarias por rol
           personasactuales={personasactuales} //personas actuales por rol

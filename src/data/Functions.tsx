@@ -524,8 +524,8 @@ export const getpersonas = (rolesInfo: any, filtros: any) => {
   return cells.toFixed(0);
 };
 
-export const gettotaldemandafilter = (totaldemanda:any, filtros:any):number =>{
-  let aux:number = 0;
+export const gettotaldemandafilter = (totaldemanda:any, filtros:any):any =>{
+  let aux:any = 0;
   totaldemanda.map((item:any,index:any)=>{
     const filtro = filtros.find((f: any) => f.value == item[0]);
     if(filtro){

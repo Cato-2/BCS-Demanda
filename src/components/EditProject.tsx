@@ -13,6 +13,7 @@ import tasks from "../../src-tauri/tareas.json";
 import Roles from "../../src-tauri/roles.json";
 import Select from "react-select";
 import { writeFile, FsTextFileOption } from "@tauri-apps/api/fs";
+import { trace, info, error, attachConsole } from "tauri-plugin-log-api";
 
 
 let data = Roles.map((role:any) => {
@@ -99,9 +100,13 @@ function EditProject(props:
     writeFile(f)
       .then(() => {
         console.log("Tasks File written");
+        info("Tasks File written");
+
       })
       .catch((error: any) => {
         console.error("Error writing file:", error);
+        error("Error writing file1:", error);
+
       });
     handleOpen();
   };

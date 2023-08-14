@@ -1,6 +1,7 @@
 import React, { ChangeEvent, useState } from "react";
 import * as XLSX from "xlsx";
 import { writeFile, FsTextFileOption } from "@tauri-apps/api/fs";
+import { trace, info, error, attachConsole } from "tauri-plugin-log-api";
 
 
 const formatDate = (excelDate: number) => {
@@ -11,6 +12,7 @@ const formatDate = (excelDate: number) => {
   const day = String(date.getUTCDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 };
+
 
 const ExcelToJSON: React.FC = () => {
   const [xlsxDataTask, setXlsxDataTask] = useState<any[]>([]);
@@ -30,8 +32,9 @@ const ExcelToJSON: React.FC = () => {
         });
 
         const headerRow = jsonData[0] as string[];
-        const jsonDataWithHeaders = jsonData.slice(1).map((row: any[]) => {
+        const jsonDataWithHeaders:any = jsonData.slice(1).map((row: any[]) => {
           const rowData: any = {};
+
           headerRow.forEach((header: string, index: number) => {
             if (header === 'meses especificos') {
               // Split the comma-separated string back into an array
@@ -75,9 +78,12 @@ const ExcelToJSON: React.FC = () => {
         writeFile(f)
           .then(() => {
             console.log("Tasks File written");
+            info("Tasks File written");
           })
           .catch((error: any) => {
             console.error("Error writing file:", error);
+            error("Error writing file:", error);
+
           });
 
         const f2: FsTextFileOption = {
@@ -90,6 +96,7 @@ const ExcelToJSON: React.FC = () => {
           })
           .catch((error: any) => {
             console.error("Error writing file:", error);
+            error("Error writing file:", error);
           });
       };
       reader.readAsArrayBuffer(file);

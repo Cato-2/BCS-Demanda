@@ -8,16 +8,7 @@ import NoRoutine from "./components/NoRoutine";
 import Programadas from "./components/Programadas";
 import PdfScreen from "./components/PdfScreen";
 import Sidenav from "./components/Sidenav";
-import { trace, info, error, attachConsole } from "tauri-plugin-log-api";
-  // with LogTarget::Webview enabled this function will print logs to the browser console
-  const detach = await attachConsole();
-  
-  trace("Trace");
-  info("Info");
-  error("Error");
-  
-  // detach the browser console from the log stream
-  detach();
+
 
 
 interface LayoutProps {
@@ -38,9 +29,6 @@ function Layout({ children }: LayoutProps): JSX.Element {
 }
 
 function App(): JSX.Element {
-  info("Will call run a command now...") // <-- this line here
-
-
   return (
     <Routes>
       <Route

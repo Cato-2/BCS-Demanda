@@ -27,7 +27,8 @@ const Riesgos: React.FC<Props> = (props) => {
     const riesgosElements: JSX.Element[] = [];
     capacidadofertada.forEach((role, index) => {
       if (role[0] == filter) {
-        const capacidadResidual = role[2] - demandapromedio[index][1];
+        
+        const capacidadResidual = role[2] - (demandapromedio[index]?.[1]?? 0);
         if (capacidadResidual < 0) {
           riesgosElements.push(
             <span className="py-1" key={index}>
