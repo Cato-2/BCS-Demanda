@@ -171,7 +171,7 @@ function AddProject(props: any) {
               <div className="flex-row justify-between flex">
                 {props.tipo == "programadas" && (
                   <label htmlFor="" className="w-1/2 p-1">
-                    Duración por mes (horas)
+                    Duración total tarea (horas)
                   </label>
                 )}
                 {props.tipo == "rutinarias" && (

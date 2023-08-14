@@ -440,10 +440,7 @@ export const getPersonasNecesarias = (
   return aux;
 };
 
-export const getcapacidadvaluebyfilter = (
-  arr: any,
-  filter: string
-): number => {
+export const getcapacidadvaluebyfilter = (arr: any, filter: string): number => {
   return arr[0]; // Or any default value if role with the specified filter is not found
 };
 
@@ -483,22 +480,22 @@ export const getcapacidad = (rolesInfo: any, filtros: any) => {
   let aux = 0;
   for (let i = 0; i < months.length; i++) {
     cells[i] = 0; // Initialize cells[i] as a number
-    
+
     rolesInfo.forEach((item: any) => {
       const filtro = filtros.find((f: any) => f.value == item[0]);
       if (filtro) {
-        aux=1;
+        aux = 1;
         cells[i] += item[2];
       }
     });
-    if(aux == 0){
+    if (aux == 0) {
       const filtro = rolesInfo.find((f: any) => f[0] == "todos");
-      if(filtro){
-        cells[i] = filtro[2]
+      if (filtro) {
+        cells[i] = filtro[2];
       }
     }
   }
-  aux=0;
+  aux = 0;
   return cells;
 };
 
@@ -507,20 +504,20 @@ export const getpersonas = (rolesInfo: any, filtros: any) => {
   const months = getLast12Months();
   let aux = 0;
 
-    rolesInfo.forEach((item: any) => {
-      const filtro = filtros.find((f: any) => f.value == item[0]);
-      if (filtro) {
-        aux=1;
-        cells += item[1];
-      }
-    });
-    if(aux == 0){
-      const filtro = rolesInfo.find((f: any) => f[0] == "todos");
-      if(filtro){
-        cells = filtro[1]
-      }
+  rolesInfo.forEach((item: any) => {
+    const filtro = filtros.find((f: any) => f.value == item[0]);
+    if (filtro) {
+      aux = 1;
+      cells += item[1];
+    }
+  });
+  if (aux == 0) {
+    const filtro = rolesInfo.find((f: any) => f[0] == "todos");
+    if (filtro) {
+      cells = filtro[1];
+    }
   }
-  aux=0;
+  aux = 0;
   return cells.toFixed(0);
 };
 
@@ -528,35 +525,53 @@ export const gettotaldemandafilter = (totaldemanda:any, filtros:any):any =>{
   let aux:any = 0;
   totaldemanda.map((item:any,index:any)=>{
     const filtro = filtros.find((f: any) => f.value == item[0]);
-    if(filtro){
-      aux+=item[1]
+    if (filtro) {
+      aux += item[1];
     }
-  })
-  if(aux==0){
+  });
+  if (aux == 0) {
     const filtro = totaldemanda.find((f: any) => f[0] == "todos");
-    if(filtro){
-      aux = filtro[1]
+    if (filtro) {
+      aux = filtro[1];
     }
   }
-
-  return aux
-}
-
-export const getaveragecapacidad= (rolesInfo: any, filtros: any) => {
-  let aux = 0;
-
-    rolesInfo.forEach((item: any) => {
-      const filtro = filtros.find((f: any) => f.value == item[0]);
-      if (filtro) {
-        aux += item[2];
-      }
-    });
-    if(aux == 0){
-      const filtro = rolesInfo.find((f: any) => f[0] == "todos");
-      if(filtro){
-        aux = filtro[2]
-      }
-    }
-
+  console.log("demanda", aux);
   return aux;
+};
+
+export const getaveragecapacidad = (rolesInfo: any, filtros: any) => {
+  let aux = 0;
+  rolesInfo.forEach((item: any) => {
+    const filtro = filtros.find((f: any) => f.value == item[0]);
+    if (filtro) {
+      aux += item[2];
+    }
+  });
+  if (aux == 0) {
+    const filtro = rolesInfo.find((f: any) => f[0] == "todos");
+    if (filtro) {
+      aux = filtro[2];
+    }
+  }
+  return aux;
+};
+
+export const getaveragecapacidad2 = (rolesInfo: any, filtros: any) => {
+  let aux = 0;
+  let cont = 0;
+  rolesInfo.forEach((item: any) => {
+    const filtro = filtros.find((f: any) => f.value == item[0]);
+    if (filtro) {
+      cont++;
+      aux += item[2];
+    }
+  });
+  if (aux == 0) {
+    const filtro = rolesInfo.find((f: any) => f[0] == "todos");
+    if (filtro) {
+      cont = rolesInfo.length - 1;
+      aux = filtro[2];
+    }
+  }
+  return aux / cont;
 };

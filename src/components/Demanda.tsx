@@ -42,7 +42,8 @@ import {
   getcapacidad,
   getpersonas,
   gettotaldemandafilter,
-  getaveragecapacidad
+  getaveragecapacidad,
+  getaveragecapacidad2
 } from "../data/Functions";
 
 const roles = RolesList; //json
@@ -105,7 +106,6 @@ function Demanda() {
     filter
   );
 
-
   const capacidadResidual =
     arrcapacidad[0] - gettotaldemandafilter(totaldemanda, filter2);
   const colorStyle = capacidadResidual < 0 ? "red" : "inherit";
@@ -119,7 +119,7 @@ function Demanda() {
             name="colors"
             options={data}
             onChange={handleChangeRoles}
-            className="basic-multi-select"
+            className="basic-multi-select capitalize"
             classNamePrefix="select"
           />
         </div>
@@ -245,7 +245,9 @@ function Demanda() {
               <ListItem>
                 <span>Demanda del sistema</span>
 
-                <span>{gettotaldemandafilter(totaldemanda, filter2).toFixed(0)} HH</span>
+                <span>
+                  {gettotaldemandafilter(totaldemanda, filter2).toFixed(0)} HH
+                </span>
               </ListItem>
               <ListItem>
                 <span>Capacidad ofertada</span>
@@ -258,14 +260,13 @@ function Demanda() {
                 </span>
               </ListItem>
               <ListItem>
-      <span>Personas necesarias</span>
-      <span>
-        {(
-          gettotaldemandafilter(totaldemanda, filter2) /
-          (getcapacidad(rolesInfo, filter2)[0])
-        ).toFixed(1)}
-      </span>
-    </ListItem>
+                <span>Personas necesarias</span>
+                <span>
+                  {(
+                    (gettotaldemandafilter(totaldemanda, filter2)/getaveragecapacidad2(rolesInfo, filter2))
+                  ).toFixed(1)}
+                </span>
+              </ListItem>
             </List>
           </Card>
         </div>
