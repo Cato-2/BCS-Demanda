@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect} from "react";
 import {
   Button,
   Dialog,
@@ -11,8 +11,9 @@ import {
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 import Select from "react-select";
 import Roles from "../../src-tauri/roles.json";
-import { writeFile, FsTextFileOption } from "@tauri-apps/api/fs";
+import { writeFile, FsTextFileOption , BaseDirectory} from "@tauri-apps/api/fs";
 import Tasks from "../../src-tauri/tareas.json";
+import {ReadJson}  from "../data/ReadJson";
 
 function AddProject(props: any) {
   const [open, setOpen] = useState<boolean>(false);
@@ -26,6 +27,18 @@ function AddProject(props: any) {
   const [howmany, setHowmany] = useState<number>(0);
   const [frecuency, setFrecuency] = useState<string>("");
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+  const [Roles, setRoles] = useState<any[]>([]);
+  const [Tasks, setTasks] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const roles = await  ReadJson("roles");
+      const tareas = await  ReadJson("tareas");
+      setRoles(roles);
+      setTasks(tareas);
+    };
+    fetchData();
+  }, [])
 
   const handleSelectChange = (
     event: React.ChangeEvent<HTMLSelectElement>,
@@ -117,10 +130,10 @@ function AddProject(props: any) {
     alltasks = JSON.stringify(alltasks);
 
     const f: FsTextFileOption = {
-      path: "./tareas.json",
+      path: "tareas.json",
       contents: alltasks, // Convert to string
     };
-    writeFile(f)
+    writeFile(f, { dir: BaseDirectory.App })
       .then(() => {
         console.log("Tasks File written");
       })
@@ -128,6 +141,7 @@ function AddProject(props: any) {
         console.error("Error writing file:", error);
       });
     handleOpen();
+    window.location.reload();
   };
 
   return (

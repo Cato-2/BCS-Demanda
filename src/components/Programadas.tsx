@@ -23,8 +23,9 @@ import {
   IconButton,
   Tooltip,
 } from "@material-tailwind/react";
-import { useState } from "react";
+import { useState , useEffect} from "react";
 import data from "../../src-tauri/tareas.json";
+import { ReadJson } from "../data/ReadJson";
 const TABLE_HEAD = [
   "Id",
   "Titulo",
@@ -35,7 +36,7 @@ const TABLE_HEAD = [
   "",
 ];
 
-const TABLE_ROWS = data;
+
 
 function Programadas() {
   const [search, setSearch] = useState("");
@@ -43,6 +44,20 @@ function Programadas() {
   const handleSearch = (event: any) => {
     setSearch(event.target.value);
   };
+  const [Roles, setRoles] = useState<any[]>([]);
+  const [Tasks, setTasks] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const roles = await  ReadJson("roles");
+      const tareas = await  ReadJson("tareas");
+      setRoles(roles);
+      setTasks(tareas);
+    };
+    fetchData();
+  }, [])
+
+  const TABLE_ROWS = Tasks;
 
   return (
     <>

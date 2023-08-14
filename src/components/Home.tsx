@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useState , useEffect} from "react";
 import Topnav from "./Topnav";
 import ExcelToJSON from "../data/ExcelToJson";
 import { Link } from "react-router-dom";
+import {ReadJson}  from "../data/ReadJson";
 import {
   Card,
   CardBody,
@@ -52,12 +53,23 @@ import tasks from "../../src-tauri/tareas.json";
 import RolesList from "../../src-tauri/roles.json";
 import {JsonToExcel} from "../data/JsonToExcel";
 
-const roles = RolesList; //json
-const tareas = tasks; //json
+
 
 function Home() {
   const currentDate: Date = new Date();
+  const [roles, setRoles] = useState<any[]>([]);
+  const [tareas, setTareas] = useState<any[]>([]);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      const roles = await  ReadJson("roles");
+      const tareas = await  ReadJson("tareas");
+      setRoles(roles);
+      setTareas(tareas);
+    };
+    fetchData();
+  }, [])
+  
   // To get the individual components of the date
   const year: number = currentDate.getFullYear();
   const month: number = currentDate.getMonth();
@@ -129,8 +141,7 @@ function Home() {
     filter
   );
   const valuecapacidad: number = getcapacidadvaluebyfilter(rolesInfo, filter);
-
-
+  
   const graphdata = () => {
     let data: any = [];
     totalbymonth.map((item: any, index: number) => {
@@ -160,7 +171,7 @@ function Home() {
             <Card className="ring-1 ring-gray-300 rounded-lg">
               <CardBody>
                 <Typography variant="h5" color="blue-gray" className="mb-2">
-                  Mes Actual 
+                  Mes Actual  
                 </Typography>
                 <Table className="py-2 max-h-[17rem] overflow-auto">
                   <TableHead>

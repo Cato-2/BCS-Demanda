@@ -1,6 +1,6 @@
 import React, { ChangeEvent, useState } from "react";
 import * as XLSX from "xlsx";
-import { writeFile, FsTextFileOption } from "@tauri-apps/api/fs";
+import { writeFile, FsTextFileOption, BaseDirectory } from "@tauri-apps/api/fs";
 import { trace, info, error, attachConsole } from "tauri-plugin-log-api";
 
 
@@ -72,12 +72,12 @@ const ExcelToJSON: React.FC = () => {
         setXlsxDataRoles(jsonDataWithHeaders2);
 
         const f: FsTextFileOption = {
-          path: "./tareas.json",
+          path: "tareas.json",
           contents: JSON.stringify(jsonDataWithHeaders), // Convert to string
         };
-        writeFile(f)
+        writeFile(f, { dir: BaseDirectory.App })
           .then(() => {
-            console.log("Tasks File written");
+            console.log(BaseDirectory.App);
             info("Tasks File written");
           })
           .catch((error: any) => {
@@ -87,10 +87,10 @@ const ExcelToJSON: React.FC = () => {
           });
 
         const f2: FsTextFileOption = {
-          path: "./roles.json",
+          path: "roles.json",
           contents: JSON.stringify(jsonDataWithHeaders2), // Convert to string
         };
-        writeFile(f2)
+        writeFile(f2, { dir: BaseDirectory.App })
           .then(() => {
             console.log("Roles File written");
           })
@@ -100,7 +100,10 @@ const ExcelToJSON: React.FC = () => {
           });
       };
       reader.readAsArrayBuffer(file);
+      
+
     }
+    
   };
 
   return (
