@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import {
   Button,
   Dialog,
@@ -11,10 +11,9 @@ import {
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 import Select from "react-select";
 import { writeFile, FsTextFileOption } from "@tauri-apps/api/fs";
-import Tasks from "../../src-tauri/tareas.json";
 import path from "path";
-import Roles from "../../src-tauri/roles.json";
 import { start } from "repl";
+import { ReadJson } from "../data/ReadJson";
 
 function AddProjectProgramada(any:any) {
   const [open, setOpen] = useState(false);
@@ -25,6 +24,18 @@ function AddProjectProgramada(any:any) {
   const [duedate, setduedate] = useState();
   const [duration, setduration] = useState();
   const [roles, setroles] = useState({value:"", label:""}); // format {value: "nombre", label: "nombre"}
+  const [Roles, setRoles] = useState<any[]>([]);
+  const [Tasks, setTasks] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const roles = await  ReadJson("roles");
+      const tareas = await  ReadJson("tareas");
+      setRoles(roles);
+      setTasks(tareas);
+    };
+    fetchData();
+  }, [])
 
   const handleChangeStart = (e: any) => {
     setstartdate(e.target.value);

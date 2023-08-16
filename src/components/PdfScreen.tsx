@@ -1,6 +1,7 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import jsPDF from "jspdf";
-import html2canvas from 'html2canvas';
+import html2canvas from "html2canvas";
+import { ReadJson } from "../data/ReadJson";
 
 import {
   ComposedChart,
@@ -26,8 +27,6 @@ import { Card, List, ListItem, Title } from "@tremor/react";
 import Grafico2 from "./Grafico2";
 import Indicador2 from "./Indicador2";
 import Riesgos from "./Riesgos";
-import tasks from "../../src-tauri/tareas.json";
-import RolesList from "../../src-tauri/roles.json";
 import { Link } from "react-router-dom";
 import {
   getLast12Months,
@@ -42,7 +41,6 @@ import {
   calculateDuration,
   bymonthprogramadas,
   bymonthyearly,
-
 } from "../data/Functions";
 
 const allmonths = [
@@ -62,60 +60,59 @@ const allmonths = [
 
 // Variables ------------------------------------
 
-const roles = RolesList; //json
-const tareas = tasks; //json
-const last12Months = getLast12Months();
-const norutinariasMes = norutinariasbyrole(roles, tareas);
-const rutinariasMes = rutinariasbyrole(roles, tareas);
-const programadasMes = programadasbyrole(roles, tareas);
-const rolesInfo = getroledata(roles);
-let lastyearRutina = bymonth(last12Months, rutinariasMes, roles);
-let lastyearNorutina = bymonth(last12Months, norutinariasMes, roles); // esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
-let lastyearProgramada = bymonth(last12Months, programadasMes, roles);
-bymonthprogramadas(lastyearProgramada, tareas, last12Months, "programadas"); //agrega actividades con fecha de inicio y termino a cada mes sgun corresponda
-bymonthprogramadas(lastyearNorutina, tareas, last12Months, "no rutinarias");
-bymonthyearly(lastyearProgramada, tareas, last12Months, "programadas");
-let totalbymonth = gettotal(
-  lastyearRutina,
-  lastyearNorutina,
-  lastyearProgramada
-);
-const totaldemanda = averagetotal(totalbymonth);
-const getPersonasNecesarias = (tipo: string, rolnombre: string) => {
-  // Calculate the required number of people for the selected role
-  let aux = 0;
-
-  totaldemanda.forEach((role:any, index:any) => {
-    if (role[0] === rolnombre) {
-      if (tipo === "necesarias") {
-        aux = role[1] / rolesInfo[index][3];
-      } else {
-        aux = rolesInfo[index][1];
-      }
-    }
-  });
-
-  // Update the state with the calculated values
-  return aux;
-};
-
-const getcapacidadvaluebyfilter = (rolnombre: string): number => {
-  const foundRole = rolesInfo.find((item) => item[0] == rolnombre);
-  if (foundRole) {
-    return foundRole[2];
-  }
-  return 0; // Or any default value if role with the specified filter is not found
-};
-
 interface MyPdfDocumentProps {
-  graphDataList: any[]; // Replace 'any[]' with the type of your graph data
-  roleList: any[];
+  RolesList: any[];
+  tasks: any[];
 }
 
 const MyPdfDocument: React.FC<MyPdfDocumentProps> = ({
-  graphDataList,
-  roleList,
+  RolesList,
+  tasks
 }) => {
+  const roles = RolesList; //json
+  const tareas = tasks; //json
+  const last12Months = getLast12Months();
+  const norutinariasMes = norutinariasbyrole(roles, tareas);
+  const rutinariasMes = rutinariasbyrole(roles, tareas);
+  const programadasMes = programadasbyrole(roles, tareas);
+  const rolesInfo = getroledata(roles);
+  let lastyearRutina = bymonth(last12Months, rutinariasMes, roles);
+  let lastyearNorutina = bymonth(last12Months, norutinariasMes, roles); // esto no deberia ser así, hay que agregarle los proyectos que tienen un periodo de tiempo
+  let lastyearProgramada = bymonth(last12Months, programadasMes, roles);
+  bymonthprogramadas(lastyearProgramada, tareas, last12Months, "programadas"); //agrega actividades con fecha de inicio y termino a cada mes sgun corresponda
+  bymonthprogramadas(lastyearNorutina, tareas, last12Months, "no rutinarias");
+  bymonthyearly(lastyearProgramada, tareas, last12Months, "programadas");
+  let totalbymonth = gettotal(
+    lastyearRutina,
+    lastyearNorutina,
+    lastyearProgramada
+  );
+  const totaldemanda = averagetotal(totalbymonth);
+  const getPersonasNecesarias = (tipo: string, rolnombre: string) => {
+    // Calculate the required number of people for the selected role
+    let aux = 0;
+
+    totaldemanda.forEach((role: any, index: any) => {
+      if (role[0] === rolnombre) {
+        if (tipo === "necesarias") {
+          aux = role[1] / rolesInfo[index][3];
+        } else {
+          aux = rolesInfo[index][1];
+        }
+      }
+    });
+
+    // Update the state with the calculated values
+    return aux;
+  };
+
+  const getcapacidadvaluebyfilter = (rolnombre: string): number => {
+    const foundRole = rolesInfo.find((item) => item[0] == rolnombre);
+    if (foundRole) {
+      return foundRole[2];
+    }
+    return 0; // Or any default value if role with the specified filter is not found
+  };
   const pdfRef = useRef<HTMLDivElement>(null);
 
   const generatePDF = async () => {
@@ -124,13 +121,13 @@ const MyPdfDocument: React.FC<MyPdfDocumentProps> = ({
       const currentDate = new Date();
       const dateString = currentDate.toLocaleString();
 
-      for (let i = 0; i < roleList.length; i++) {
+      for (let i = 0; i < rolesInfo.length; i++) {
         const canvas = await html2canvas(
-          pdfRef.current!.childNodes[i] as HTMLElement
+          pdfRef?.current!.childNodes[i] as HTMLElement
         );
         const imgData = canvas.toDataURL("image/png");
         pdf.addImage(imgData, "PNG", 10, 10, 280, 130); // Adjust the width and height as needed
-        if (i !== roleList.length - 1) {
+        if (i !== rolesInfo.length - 1) {
           pdf.addPage("landscape"); // Add a new horizontal page for each graph
         }
       }
@@ -181,7 +178,7 @@ const MyPdfDocument: React.FC<MyPdfDocumentProps> = ({
                         {"Actividades programadas"}
                       </TableCell>
                       {lastyearProgramada.map(
-                        (item:any, index:any) =>
+                        (item: any, index: any) =>
                           item.rol == role[0] && (
                             <React.Fragment key={index}>
                               {item.datos.map(
@@ -203,7 +200,7 @@ const MyPdfDocument: React.FC<MyPdfDocumentProps> = ({
                         {"Actividades de no rutina"}
                       </TableCell>
                       {lastyearNorutina.map(
-                        (item:any, index:any) =>
+                        (item: any, index: any) =>
                           item.rol === role[0] && (
                             <React.Fragment key={index}>
                               {item.datos.map(
@@ -225,7 +222,7 @@ const MyPdfDocument: React.FC<MyPdfDocumentProps> = ({
                         {"Actividades de rutina"}
                       </TableCell>
                       {lastyearRutina.map(
-                        (item:any, index:any) =>
+                        (item: any, index: any) =>
                           item.rol === role[0] && (
                             <React.Fragment key={index}>
                               {item.datos.map(
@@ -338,7 +335,9 @@ const MyPdfDocument: React.FC<MyPdfDocumentProps> = ({
                       <span>Demanda del sistema</span>
                       {totaldemanda.map((item, index) => {
                         if (item[0] === role[0]) {
-                          return <span key={index}>{item[1].toFixed(0)} HH</span>;
+                          return (
+                            <span key={index}>{item[1].toFixed(0)} HH</span>
+                          );
                         }
                       })}
                     </ListItem>
@@ -346,7 +345,9 @@ const MyPdfDocument: React.FC<MyPdfDocumentProps> = ({
                       <span>Capacidad ofertada</span>
                       {rolesInfo.map((item, index) => {
                         if (item[0] === role[0]) {
-                          return <span key={index}>{item[2].toFixed(0)} HH</span>;
+                          return (
+                            <span key={index}>{item[2].toFixed(0)} HH</span>
+                          );
                         }
                       })}
                     </ListItem>
@@ -422,16 +423,23 @@ const MyPdfDocument: React.FC<MyPdfDocumentProps> = ({
   );
 };
 
-const arr = [
-  { nombre: "test1", cantidad: 12 },
-  { nombre: "test2", cantidad: 20 },
-  { nombre: "test3", cantidad: 10 },
-  { nombre: "test4", cantidad: 50 },
-];
 
-const nveces = [{ nombre: "juan" }, { nombre: "pepe" }, { nombre: "pedro" }];
+
 function PdfScreen() {
-  return <MyPdfDocument graphDataList={arr} roleList={rolesInfo} />;
+  const [RolesList, setRoles] = useState<any[]>([]);
+  const [tasks, setTareas] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const roles = await ReadJson("roles");
+      const tareas = await ReadJson("tareas");
+      setRoles(roles);
+      setTareas(tareas);
+    };
+    fetchData();
+  }, []);
+  
+  return <MyPdfDocument  RolesList={RolesList} tasks={tasks} />;
 }
 
 export default PdfScreen;

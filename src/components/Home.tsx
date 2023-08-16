@@ -49,8 +49,6 @@ import {
   ResponsiveContainer,
   Label,
 } from "recharts";
-import tasks from "../../src-tauri/tareas.json";
-import RolesList from "../../src-tauri/roles.json";
 import {JsonToExcel} from "../data/JsonToExcel";
 
 

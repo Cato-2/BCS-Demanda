@@ -10,9 +10,7 @@ import {
 } from "@material-tailwind/react";
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
 import Select from "react-select";
-import Roles from "../../src-tauri/roles.json";
 import { writeFile, FsTextFileOption , BaseDirectory} from "@tauri-apps/api/fs";
-import Tasks from "../../src-tauri/tareas.json";
 import {ReadJson}  from "../data/ReadJson";
 
 function AddProject(props: any) {

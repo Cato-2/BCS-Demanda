@@ -24,7 +24,6 @@ import {
   Tooltip,
 } from "@material-tailwind/react";
 import { useState , useEffect} from "react";
-import data from "../../src-tauri/tareas.json";
 import { ReadJson } from "../data/ReadJson";
 const TABLE_HEAD = [
   "Id",

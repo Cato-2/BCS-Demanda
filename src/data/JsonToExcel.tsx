@@ -1,13 +1,24 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState, useEffect } from "react";
 import * as XLSX from "xlsx";
 import { writeFile, FsTextFileOption } from "@tauri-apps/api/fs";
-import tasks from "../../src-tauri/tareas.json";
-import roles from "../../src-tauri/roles.json";
 import { Button } from "@material-tailwind/react";
+import { ReadJson } from "../data/ReadJson";
 
 export const JsonToExcel: React.FC = () => {
     const [JsonDataTask, setJsonDataTask] = useState<any[]>([]);
     const [JsonDataRoles, setJsonDataRoles] = useState<any[]>([]);
+    const [roles, setRoles] = useState<any[]>([]);
+    const [tasks, setTareas] = useState<any[]>([]);
+  
+    useEffect(() => {
+      const fetchData = async () => {
+        const roles = await  ReadJson("roles");
+        const tareas = await  ReadJson("tareas");
+        setRoles(roles);
+        setTareas(tareas);
+      };
+      fetchData();
+    }, [])
 
     const handleClick = () => {
         // Convert "meses especificos" array to comma-separated strings in "tasks" data.

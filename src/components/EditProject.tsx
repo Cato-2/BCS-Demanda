@@ -1,4 +1,4 @@
-import { Fragment, useState, useEffect} from "react";
+import { Fragment, useState, useEffect } from "react";
 import {
   Button,
   Dialog,
@@ -9,12 +9,10 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
-
 import Select from "react-select";
-import { writeFile, FsTextFileOption, BaseDirectory} from "@tauri-apps/api/fs";
+import { writeFile, FsTextFileOption, BaseDirectory } from "@tauri-apps/api/fs";
 import { trace, info, error, attachConsole } from "tauri-plugin-log-api";
 import { ReadJson } from "../data/ReadJson";
-
 
 
 function EditProject(props:
@@ -22,14 +20,14 @@ function EditProject(props:
   const [open, setOpen] = useState(false);
   const [id, setId] = useState(0);
   const [Roles, setRoles] = useState<any[]>([]);
-  const [tasks, setTareas] = useState<any[]>([]);
+  const [tasks, setTasks] = useState<any[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       const roles = await  ReadJson("roles");
       const tareas = await  ReadJson("tareas");
       setRoles(roles);
-      setTareas(tareas);
+      setTasks(tareas);
     };
     fetchData();
   }, [])
@@ -110,10 +108,10 @@ function EditProject(props:
       path: "tareas.json",
       contents: alltasks, // Convert to string
     };
-    writeFile(f ,{ dir: BaseDirectory.App })
+    writeFile(f, { dir: BaseDirectory.App })
       .then(() => {
         console.log("Tasks File written");
-        info("Tasks File written");
+        info("Tasks File written", alltasks);
 
       })
       .catch((error: any) => {
