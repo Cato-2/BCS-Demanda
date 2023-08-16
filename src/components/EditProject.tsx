@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect} from "react";
 import {
   Button,
   Dialog,
@@ -9,20 +9,33 @@ import {
   IconButton,
 } from "@material-tailwind/react";
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
-import tasks from "../../src-tauri/tareas.json";
-import Roles from "../../src-tauri/roles.json";
+
 import Select from "react-select";
-import { writeFile, FsTextFileOption } from "@tauri-apps/api/fs";
+import { writeFile, FsTextFileOption, BaseDirectory} from "@tauri-apps/api/fs";
 import { trace, info, error, attachConsole } from "tauri-plugin-log-api";
+import { ReadJson } from "../data/ReadJson";
 
 
-let data = Roles.map((role:any) => {
-  return { value: role.nombre, label: role.nombre };
-});
+
 function EditProject(props:
    any) {
   const [open, setOpen] = useState(false);
   const [id, setId] = useState(0);
+  const [Roles, setRoles] = useState<any[]>([]);
+  const [tasks, setTareas] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const roles = await  ReadJson("roles");
+      const tareas = await  ReadJson("tareas");
+      setRoles(roles);
+      setTareas(tareas);
+    };
+    fetchData();
+  }, [])
+  let data = Roles.map((role:any) => {
+    return { value: role.nombre, label: role.nombre };
+  });
   const handleOpen = () => {
     setOpen(!open);
     handleId();
@@ -94,10 +107,10 @@ function EditProject(props:
     alltasks = JSON.stringify(alltasks);
 
     const f: FsTextFileOption = {
-      path: "./tareas.json",
+      path: "tareas.json",
       contents: alltasks, // Convert to string
     };
-    writeFile(f)
+    writeFile(f ,{ dir: BaseDirectory.App })
       .then(() => {
         console.log("Tasks File written");
         info("Tasks File written");
@@ -109,6 +122,7 @@ function EditProject(props:
 
       });
     handleOpen();
+    window.location.reload();
   };
 
   return (

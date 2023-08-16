@@ -4,7 +4,7 @@ import {
   MagnifyingGlassCircleIcon,
 } from "@heroicons/react/24/outline";
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
-import data from "../../src-tauri/roles.json"
+
 import AddProject from "./AddProject";
 import EditProject from "./EditProject";
 import ViewProject from "./ViewProject";
@@ -24,17 +24,32 @@ import {
   IconButton,
   Tooltip,
 } from "@material-tailwind/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import AddRole from "./AddRole";
+import { ReadJson } from "../data/ReadJson";
 
 const TABLE_HEAD = ["Rol", "Cantidad de personas", "Cantidad de tareas", "Horas disponible", "Horas reales", ""];
 
 
-const rows = data;
+
 
 
 function Roles() {
   const [search, setSearch] = useState("");
+  const [Roles, setRoles] = useState<any[]>([]);
+  const [Tasks, setTasks] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const roles = await  ReadJson("roles");
+      const tareas = await  ReadJson("tareas");
+      setRoles(roles);
+      setTasks(tareas);
+    };
+    fetchData();
+  }, [])
+
+  const rows = Roles;
 
   const handleSearch = (event: any) => {
     setSearch(event.target.value);

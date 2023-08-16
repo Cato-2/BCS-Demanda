@@ -10,7 +10,7 @@ import {
 } from "@tremor/react";
 import { SearchSelect, SearchSelectItem } from "@tremor/react";
 import { Card, List, ListItem, Title, Button } from "@tremor/react";
-import React from "react";
+import React, {useEffect} from "react";
 import Grafico from "./Grafico";
 import tasks from "../../src-tauri/tareas.json";
 import RolesList from "../../src-tauri/roles.json";
@@ -21,6 +21,7 @@ import { useState } from "react";
 import { ArrowDownTrayIcon } from "@heroicons/react/24/outline";
 import { Link } from "react-router-dom";
 import Select from "react-select";
+import { ReadJson } from "../data/ReadJson";
 
 import {
   allmonths,
@@ -46,10 +47,20 @@ import {
   getaveragecapacidad2
 } from "../data/Functions";
 
-const roles = RolesList; //json
-const tareas = tasks; //json
 
 function Demanda() {
+  const [roles, setRoles] = useState<any[]>([]);
+  const [tareas, setTareas] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const roles = await  ReadJson("roles");
+      const tareas = await  ReadJson("tareas");
+      setRoles(roles);
+      setTareas(tareas);
+    };
+    fetchData();
+  }, [])
   const last12Months = getLast12Months();
   const norutinariasMes = norutinariasbyrole(roles, tareas);
   const rutinariasMes = rutinariasbyrole(roles, tareas);

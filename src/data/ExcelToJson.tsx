@@ -1,9 +1,9 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useState, useEffect } from "react";
 import * as XLSX from "xlsx";
 import { writeFile, FsTextFileOption, BaseDirectory } from "@tauri-apps/api/fs";
 import { trace, info, error, attachConsole } from "tauri-plugin-log-api";
-
-
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import { Button } from "@material-tailwind/react";
 const formatDate = (excelDate: number) => {
   const epochStart = new Date(Date.UTC(1899, 11, 30)); // Excel epoch starts from 1900-01-01, but has a bug for 1900 being a leap year
   const date = new Date(epochStart.getTime() + excelDate * 86400000);
@@ -17,6 +17,14 @@ const formatDate = (excelDate: number) => {
 const ExcelToJSON: React.FC = () => {
   const [xlsxDataTask, setXlsxDataTask] = useState<any[]>([]);
   const [xlsxDataRoles, setXlsxDataRoles] = useState<any[]>([]);
+  const [reloadPage, setReloadPage] = useState(false); // Add this state
+
+  useEffect(() => {
+    if (reloadPage) {
+      window.location.reload();
+    }
+  }, [reloadPage]);
+
 
   const handleFileChange = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files && event.target.files[0];
@@ -107,9 +115,12 @@ const ExcelToJSON: React.FC = () => {
   };
 
   return (
-    <div>
+    <div className="flex">
       <div>
         <input type="file" accept=".xlsx" className="relative m-0 block w-full min-w-0 flex-auto rounded border border-solid border-neutral-300 bg-clip-padding px-3 py-[0.32rem] text-base font-normal text-neutral-700 transition duration-300 ease-in-out file:-mx-3 file:-my-[0.32rem] file:overflow-hidden file:rounded-none file:border-0 file:border-solid file:border-inherit file:bg-neutral-100 file:px-3 file:py-[0.32rem] file:text-neutral-700 file:transition file:duration-150 file:ease-in-out file:[border-inline-end-width:1px] file:[margin-inline-end:0.75rem] hover:file:bg-neutral-200 focus:border-primary focus:text-neutral-700 focus:shadow-te-primary focus:outline-none dark:border-neutral-600 dark:text-neutral-200 dark:file:bg-neutral-700 dark:file:text-neutral-100 dark:focus:border-primary hover:bg-blue-gray-200 hover:cursor-pointer" onChange={handleFileChange} />
+      </div>
+      <div>
+        <Button className="p-2" onClick={() => setReloadPage(true)}><ArrowPathIcon className="w-4 h-4"/></Button>
       </div>
     </div>
   );

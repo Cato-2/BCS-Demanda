@@ -1,4 +1,4 @@
-import { Fragment, useState } from "react";
+import { Fragment, useState, useEffect } from "react";
 import {
   Button,
   Dialog,
@@ -9,8 +9,8 @@ import {
   Checkbox,
 } from "@material-tailwind/react";
 import { PencilIcon, UserPlusIcon } from "@heroicons/react/24/solid";
-import Roles from "../../src-tauri/roles.json"
-import { writeFile, FsTextFileOption } from "@tauri-apps/api/fs";
+import { writeFile, FsTextFileOption, BaseDirectory } from "@tauri-apps/api/fs";
+import { ReadJson } from "../data/ReadJson";
 
 
 function AddRole() {
@@ -19,6 +19,18 @@ function AddRole() {
   const [nombre, setnombre] = useState("");
   const [cantidad, setcantidad] = useState(0);
   const [horas, sethoras] = useState(0);
+  const [Roles, setRoles] = useState<any[]>([]);
+  const [tasks, setTareas] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const roles = await  ReadJson("roles");
+      const tareas = await  ReadJson("tareas");
+      setRoles(roles);
+      setTareas(tareas);
+    };
+    fetchData();
+  }, [])
 
   const handleChangeNombre = (e: any) => {
     setnombre(e.target.value);
@@ -55,10 +67,10 @@ function AddRole() {
     allroles = JSON.stringify(allroles);
 
     const f: FsTextFileOption = {
-      path: "./roles.json",
+      path: "roles.json",
       contents: allroles, // Convert to string
     };
-    writeFile(f)
+    writeFile(f,{ dir: BaseDirectory.App })
       .then(() => {
         console.log("Roles File written");
       })
@@ -66,6 +78,7 @@ function AddRole() {
         console.error("Error writing file:", error);
       });
     handleOpen();
+    window.location.reload();
   };
 
   return (
